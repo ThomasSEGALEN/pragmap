@@ -1,0 +1,72 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Pragmap.Infrastructure.Context;
+using Pragmap.Infrastructure.Repositories.Interfaces;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Pragmap.Infrastructure.Repositories
+{
+    public class BaseRepository<TEntity> : IBaseRepository<TEntity> where TEntity : class
+    {
+        private readonly PragmapContext _context;
+        private readonly DbSet<TEntity> _dbSet;
+        public BaseRepository(PragmapContext context)
+        {
+            _context = context;
+            _dbSet = context.Set<TEntity>();
+        }
+
+        public IQueryable<TEntity> GetAll()
+        {
+            return _dbSet.AsQueryable();
+        }
+        public IEnumerable<TEntity> GetAll(Func<TEntity, bool> predicate)
+        {
+            return _dbSet.Where(predicate).AsEnumerable();
+        }
+
+        public IEnumerable<TEntity> GetAllSet()
+        {
+            return _dbSet.AsEnumerable();
+        }
+
+        public TEntity Single(int id)
+        {
+            return _dbSet.Find(id);
+        }
+
+        public TEntity? Single(Func<TEntity, bool> predicate)
+        {
+            return _dbSet.FirstOrDefault(predicate);
+        }
+
+        public virtual void Add(TEntity entity)
+        {
+            _dbSet.Add(entity);
+        }
+
+        public virtual void Delete(int id)
+        {
+            TEntity entityToDelete = _dbSet.Find(id);
+            Delete(entityToDelete);
+        }
+
+        public virtual void Delete(TEntity entityToDelete)
+        {
+            if (_context.Entry(entityToDelete).State == EntityState.Detached)
+            {
+                _dbSet.Attach(entityToDelete);
+            }
+            _dbSet.Remove(entityToDelete);
+        }
+
+        public virtual void Update(TEntity entityToUpdate)
+        {
+            _dbSet.Attach(entityToUpdate);
+            _context.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+    }
+}
