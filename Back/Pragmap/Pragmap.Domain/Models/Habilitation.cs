@@ -13,8 +13,8 @@ namespace Pragmap.Domain.Models
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
-        public ICollection<Client> clients { get; set;}
+        public ICollection<Client> Clients { get; set;}
 
-        public ICollection<RoadMap> roadMaps { get; set;}
+        public ICollection<RoadMap>RoadMaps { get; set;}
     }
 }
