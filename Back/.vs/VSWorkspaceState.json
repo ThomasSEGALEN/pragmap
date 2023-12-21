@@ -1,0 +1,13 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\Pragmap",
+    "\\Pragmap\\Pragmap.API",
+    "\\Pragmap\\Pragmap.API\\Controllers",
+    "\\Pragmap\\Pragmap.Domain",
+    "\\Pragmap\\Pragmap.Infrastructure\\Repositories",
+    "\\Pragmap\\Pragmap.Infrastructure\\Repositories\\Interfaces"
+  ],
+  "SelectedNode": "\\Pragmap\\Pragmap.sln",
+  "PreviewInSolutionExplorer": false
+}
