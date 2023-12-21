@@ -1,4 +1,5 @@
 using Npgsql;
+using Pragmap.Models;
 
 
 namespace Pragmap.Services

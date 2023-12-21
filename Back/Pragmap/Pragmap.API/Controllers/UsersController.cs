@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
-using Npgsql;
+using Pragmap.Services;
+using Pragmap.Models;
 
 namespace Pragmap.Controllers
 {
@@ -15,10 +16,10 @@ namespace Pragmap.Controllers
             _logger = logger;
         }
 
-        [HttpGet]
-        public IActionResult GetUsers()
+        [HttpGet(Name ="GetUsers")]
+        public IEnumerable<User> GetUsers()
         {
-            return Ok(UsersServices.GetUsers());
+            return UsersServices.GetUsers();
         }
     }
 }
