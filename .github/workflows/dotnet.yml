@@ -10,6 +10,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Back/Pragmap
     steps:
     - uses: actions/checkout@v3
     - name: Setup .NET
@@ -17,11 +20,8 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Restore dependencies
-      working-directory: ./Pragmap/Back
       run: dotnet restore
     - name: Build
-      working-directory: ./Pragmap/Back
       run: dotnet build --no-restore
     - name: Test
-      working-directory: ./Pragmap/Back
       run: dotnet test --no-build --verbosity normal
