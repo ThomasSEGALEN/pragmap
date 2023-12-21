@@ -1,37 +1,40 @@
 using Npgsql;
 
 
-class UsersServices
+namespace Pragmap.Services
 {
-
-    public static List<User> GetUsers()
+    class UsersServices
     {
-        List<User> users = new();
 
-        using (NpgsqlConnection connection = new NpgsqlConnection(Constantes.DATABASE))
+        public static List<User> GetUsers()
         {
-            connection.Open();
+            List<User> users = new();
 
-            using (NpgsqlCommand command = new NpgsqlCommand("SELECT user_id, username, email, date_joined FROM users", connection))
-            using (NpgsqlDataReader reader = command.ExecuteReader())
+            using (NpgsqlConnection connection = new NpgsqlConnection(Constantes.DATABASE))
             {
-                while (reader.Read())
-                {
-                    User user = new()
-                    {
-                        UserId = reader.GetInt32(0),
-                        Username = reader.GetString(1),
-                        Email = reader.GetString(2),
-                        RegistrationDate = reader.GetDateTime(3)
-                    };
+                connection.Open();
 
-                    users.Add(user);
+                using (NpgsqlCommand command = new NpgsqlCommand("SELECT user_id, username, email, date_joined FROM users", connection))
+                using (NpgsqlDataReader reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        User user = new()
+                        {
+                            UserId = reader.GetInt32(0),
+                            Username = reader.GetString(1),
+                            Email = reader.GetString(2),
+                            RegistrationDate = reader.GetDateTime(3)
+                        };
+
+                        users.Add(user);
+                    }
                 }
+
+                connection.Close();
             }
 
-            connection.Close();
+            return users;
         }
-
-        return users;
     }
 }
