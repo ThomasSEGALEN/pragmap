@@ -4,6 +4,7 @@ using Pragmap.Infrastructure.Repositories.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -23,7 +24,7 @@ namespace Pragmap.Infrastructure.Repositories
         {
             return _dbSet.AsQueryable();
         }
-        public IEnumerable<TEntity> GetAll(Func<TEntity, bool> predicate)
+        public IEnumerable<TEntity> GetAll(Expression<Func<TEntity, bool>> predicate)
         {
             return _dbSet.Where(predicate).AsEnumerable();
         }
