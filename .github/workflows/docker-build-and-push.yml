@@ -7,6 +7,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: Back/Pragmap
     steps:
     - uses: actions/checkout@v3
     - name: docker login
@@ -16,6 +19,6 @@ jobs:
       run:
         docker login -u $DOCKER_USER -p $DOCKER_PASSWORD
     - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag thomassegalen/pragmap-api:latest
+      run: docker build . --file ./Pragmap.API/Dockerfile --tag thomassegalen/pragmap-api:latest
     - name: Docker push
       run: docker push ${{secrets.DOCKER_USER}}/pragmap-api
