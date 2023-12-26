@@ -20,7 +20,7 @@ namespace Pragmap.API.Application.Commands
         {
             if(!User.IsValidEmail(request.Email))
             {
-                return Task.FromResult(CommandResult<User>.Failed("Le format de l'addresse mail est invalide"));
+                return Task.FromResult(CommandResult<User>.Failed("Le format de l'adresse mail est invalide"));
             }
 
             if(_unitOfWork.GetRepository<User>().Any(u => u.Email.Equals(request.Email)))
