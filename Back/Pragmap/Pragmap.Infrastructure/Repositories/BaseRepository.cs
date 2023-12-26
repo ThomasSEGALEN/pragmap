@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Pragmap.Domain.Common.Interfaces;
 using Pragmap.Infrastructure.Context;
 using Pragmap.Infrastructure.Repositories.Interfaces;
 using System;
@@ -46,6 +47,9 @@ namespace Pragmap.Infrastructure.Repositories
 
         public virtual void Add(TEntity entity)
         {
+            if(entity is IDatedEntity) {
+                ((IDatedEntity)entity).CreatedDate = DateTime.Now;
+            }
             _dbSet.Add(entity);
         }
 
@@ -66,8 +70,17 @@ namespace Pragmap.Infrastructure.Repositories
 
         public virtual void Update(TEntity entityToUpdate)
         {
+            if(entityToUpdate is IDatedEntity)
+            {
+                ((IDatedEntity)entityToUpdate).ModifiedDate = DateTime.Now;
+            }
             _dbSet.Attach(entityToUpdate);
             _context.Entry(entityToUpdate).State = EntityState.Modified;
+        }
+
+        public bool Any(Expression<Func<TEntity, bool>> predicate)
+        {
+            return _dbSet.Any(predicate);
         }
     }
 }

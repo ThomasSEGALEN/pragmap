@@ -1,4 +1,4 @@
-﻿namespace Pragmap.Domain.Models
+﻿namespace Pragmap.Domain.Entities
 {
     public class Client
     {

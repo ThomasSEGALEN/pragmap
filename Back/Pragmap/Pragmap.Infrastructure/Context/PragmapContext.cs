@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using Pragmap.Controllers.Models;
-using Pragmap.Domain.Models;
+using Pragmap.Controllers.Entities;
+using Pragmap.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,6 +37,10 @@ namespace Pragmap.Infrastructure.Context
                 .HasOne(ur => ur.Role)
                 .WithMany(r => r.UserRoles)
                 .HasForeignKey(ur => ur.RoleId);
+
+            modelBuilder.Entity<User>()
+               .HasIndex(u => u.Email)
+               .IsUnique();
         }
     }
 }

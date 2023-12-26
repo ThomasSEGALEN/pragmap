@@ -18,5 +18,6 @@ namespace Pragmap.Infrastructure.Repositories.Interfaces
         public void Delete(int id);
         public void Delete(TEntity entityToDelete);
         public void Update(TEntity entityToUpdate);
+        public bool Any(Expression<Func<TEntity, bool>> predicate);
     }
 }

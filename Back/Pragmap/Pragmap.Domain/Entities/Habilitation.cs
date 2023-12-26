@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Pragmap.Domain.Models
+namespace Pragmap.Domain.Entities
 {
     public class Habilitation
     {
