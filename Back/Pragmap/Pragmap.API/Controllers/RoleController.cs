@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Pragmap.Domain.Models;
+using Pragmap.Domain.Entities;
 using Pragmap.Infrastructure.Context;
 using Pragmap.Infrastructure.UnitOfWork;
 

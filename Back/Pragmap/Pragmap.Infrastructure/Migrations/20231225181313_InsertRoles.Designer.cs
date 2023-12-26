@@ -12,8 +12,8 @@ using Pragmap.Infrastructure.Context;
 namespace Pragmap.Infrastructure.Migrations
 {
     [DbContext(typeof(PragmapContext))]
-    [Migration("20231221222854_Migartion")]
-    partial class Migartion
+    [Migration("20231225181313_InsertRoles")]
+    partial class InsertRoles
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -25,7 +25,7 @@ namespace Pragmap.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Pragmap.Controllers.Models.User", b =>
+            modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -53,12 +53,16 @@ namespace Pragmap.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Username")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("text");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -129,10 +133,6 @@ namespace Pragmap.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Description")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -167,7 +167,7 @@ namespace Pragmap.Infrastructure.Migrations
             modelBuilder.Entity("Pragmap.Domain.Models.Client", b =>
                 {
                     b.HasOne("Pragmap.Domain.Models.Habilitation", null)
-                        .WithMany("clients")
+                        .WithMany("Clients")
                         .HasForeignKey("HabilitationId");
                 });
 
@@ -178,7 +178,7 @@ namespace Pragmap.Infrastructure.Migrations
                         .HasForeignKey("ClientId");
 
                     b.HasOne("Pragmap.Domain.Models.Habilitation", null)
-                        .WithMany("roadMaps")
+                        .WithMany("RoadMaps")
                         .HasForeignKey("HabilitationId");
                 });
 
@@ -190,7 +190,7 @@ namespace Pragmap.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Pragmap.Controllers.Models.User", "User")
+                    b.HasOne("Pragmap.Controllers.Entities.User", "User")
                         .WithMany("UserRoles")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -201,7 +201,7 @@ namespace Pragmap.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Pragmap.Controllers.Models.User", b =>
+            modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
                 {
                     b.Navigation("UserRoles");
                 });
@@ -213,9 +213,9 @@ namespace Pragmap.Infrastructure.Migrations
 
             modelBuilder.Entity("Pragmap.Domain.Models.Habilitation", b =>
                 {
-                    b.Navigation("clients");
+                    b.Navigation("Clients");
 
-                    b.Navigation("roadMaps");
+                    b.Navigation("RoadMaps");
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Models.Role", b =>

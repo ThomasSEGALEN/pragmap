@@ -1,11 +1,17 @@
-﻿using Pragmap.Controllers.Models;
+﻿using Pragmap.Controllers.Entities;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Runtime.Serialization;
 
-namespace Pragmap.Domain.Models
+namespace Pragmap.Domain.Entities
 {
     public class Role
     {
+        public const string ADMINISTRATEUR = "Administrateur";
+        public const string GESTIONNAIRE = "Gestionnaire";
+        public const string LECTEUR = "Lecteur";
+        public const string EDITEUR = "Editeur";
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid Id { get; set; }
@@ -13,8 +19,6 @@ namespace Pragmap.Domain.Models
         [Required]
         [MaxLength(50)]
         public string Name { get; set; }
-
-        public string Description { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; }
     }
