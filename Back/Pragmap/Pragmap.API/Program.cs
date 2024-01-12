@@ -28,6 +28,16 @@ builder.Services.AddDbContext<PragmapContext>(options =>
     options.UseNpgsql(builder.Configuration["DbSettings:ConnectionString"])
 );
 
+builder.Services.AddCors(options =>
+{
+		options.AddPolicy("AllowSpecificOrigin",
+				builder => builder
+						.WithOrigins("http://localhost:4173", "http://localhost:5173")
+						.AllowAnyHeader()
+						.AllowAnyMethod()
+						.AllowCredentials());
+});
+
 var app = builder.Build();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
@@ -43,5 +53,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();
+
+app.UseCors("AllowSpecificOrigin");
 
 app.Run();
