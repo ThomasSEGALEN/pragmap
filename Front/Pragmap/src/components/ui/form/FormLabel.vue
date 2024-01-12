@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils'
 defineOptions({
   inheritAttrs: false
 })
-// const props = 
+// const props =
 defineProps<LabelProps>()
 
 const { error, formItemId } = useFormField()

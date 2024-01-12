@@ -13,7 +13,7 @@ import { Loader2 } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
-// const props = 
+// const props =
 defineProps({
   token: {
     type: String,
