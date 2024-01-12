@@ -13,7 +13,8 @@ import { Loader2 } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
-const props = defineProps({
+// const props = 
+defineProps({
   token: {
     type: String,
     required: true
@@ -42,7 +43,7 @@ const formSchema = toTypedSchema(
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: formSchema
 })
-const onSubmit = handleSubmit(async (values) => {
+const onSubmit = handleSubmit(async (/*values*/) => {
   try {
     //TODO: Update user password
     // await api.post('/auth/reset-password', {

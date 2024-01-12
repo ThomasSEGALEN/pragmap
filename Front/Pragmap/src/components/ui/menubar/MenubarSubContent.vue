@@ -12,7 +12,8 @@ const props = withDefaults(defineProps<MenubarSubContentProps & { class?: string
   alignOffset: 0
 })
 
-const emits = defineEmits<MenubarSubContentEmits>()
+// const emits = 
+defineEmits<MenubarSubContentEmits>()
 </script>
 
 <template>
