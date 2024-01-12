@@ -26,7 +26,7 @@ namespace Pragmap.API.Application.Commands.Auth
         {
             if (!User.IsValidEmail(request.Email))
             {
-                return Task.FromResult(CommandResult<AuthTokensDto>.Failed("Le format de l'adresse mail est invalide"));
+                return Task.FromResult(CommandResult<AuthTokensDto>.Failed("Le format de l'adresse e-mail est invalide"));
             }
 
             IBaseRepository<User> userRepository = _unitOfWork.GetRepository<User>();
@@ -35,7 +35,7 @@ namespace Pragmap.API.Application.Commands.Auth
             
             if(user == null)
             {
-                return Task.FromResult(CommandResult<AuthTokensDto>.Failed("Adresse mail ou mot de passe incorrect"));
+                return Task.FromResult(CommandResult<AuthTokensDto>.Failed("Adresse e-mail ou mot de passe incorrect"));
             }
 
             var authClaims = new List<Claim>
