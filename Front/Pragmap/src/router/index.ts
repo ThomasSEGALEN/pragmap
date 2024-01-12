@@ -1,23 +1,100 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { useAuthStore } from '@/stores'
+import authMiddleware from '@/middlewares/auth'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
+      path: '/users',
+      name: 'users-index',
+      component: () => import('@/views/users/Index.vue'),
+      beforeEnter: authMiddleware,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/users/create',
+      name: 'users-create',
+      component: () => import('@/views/users/Create.vue'),
+      beforeEnter: authMiddleware,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/users/:id/edit',
+      name: 'users-edit',
+      component: () => import('@/views/users/Edit.vue'),
+      beforeEnter: (to, from, next) => {
+        authMiddleware
+
+        if (isNaN(Number(to.params.id))) return next({ name: 'home' })
+
+        return next()
+      },
+      meta: { requiresAuth: true },
+      props: ({ params }) => ({
+        id: Number(params.id)
+      })
+    },
+    {
       path: '/',
       name: 'home',
-      component: HomeView
+      component: () => import('@/views/Home.vue'),
+      beforeEnter: authMiddleware,
+      meta: { requiresAuth: true }
     },
     {
       path: '/about',
       name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/AboutView.vue')
+      component: () => import('@/views/About.vue'),
+      beforeEnter: authMiddleware,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/logout',
+      name: 'logout',
+      redirect: () => {
+        const authStore = useAuthStore()
+
+        authStore.logout()
+
+        return { name: 'login' }
+      },
+      beforeEnter: authMiddleware,
+      meta: { requiresAuth: true }
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/views/Login.vue')
+    },
+    {
+      path: '/forgot-password',
+      name: 'forgot-password',
+      component: () => import('@/views/ForgotPassword.vue')
+    },
+    {
+      path: '/reset-password/:token',
+      name: 'reset-password',
+      component: () => import('@/views/ResetPassword.vue'),
+      props: true
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      name: 'not-found',
+      component: () => import('@/views/NotFound.vue')
     }
   ]
+})
+
+router.beforeEach((to, from, next) => {
+  const authStore = useAuthStore()
+  const isAuthenticated = authStore.isAuthenticated
+  const requiresAuth = to.meta.requiresAuth
+
+  if (!isAuthenticated && requiresAuth) return next({ name: 'login' })
+  if (isAuthenticated && !requiresAuth) return next({ name: 'home' })
+
+  return next()
 })
 
 export default router
