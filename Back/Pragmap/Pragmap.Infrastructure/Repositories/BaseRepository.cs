@@ -35,7 +35,7 @@ namespace Pragmap.Infrastructure.Repositories
             return _dbSet.AsEnumerable();
         }
 
-        public TEntity Single(int id)
+        public TEntity? Single(Guid id)
         {
             return _dbSet.Find(id);
         }
@@ -53,7 +53,7 @@ namespace Pragmap.Infrastructure.Repositories
             _dbSet.Add(entity);
         }
 
-        public virtual void Delete(int id)
+        public virtual void Delete(Guid id)
         {
             TEntity entityToDelete = _dbSet.Find(id);
             Delete(entityToDelete);
