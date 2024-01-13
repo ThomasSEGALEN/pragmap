@@ -25,6 +25,12 @@ namespace Pragmap.API.Controllers
             return _unitOfWork.GetRepository<User>().GetAll();
         }
 
+        [HttpGet("{id}")]
+        public User? Get(Guid id)
+        {
+            return _unitOfWork.GetRepository<User>().Single(id);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateUserCommand createUserCommand)
         {
