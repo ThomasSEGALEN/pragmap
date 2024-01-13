@@ -32,7 +32,10 @@ namespace Pragmap.Controllers.Entities
 
         public DateTime ModifiedDate { get; set; }
 
+        [JsonIgnore]
         public string? RefreshToken { get; set; }
+
+        [JsonIgnore]
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
         public virtual ICollection<UserRole> UserRoles { get; set; }
