@@ -25,6 +25,7 @@
     "axios": "^1.6.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
+    "jwt-decode": "^4.0.0",
     "lucide-vue-next": "^0.307.0",
     "pinia": "^2.1.7",
     "radix-vue": "^1.2.6",
