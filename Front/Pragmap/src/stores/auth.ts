@@ -19,10 +19,11 @@ export const useAuthStore = defineStore('auth', {
 				password: password
 			})
 			const { accessToken } = response.data
+			const userId = jwtDecode<{ nameid: string; }>(accessToken).nameid
 
 			this.accessToken = accessToken
 
-			await this.getUserById(jwtDecode<{ nameid: string; }>(accessToken).nameid)
+			await this.getUserById(userId)
 		},
 		logout() {
 			this.clearToken()
@@ -30,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
 		async getUserById(id: string) {
 			const response = await api.get(`/user/${id}`)
 
-			this.user = response.data.user
+			this.user = response.data
 		},
 		getToken(token: string) {
 			return this.$state[token as keyof typeof this.$state]
