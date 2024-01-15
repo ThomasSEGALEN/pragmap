@@ -12,7 +12,7 @@ using Pragmap.Infrastructure.Context;
 namespace Pragmap.Infrastructure.Migrations
 {
     [DbContext(typeof(PragmapContext))]
-    [Migration("20231225181140_InitialCreate")]
+    [Migration("20240115214627_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -31,7 +31,7 @@ namespace Pragmap.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<DateTime>("CreatedDate")
+                    b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -46,9 +46,6 @@ namespace Pragmap.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("timestamp with time zone");
-
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("text");
@@ -59,26 +56,30 @@ namespace Pragmap.Infrastructure.Migrations
                     b.Property<DateTime?>("RefreshTokenExpiryTime")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<Guid>("RoleId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
 
                     b.HasIndex("Email")
                         .IsUnique();
 
+                    b.HasIndex("RoleId");
+
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Models.Client", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.Customer", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<string>("GestionnaireUser")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<Guid?>("HabilitationId")
-                        .HasColumnType("uuid");
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Logo")
                         .IsRequired()
@@ -86,48 +87,74 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("text");
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("HabilitationId");
-
-                    b.ToTable("Client");
+                    b.ToTable("Customer");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Models.Habilitation", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.CustomerUser", b =>
+                {
+                    b.Property<Guid>("id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("id");
+
+                    b.HasIndex("CustomerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("CustomersUsers");
+                });
+
+            modelBuilder.Entity("Pragmap.Domain.Entities.RoadMap", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Data")
+                        .IsRequired()
+                        .HasColumnType("jsonb");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(255)
+                        .HasColumnType("character varying(255)");
+
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
                     b.HasKey("Id");
-
-                    b.ToTable("Habilitations");
-                });
-
-            modelBuilder.Entity("Pragmap.Domain.Models.RoadMap", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("ClientId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid?>("HabilitationId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClientId");
-
-                    b.HasIndex("HabilitationId");
 
                     b.ToTable("RoadMaps");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Models.Role", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.Role", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -143,84 +170,44 @@ namespace Pragmap.Infrastructure.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Models.UserRole", b =>
+            modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
                 {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("RoleId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserRoles");
-                });
-
-            modelBuilder.Entity("Pragmap.Domain.Models.Client", b =>
-                {
-                    b.HasOne("Pragmap.Domain.Models.Habilitation", null)
-                        .WithMany("Clients")
-                        .HasForeignKey("HabilitationId");
-                });
-
-            modelBuilder.Entity("Pragmap.Domain.Models.RoadMap", b =>
-                {
-                    b.HasOne("Pragmap.Domain.Models.Client", null)
-                        .WithMany("roadMaps")
-                        .HasForeignKey("ClientId");
-
-                    b.HasOne("Pragmap.Domain.Models.Habilitation", null)
-                        .WithMany("RoadMaps")
-                        .HasForeignKey("HabilitationId");
-                });
-
-            modelBuilder.Entity("Pragmap.Domain.Models.UserRole", b =>
-                {
-                    b.HasOne("Pragmap.Domain.Models.Role", "Role")
-                        .WithMany("UserRoles")
+                    b.HasOne("Pragmap.Domain.Entities.Role", "Role")
+                        .WithMany()
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Role");
+                });
+
+            modelBuilder.Entity("Pragmap.Domain.Entities.CustomerUser", b =>
+                {
+                    b.HasOne("Pragmap.Domain.Entities.Customer", "Customer")
+                        .WithMany("CustomerUsers")
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Pragmap.Controllers.Entities.User", "User")
-                        .WithMany("UserRoles")
+                        .WithMany("UserCustomers")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Role");
+                    b.Navigation("Customer");
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
                 {
-                    b.Navigation("UserRoles");
+                    b.Navigation("UserCustomers");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Models.Client", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.Customer", b =>
                 {
-                    b.Navigation("roadMaps");
-                });
-
-            modelBuilder.Entity("Pragmap.Domain.Models.Habilitation", b =>
-                {
-                    b.Navigation("Clients");
-
-                    b.Navigation("RoadMaps");
-                });
-
-            modelBuilder.Entity("Pragmap.Domain.Models.Role", b =>
-                {
-                    b.Navigation("UserRoles");
+                    b.Navigation("CustomerUsers");
                 });
 #pragma warning restore 612, 618
         }

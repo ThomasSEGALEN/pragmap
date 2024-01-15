@@ -11,7 +11,7 @@ namespace Pragmap.API.Application.Commands
         public string Password { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public IEnumerable<Role> Roles { get; set; }
+        public Role Role { get; set; }
 
     }
 }

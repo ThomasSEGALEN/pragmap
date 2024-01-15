@@ -48,7 +48,7 @@ namespace Pragmap.Infrastructure.Repositories
         public virtual void Add(TEntity entity)
         {
             if(entity is IDatedEntity) {
-                ((IDatedEntity)entity).CreatedDate = DateTime.Now;
+                ((IDatedEntity)entity).CreatedAt = DateTime.Now;
             }
             _dbSet.Add(entity);
         }
@@ -72,7 +72,7 @@ namespace Pragmap.Infrastructure.Repositories
         {
             if(entityToUpdate is IDatedEntity)
             {
-                ((IDatedEntity)entityToUpdate).ModifiedDate = DateTime.Now;
+                ((IDatedEntity)entityToUpdate).UpdatedAt = DateTime.Now;
             }
             _dbSet.Attach(entityToUpdate);
             _context.Entry(entityToUpdate).State = EntityState.Modified;

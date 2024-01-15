@@ -18,9 +18,8 @@ namespace Pragmap.Infrastructure.Context
 
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
-        public DbSet<UserRole> UserRoles { get; set; }
-        public DbSet<Client> Client { get; set; }
-        public DbSet<Habilitation> Habilitations { get; set; }
+        public DbSet<CustomerUser> CustomersUsers { get; set; }
+        public DbSet<Customer> Customer { get; set; }
         public DbSet<RoadMap> RoadMaps { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -28,15 +27,15 @@ namespace Pragmap.Infrastructure.Context
             base.OnModelCreating(modelBuilder);
 
             // Configuration pour la relation User-Role
-            modelBuilder.Entity<UserRole>()
+            modelBuilder.Entity<CustomerUser>()
                 .HasOne(ur => ur.User)
-                .WithMany(u => u.UserRoles)
+                .WithMany(u => u.UserCustomers)
                 .HasForeignKey(ur => ur.UserId);
 
-            modelBuilder.Entity<UserRole>()
-                .HasOne(ur => ur.Role)
-                .WithMany(r => r.UserRoles)
-                .HasForeignKey(ur => ur.RoleId);
+            modelBuilder.Entity<CustomerUser>()
+                .HasOne(ur => ur.Customer)
+                .WithMany(r => r.CustomerUsers)
+                .HasForeignKey(ur => ur.CustomerId);
 
             modelBuilder.Entity<User>()
                .HasIndex(u => u.Email)

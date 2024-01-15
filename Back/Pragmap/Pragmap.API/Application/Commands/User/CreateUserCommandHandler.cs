@@ -34,9 +34,9 @@ namespace Pragmap.API.Application.Commands
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 PasswordHash = User.HashPassword(request.Password),
+                RoleId = request.Role.Id
             };
 
-            user.UserRoles = request.Roles.Select(r => new UserRole { UserId = user.Id, RoleId = r.Id }).ToList();
             _unitOfWork.GetRepository<User>().Add(user);
             _unitOfWork.Complete().Wait();
 

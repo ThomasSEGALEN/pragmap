@@ -15,10 +15,10 @@ namespace Pragmap.Infrastructure.Migrations
                 columns: new[] { "Id", "Name" },
                 values: new object[,]
                 {
-                    { Guid.NewGuid(), Role.ADMINISTRATEUR },
-                    { Guid.NewGuid(), Role.GESTIONNAIRE },
-                    { Guid.NewGuid(), Role.LECTEUR },
-                    { Guid.NewGuid(), Role.EDITEUR }
+                    { Guid.NewGuid(), Role.ADMINISTRATOR },
+                    { Guid.NewGuid(), Role.MANAGER },
+                    { Guid.NewGuid(), Role.READER },
+                    { Guid.NewGuid(), Role.EDITOR }
                 });
         }
 
@@ -29,10 +29,10 @@ namespace Pragmap.Infrastructure.Migrations
                 keyColumn: "Name",
                 keyValues: new object[]
                 {
-                    Role.ADMINISTRATEUR,
-                    Role.GESTIONNAIRE,
-                    Role.LECTEUR,
-                    Role.EDITEUR
+                    Role.ADMINISTRATOR,
+                    Role.MANAGER,
+                    Role.READER,
+                    Role.EDITOR
                 });
         }
 

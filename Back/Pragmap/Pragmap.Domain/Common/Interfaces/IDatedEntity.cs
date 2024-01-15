@@ -8,7 +8,7 @@ namespace Pragmap.Domain.Common.Interfaces
 {
     public interface IDatedEntity
     {
-        DateTime CreatedDate { get; set; }
-        DateTime ModifiedDate { get; set; }
+        DateTime CreatedAt { get; set; }
+        DateTime UpdatedAt { get; set; }
     }
 }
