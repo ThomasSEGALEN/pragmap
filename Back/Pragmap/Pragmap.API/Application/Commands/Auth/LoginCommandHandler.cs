@@ -43,14 +43,9 @@ namespace Pragmap.API.Application.Commands.Auth
                new Claim(ClaimTypes.Name, string.Format("{0} {1}", user.FirstName, user.LastName)),
                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+               new Claim(ClaimTypes.Role, user.Role.Name)
             };
-            if (user.UserRoles != null && user.UserRoles.Any())
-            {
-                foreach (var userRole in user.UserRoles)
-                {
-                    authClaims.Add(new Claim(ClaimTypes.Role, userRole.Role.Name));
-                }
-            }
+
             string token = GenerateToken(authClaims);
             string refreshToken = Guid.NewGuid().ToString();
 

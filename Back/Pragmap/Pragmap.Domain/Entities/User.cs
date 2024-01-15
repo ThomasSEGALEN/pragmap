@@ -28,9 +28,9 @@ namespace Pragmap.Controllers.Entities
 
         public string LastName { get; set; }
 
-        public DateTime CreatedDate { get; set; }
+        public DateTime CreatedAt { get; set; }
 
-        public DateTime ModifiedDate { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         [JsonIgnore]
         public string? RefreshToken { get; set; }
@@ -38,7 +38,11 @@ namespace Pragmap.Controllers.Entities
         [JsonIgnore]
         public DateTime? RefreshTokenExpiryTime { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
+        public Guid RoleId { get; set; }
+
+        public virtual Role Role { get; set; }
+
+        public virtual ICollection<CustomerUser>? UserCustomers { get; set; }
 
         public static string HashPassword(string password)
         {

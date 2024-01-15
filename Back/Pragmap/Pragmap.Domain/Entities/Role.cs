@@ -7,10 +7,10 @@ namespace Pragmap.Domain.Entities
 {
     public class Role
     {
-        public const string ADMINISTRATEUR = "Administrateur";
-        public const string GESTIONNAIRE = "Gestionnaire";
-        public const string LECTEUR = "Lecteur";
-        public const string EDITEUR = "Editeur";
+        public const string ADMINISTRATOR = "Administrateur";
+        public const string MANAGER = "Gestionnaire";
+        public const string READER = "Lecteur";
+        public const string EDITOR = "Editeur";
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
@@ -20,6 +20,5 @@ namespace Pragmap.Domain.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
-        public virtual ICollection<UserRole> UserRoles { get; set; }
     }
 }
