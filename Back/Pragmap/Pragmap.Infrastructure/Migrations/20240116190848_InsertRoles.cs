@@ -8,6 +8,7 @@ namespace Pragmap.Infrastructure.Migrations
     /// <inheritdoc />
     public partial class InsertRoles : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.InsertData(
@@ -35,6 +36,5 @@ namespace Pragmap.Infrastructure.Migrations
                     Role.EDITOR
                 });
         }
-
     }
 }

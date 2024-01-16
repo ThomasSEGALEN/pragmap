@@ -22,6 +22,11 @@ namespace Pragmap.Infrastructure.Context
         public DbSet<Customer> Customer { get; set; }
         public DbSet<RoadMap> RoadMaps { get; set; }
 
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.UseLazyLoadingProxies();
+
+        }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -37,9 +42,18 @@ namespace Pragmap.Infrastructure.Context
                 .WithMany(r => r.CustomerUsers)
                 .HasForeignKey(ur => ur.CustomerId);
 
-            modelBuilder.Entity<User>()
-               .HasIndex(u => u.Email)
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasIndex(u => u.Email)
                .IsUnique();
+                entity.HasOne(u => u.Role).WithMany(r => r.Users).HasForeignKey(u => u.RoleId);
+            });
+            
+            modelBuilder.Entity<Role>(entity =>
+            {
+                entity.HasMany(u => u.Users).WithOne(r => r.Role).HasForeignKey(u => u.RoleId);
+            });
+             
         }
     }
 }

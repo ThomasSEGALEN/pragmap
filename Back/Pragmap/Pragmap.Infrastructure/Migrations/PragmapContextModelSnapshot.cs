@@ -18,6 +18,9 @@ namespace Pragmap.Infrastructure.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "7.0.14")
+                .HasAnnotation("Proxies:ChangeTracking", false)
+                .HasAnnotation("Proxies:CheckEquality", false)
+                .HasAnnotation("Proxies:LazyLoading", true)
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -170,7 +173,7 @@ namespace Pragmap.Infrastructure.Migrations
             modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
                 {
                     b.HasOne("Pragmap.Domain.Entities.Role", "Role")
-                        .WithMany()
+                        .WithMany("Users")
                         .HasForeignKey("RoleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -205,6 +208,11 @@ namespace Pragmap.Infrastructure.Migrations
             modelBuilder.Entity("Pragmap.Domain.Entities.Customer", b =>
                 {
                     b.Navigation("CustomerUsers");
+                });
+
+            modelBuilder.Entity("Pragmap.Domain.Entities.Role", b =>
+                {
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
