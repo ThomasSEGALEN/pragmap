@@ -30,12 +30,12 @@ builder.Services.AddDbContext<PragmapContext>(options =>
 
 builder.Services.AddCors(options =>
 {
-		options.AddPolicy("AllowSpecificOrigin",
-				builder => builder
-            .WithOrigins("http://localhost:4173", "http://localhost:5173")
-						.AllowAnyHeader()
-						.AllowAnyMethod()
-            .AllowCredentials());
+	options.AddPolicy("AllowSpecificOrigin",
+		builder => builder
+        .WithOrigins("http://localhost:4173", "http://localhost:5173")
+		.AllowAnyHeader()
+		.AllowAnyMethod()
+        .AllowCredentials());
 });
 
 var app = builder.Build();
