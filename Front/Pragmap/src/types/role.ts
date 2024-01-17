@@ -1,6 +1,5 @@
 export interface IRole {
 	id: string;
 	name: string;
-	createdAt: string;
-	updatedAt: string;
+	userId: Array<string>; // users: Array<IUser>;
 }

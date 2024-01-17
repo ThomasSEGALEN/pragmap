@@ -4,6 +4,5 @@ export interface ICustomer {
 	logo: string;
 	createdAt: string;
 	updatedAt: string;
-	managerId: string;
-	authorizationId: string[];
+	userId: Array<string>; // users: Array<IUser>;
 }

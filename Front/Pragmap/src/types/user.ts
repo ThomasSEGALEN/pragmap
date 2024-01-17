@@ -8,6 +8,6 @@ export interface IUser {
 	updatedAt: string;
 	refreshToken: string;
 	refreshTokenExpiresAt: string;
-	roleId: string;
-	authorizationId: string[];
+	roleId: string; // role: IRole;
+	customerId: Array<string>; // customers: Array<ICustomer>
 }
