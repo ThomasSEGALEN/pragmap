@@ -36,7 +36,7 @@ namespace Pragmap.Controllers.Entities
         public string? RefreshToken { get; set; }
 
         [JsonIgnore]
-        public DateTime? RefreshTokenExpiryTime { get; set; }
+        public DateTime? RefreshTokenExpiresAt { get; set; }
 
         public Guid RoleId { get; set; }
 
