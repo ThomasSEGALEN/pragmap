@@ -43,9 +43,14 @@ api.interceptors.response.use(
 		return response
 	},
 	(error) => {
-		if (error.response.status !== 401) {
+		if (error.response.status === 400) {
+			throw new Error('400 Bad Request')
+		}
+		if (error.response.status === 401) {
 			authStore.logout()
 			router.push('/login')
+
+			throw new Error('401 Unauthorized')
 		}
 	}
 )
