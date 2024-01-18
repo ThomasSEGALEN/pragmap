@@ -2,9 +2,6 @@ import '@/assets/main.css'
 import axios from 'axios'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { library } from '@fortawesome/fontawesome-svg-core'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faMoon, faSun, faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import App from '@/App.vue'
 import router from '@/router'
 import { useAuthStore } from '@/stores'
@@ -14,9 +11,6 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
-
-app.component('FontAwesomeIcon', FontAwesomeIcon)
-library.add(faMoon, faSun, faPaperPlane)
 
 app.mount('#app')
 
