@@ -1,8 +1,5 @@
 <script setup lang="ts">
-import {
-  DropdownMenuSubTrigger,
-  type DropdownMenuSubTriggerProps,
-} from 'radix-vue'
+import { DropdownMenuSubTrigger, type DropdownMenuSubTriggerProps } from 'radix-vue'
 import { ChevronRight } from 'lucide-vue-next'
 import { cn } from '@/lib/utils'
 
@@ -15,8 +12,8 @@ const props = defineProps<DropdownMenuSubTriggerProps & { class?: string }>()
     :class="[
       cn(
         'flex cursor-default select-none items-center rounded-sm px-2 py-1.5 text-sm outline-none focus:bg-accent data-[state=open]:bg-accent',
-        props.class,
-      ),
+        props.class
+      )
     ]"
   >
     <slot />
