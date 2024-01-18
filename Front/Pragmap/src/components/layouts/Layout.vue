@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useColorMode } from '@vueuse/core'
 import { Button } from '@/components/ui/button'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Moon, Sun } from 'lucide-vue-next'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/navigation-menu'
 import { RouterLink } from 'vue-router'
 import { Toaster } from '@/components/ui/toast'
+
 
 const mode = useColorMode()
 const switchMode = () => {
@@ -138,8 +139,8 @@ const components: { title: string; href: string; description: string }[] = [
       </NavigationMenu>
 
       <Button class="" variant="outline" size="icon" @click="switchMode">
-        <FontAwesomeIcon v-if="mode === 'light'" icon="fa-solid fa-sun" />
-        <FontAwesomeIcon v-if="mode === 'dark'" icon="fa-solid fa-moon" />
+        <Sun v-if="mode === 'light'" class="w-4 h-4" />
+        <Moon v-if="mode === 'dark'" class="w-4 h-4" />
       </Button>
     </header>
 
