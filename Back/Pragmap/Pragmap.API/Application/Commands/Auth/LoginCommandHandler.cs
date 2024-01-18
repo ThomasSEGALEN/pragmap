@@ -50,7 +50,7 @@ namespace Pragmap.API.Application.Commands.Auth
             string refreshToken = Guid.NewGuid().ToString();
 
             user.RefreshToken = refreshToken;
-            user.RefreshTokenExpiryTime = DateTime.UtcNow.AddMonths(6);
+            user.RefreshTokenExpiresAt = DateTime.UtcNow.AddMonths(6);
 
             userRepository.Update(user);
             _unitOfWork.Complete().Wait();

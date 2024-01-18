@@ -1,15 +1,15 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Pragmap.API.Application.Commands;
 using Pragmap.Controllers.Entities;
 using Pragmap.Infrastructure.UnitOfWork;
 
 namespace Pragmap.API.Controllers
 {
-    [ApiController]
-    [Route("[controller]")]
-    public class UserController : Controller
+    public class UserController : ODataController
     {
         private readonly IMediator _mediatR;
         private readonly IUnitOfWork _unitOfWork;
@@ -19,16 +19,16 @@ namespace Pragmap.API.Controllers
             _unitOfWork = unitOfWork;
         }
 
-        [HttpGet]
+        [EnableQuery]
         public IEnumerable<User> Get()
         {
             return _unitOfWork.GetRepository<User>().GetAll();
         }
 
-        [HttpGet("{id}")]
-        public User? Get(Guid id)
+        [EnableQuery]
+        public User? Get([FromRoute] Guid key)
         {
-            return _unitOfWork.GetRepository<User>().Single(id);
+            return _unitOfWork.GetRepository<User>().Single(key);
         }
 
         [HttpPost]
@@ -42,11 +42,10 @@ namespace Pragmap.API.Controllers
             return BadRequest(result.Error);
         }
 
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(Guid id)
+        public async Task<IActionResult> Delete([FromRoute] Guid key)
         {
             var userRepository = _unitOfWork.GetRepository<User>();
-            User? user = userRepository.Single(u => u.Id.Equals(id));
+            User? user = userRepository.Single(u => u.Id.Equals(key));
             if (user == null)
             {
                 return BadRequest();
