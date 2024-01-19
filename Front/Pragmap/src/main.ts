@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import App from '@/App.vue'
 import router from '@/router'
 import { useAuthStore } from '@/stores'
+import { authService } from './services'
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -41,10 +42,21 @@ api.interceptors.response.use(
 			throw new Error('400 Bad Request')
 		}
 		if (error.response.status === 401) {
-			authStore.logout()
-			router.push('/login')
+			const refreshToken = authStore.getToken('refreshToken')
 
-			throw new Error('401 Unauthorized')
+			if (!refreshToken) {
+				authStore.logout()
+				router.push('/login')
+
+				throw new Error('401 Unauthorized')
+			}
+
+			authService.refreshToken(refreshToken)
 		}
+		if (error.response.status === 404) {
+			throw new Error('404 Not Found')
+		}
+
+		return Promise.reject(error);
 	}
 )

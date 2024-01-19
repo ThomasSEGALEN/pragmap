@@ -1,43 +1,49 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
-import { api } from '@/main'
-import type { IUser } from '@/types'
 import { jwtDecode } from 'jwt-decode'
+import { authService, userService } from '@/services'
+import type { IAuth, IUser } from '@/types'
 
 export const useAuthStore = defineStore('auth', {
-  state: () => ({
-    user: useLocalStorage<Omit<IUser, 'password'>>('user', null),
-    accessToken: useLocalStorage('accessToken', '')
-  }),
-  getters: {
-    isAuthenticated: (state) => !!state.accessToken
-  },
-  actions: {
-    async login(email: string, password: string) {
-      const response = await api.post('/auth/login', {
-        email: email,
-        password: password
-      })
-      const { accessToken } = response.data
-      const userId = jwtDecode<{ nameid: string }>(accessToken).nameid
+	state: () => ({
+		user: useLocalStorage<Omit<IUser, 'password'> | null>('user', null),
+		accessToken: useLocalStorage<string | null>('accessToken', null),
+		refreshToken: useLocalStorage<string | null>('refreshToken', null),
+	}),
+	getters: {
+		isAuthenticated: (state) => !!state.accessToken
+	},
+	actions: {
+		async login(email: string, password: string) {
+			const { accessToken, refreshToken } = await authService.login(email, password)
 
-      this.accessToken = accessToken
+			await this.getUser(accessToken)
 
-      await this.getUserById(userId)
-    },
-    logout() {
-      this.clearToken()
-    },
-    async getUserById(id: string) {
-      const response = await api.get(`/user/${id}`)
+			this.setToken(accessToken, refreshToken)
+		},
+		logout() {
+			this.user = null
+			this.accessToken = null
+			this.refreshToken = null
+		},
+		async getUser(accessToken: string) {
+			const userId = jwtDecode<{ nameid: string }>(accessToken).nameid
 
-      this.user = response.data
-    },
-    getToken(token: string) {
-      return this.$state[token as keyof typeof this.$state]
-    },
-    clearToken() {
-      this.accessToken = ''
-    }
-  }
+			this.user = await userService.getById(userId)
+		},
+		getToken(token: keyof IAuth) {
+			return this.$state[token]
+		},
+		setToken(accessToken: string, refreshToken: string) {
+			this.accessToken = accessToken
+			this.refreshToken = refreshToken
+		},
+		async resetToken(token: string) {
+			const { accessToken, refreshToken } = await authService.refreshToken(token)
+
+			await this.getUser(accessToken)
+
+			this.setToken(accessToken, refreshToken)
+		}
+	}
 })
