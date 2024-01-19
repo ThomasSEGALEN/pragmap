@@ -1,4 +1,4 @@
-import type { ICustomer, IRole } from "@/types"
+import type { ICustomer } from "@/types"
 
 export interface IUser {
 	id: string
@@ -10,10 +10,30 @@ export interface IUser {
 	updatedAt: string
 	refreshToken: string
 	refreshTokenExpiresAt: string
-	role: IRole;
+	role: string
 	customers: Array<ICustomer>
 }
 
-export interface IPostUser extends Pick<IUser, 'lastName' | 'firstName' | 'email' | 'password' | 'role'> { }
+export interface IPostUser {
+	lastName: string
+	firstName: string
+	email: string
+	password: string
+	role: string
+}
 
-export interface IPutUser extends Pick<IUser, 'lastName' | 'firstName' | 'email' | 'role'> { }
+export interface IPutUser {
+	lastName: string
+	firstName: string
+	email: string
+	password?: string
+	role: string
+}
+
+export interface IDisplayUser {
+	id: string
+	lastName: string
+	firstName: string
+	email: string
+	role: string
+}
