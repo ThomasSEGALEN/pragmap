@@ -9,12 +9,11 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Loader2 } from 'lucide-vue-next'
+import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
-// const props =
-defineProps({
+const { token } = defineProps({
   token: {
     type: String,
     required: true
@@ -43,13 +42,13 @@ const formSchema = toTypedSchema(
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: formSchema
 })
-const onSubmit = handleSubmit(async (/*values*/) => {
+const onSubmit = handleSubmit(async (values) => {
   try {
     //TODO: Update user password
     // await api.post('/auth/reset-password', {
     // 	password: values.password,
     // 	passwordConfirmation: values.passwordConfirmation,
-    // 	token: props.token
+    // 	token: token
     // })
 
     router.push('/login')
@@ -97,7 +96,7 @@ const onSubmit = handleSubmit(async (/*values*/) => {
 
           <div class="flex flex-col sm:flex-row justify-between">
             <Button v-if="!isSubmitting" type="submit">
-              <FontAwesomeIcon class="mr-2" icon="fa-solid fa-paper-plane" />
+              <Send class="w-4 h-4 mr-2" />
               Réinitialiser
             </Button>
             <Button v-else type="disabled">
