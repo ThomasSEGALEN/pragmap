@@ -42,6 +42,17 @@ namespace Pragmap.API.Controllers
             return BadRequest(result.Error);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> Update([FromBody] UpdateUserCommand updateUserCommand)
+        {
+            var result = await _mediatR.Send(updateUserCommand);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Error);
+        }   
+
         public async Task<IActionResult> Delete([FromRoute] Guid key)
         {
             var userRepository = _unitOfWork.GetRepository<User>();
