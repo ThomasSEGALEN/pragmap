@@ -27,5 +27,16 @@ namespace Pragmap.API.Controllers
             }
             return BadRequest(result.Error);
         }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken(RefreshTokenCommand refreshTokenCommand)
+        {
+            var result = await _mediatR.Send(refreshTokenCommand);
+            if (result.IsSuccess)
+            {
+                return Ok(result.Data);
+            }
+            return BadRequest(result.Error);
+        }
     }
 }
