@@ -1,8 +1,7 @@
-import router from "@/router"
 import { api } from "@/main"
 import type { IDisplayUser } from "@/types"
 
-export interface OData<TValue> {
+interface OData<TValue> {
 	value: TValue
 }
 
@@ -16,8 +15,8 @@ interface GetAllOptions {
 }
 
 export interface IBaseService<T, S, U> {
-	getAll(options: GetAllOptions): Promise<OData<T[]>>
-	getById(id: string): Promise<T>
+	getAll(options: GetAllOptions): Promise<T[] | void>
+	getById(id: string): Promise<OData<T>>
 	create(data: S): Promise<void>
 	update(id: string, data: U): Promise<void>
 	delete(id: string): Promise<void>
@@ -25,11 +24,9 @@ export interface IBaseService<T, S, U> {
 
 export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 	private apiPath: string;
-	private routerPath: string;
 
-	constructor(apiPath: string, routerPath: string) {
+	constructor(apiPath: string) {
 		this.apiPath = apiPath
-		this.routerPath = routerPath
 	}
 
 	private applyOptions(options?: GetAllOptions): string {
@@ -59,33 +56,39 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		return parameters
 	}
 
-	async getAll(options?: GetAllOptions): Promise<OData<T[]>> {
-		const response = await api.get(`/${this.apiPath}${options ? this.applyOptions(options) : null}`)
+	async getAll(options?: GetAllOptions): Promise<T[] | void> {
+		try {
+			const response = await api.get(`/${this.apiPath}${options ? this.applyOptions(options) : null}`)
 
-		return response.data as OData<T[]>
+			return response.data.value as T[]
+		} catch (error) {
+			console.log('getAllUsers Error: ', error)
+		}
 	}
 
-	async getById(id: string): Promise<T> {
+	async getById(id: string): Promise<OData<T>> {
 		const response = await api.get(`/${this.apiPath}/${id}`)
 
-		return response.data as T
+		return response.data as OData<T>
 	}
 
 	async create(data: S): Promise<void> {
-		await api.post(`/${this.apiPath}`, data)
-
-		router.push(`/${this.routerPath}`)
+		try {
+			await api.post(`/${this.apiPath}`, data)
+		} catch (error) {
+			console.log('createUser Error: ', error)
+		}
 	}
 
 	async update(id: string, data: U): Promise<void> {
 		await api.put(`/${this.apiPath}/${id}`, data)
-
-		router.push(`/${this.routerPath}`)
 	}
 
 	async delete(id: string): Promise<void> {
-		await api.delete(`/${this.apiPath}/${id}`)
-
-		router.push(`/${this.routerPath}`)
+		try {
+			await api.delete(`/${this.apiPath}/${id}`)
+		} catch (error) {
+			console.log('deleteUser Error: ', error)
+		}
 	}
 }
