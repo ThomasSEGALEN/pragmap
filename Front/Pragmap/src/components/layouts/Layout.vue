@@ -14,7 +14,6 @@ import {
 import { RouterLink } from 'vue-router'
 import { Toaster } from '@/components/ui/toast'
 
-
 const mode = useColorMode()
 const switchMode = () => {
   mode.value = mode.value === 'light' ? 'dark' : 'light'

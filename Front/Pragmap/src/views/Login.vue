@@ -10,7 +10,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Loader2 } from 'lucide-vue-next'
+import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
@@ -75,7 +75,7 @@ const onSubmit = handleSubmit(async (values) => {
 
           <div class="flex flex-col sm:flex-row justify-between">
             <Button v-if="!isSubmitting" type="submit">
-              <FontAwesomeIcon class="mr-2" icon="fa-solid fa-paper-plane" />
+              <Send class="w-4 h-4 mr-2" />
               Se connecter
             </Button>
             <Button v-else type="disabled">
