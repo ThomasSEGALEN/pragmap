@@ -19,7 +19,10 @@ export interface IPostUser {
 	firstName: string
 	email: string
 	password: string
-	role: string
+	role: {
+		id: string
+		name: string
+	}
 }
 
 export interface IPutUser {

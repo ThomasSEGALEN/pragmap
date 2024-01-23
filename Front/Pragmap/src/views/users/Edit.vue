@@ -1,12 +1,7 @@
 <script setup lang="ts">
 import { Layout } from '@/components/layouts'
 
-defineProps({
-  id: {
-    type: Number,
-    required: true
-  }
-})
+defineProps<{ id: string }>()
 </script>
 
 <template>
