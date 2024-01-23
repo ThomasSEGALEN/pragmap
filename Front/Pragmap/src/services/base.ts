@@ -16,7 +16,7 @@ interface GetAllOptions {
 
 export interface IBaseService<T, S, U> {
 	getAll(options: GetAllOptions): Promise<T[] | void>
-	getById(id: string): Promise<OData<T>>
+	getById(id: string): Promise<T>
 	create(data: S): Promise<void>
 	update(id: string, data: U): Promise<void>
 	delete(id: string): Promise<void>
@@ -66,10 +66,10 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		}
 	}
 
-	async getById(id: string): Promise<OData<T>> {
+	async getById(id: string): Promise<T> {
 		const response = await api.get(`/${this.apiPath}/${id}`)
 
-		return response.data as OData<T>
+		return response.data.value as T
 	}
 
 	async create(data: S): Promise<void> {
