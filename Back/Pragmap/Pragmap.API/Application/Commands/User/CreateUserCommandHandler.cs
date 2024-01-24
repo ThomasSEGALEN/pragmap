@@ -18,12 +18,12 @@ namespace Pragmap.API.Application.Commands
 
         public Task<CommandResult<User>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            if(!User.IsValidEmail(request.Email))
+            if (!User.IsValidEmail(request.Email))
             {
                 return Task.FromResult(CommandResult<User>.Failed("Le format de l'adresse e-mail est invalide"));
             }
 
-            if(_unitOfWork.GetRepository<User>().Any(u => u.Email.Equals(request.Email)))
+            if (_unitOfWork.GetRepository<User>().Any(u => u.Email.Equals(request.Email)))
             {
                 return Task.FromResult(CommandResult<User>.Failed("Un utilisateur avec cette adresse e-mail existe déjà"));
             }
@@ -34,13 +34,13 @@ namespace Pragmap.API.Application.Commands
                 FirstName = request.FirstName,
                 LastName = request.LastName,
                 PasswordHash = User.HashPassword(request.Password),
-                RoleId = request.Role.Id
+                RoleId = request.RoleId
             };
 
             _unitOfWork.GetRepository<User>().Add(user);
             _unitOfWork.Complete().Wait();
 
-            return Task.FromResult(CommandResult<User>.Success(user));   
+            return Task.FromResult(CommandResult<User>.Success(user));
         }
     }
 }

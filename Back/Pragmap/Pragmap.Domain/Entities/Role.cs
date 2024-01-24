@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Pragmap.Domain.Entities
 {
@@ -20,6 +21,7 @@ namespace Pragmap.Domain.Entities
         [MaxLength(50)]
         public string Name { get; set; }
 
+        [JsonIgnore]
         public virtual ICollection<User>? Users { get; set; }
 
     }
