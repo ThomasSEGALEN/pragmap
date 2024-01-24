@@ -20,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
+    builder.EnableLowerCamelCase();
     builder.EntitySet<User>("User");
     builder.EntitySet<Customer>("Customer");
     return builder.GetEdmModel();
