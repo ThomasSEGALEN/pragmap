@@ -5,6 +5,7 @@ using Microsoft.OData.ModelBuilder;
 using Pragmap;
 using Pragmap.API.OperationFilters;
 using Pragmap.Controllers.Entities;
+using Pragmap.Domain.Entities;
 using Pragmap.Infrastructure.Context;
 using Pragmap.Infrastructure.Repositories;
 using Pragmap.Infrastructure.Repositories.Interfaces;
@@ -18,6 +19,7 @@ static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
     builder.EntitySet<User>("User");
+    builder.EntitySet<Customer>("Customer");
     return builder.GetEdmModel();
 }
 
@@ -39,6 +41,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<ODataOperationFilter>();
+    c.CustomOperationIds(x => string.Join("/", x.HttpMethod.ToLower(), x.RelativePath));
+
 });
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

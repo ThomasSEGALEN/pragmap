@@ -19,7 +19,7 @@ namespace Pragmap.API.Controllers
         [HttpGet]
         public IEnumerable<Role> GetAllRoles()
         {
-            return _unitOfWork.GetRepository<Role>().GetAll();
+            return _unitOfWork.GetRepository<Role>().GetAllSet();
         }
 
     }
