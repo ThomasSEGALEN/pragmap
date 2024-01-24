@@ -41,6 +41,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
     c.OperationFilter<ODataOperationFilter>();
+    c.CustomOperationIds(x => string.Join("/", x.HttpMethod.ToLower(), x.RelativePath));
+
 });
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));

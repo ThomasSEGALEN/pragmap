@@ -33,7 +33,6 @@ namespace Pragmap.API.Controllers
             return _unitOfWork.GetRepository<Customer>().Single(key);
         }
 
-        [HttpPost]
         public async Task<IActionResult> Post([FromBody] CreateCustommerCommand createCustomerCommand)
         {
             var result = await _mediatR.Send(createCustomerCommand);
@@ -44,8 +43,7 @@ namespace Pragmap.API.Controllers
             return BadRequest(result.Error);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> Put([FromBody] UpdateCustomerCommand updateCustomerCommand)
+        public async Task<IActionResult> Put(Guid key, [FromBody] UpdateCustomerCommand updateCustomerCommand)
         {
             var result = await _mediatR.Send(updateCustomerCommand);
             if (result.IsSuccess)
