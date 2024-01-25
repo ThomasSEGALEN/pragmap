@@ -1,17 +1,17 @@
 import { api } from "@/main"
-import type { IDisplayUser } from "@/types"
+import type { IUser } from "@/types"
 
-interface GetAllOptions {
-	select?: Array<keyof IDisplayUser>
+interface Options {
+	select?: Array<keyof IUser>
 	expand?: Array<string>
 	filter?: Array<string>
 	top?: number
 	skip?: number
-	orderBy?: keyof IDisplayUser
+	orderBy?: keyof IUser
 }
 
 export interface IBaseService<T, S, U> {
-	getAll(options: GetAllOptions): Promise<Array<T>>
+	getAll(options: Options): Promise<Array<T>>
 	getById(id: string): Promise<T>
 	create(data: S): Promise<void>
 	update(id: string, data: U): Promise<void>
@@ -25,7 +25,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		this.apiPath = apiPath
 	}
 
-	private applyOptions(options?: GetAllOptions): string {
+	private applyOptions(options?: Options): string {
 		let parameters = '?'
 
 		if (options) {
@@ -52,7 +52,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		return parameters
 	}
 
-	async getAll(options?: GetAllOptions): Promise<Array<T>> {
+	async getAll(options?: Options): Promise<Array<T>> {
 		try {
 			const response = await api.get(`/${this.apiPath}${options ? this.applyOptions(options) : null}`)
 
@@ -62,9 +62,9 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		}
 	}
 
-	async getById(id: string): Promise<T> {
+	async getById(id: string, options?: Options): Promise<T> {
 		try {
-			const response = await api.get(`/${this.apiPath}/${id}`)
+			const response = await api.get(`/${this.apiPath}/${id}${options ? this.applyOptions(options) : null}`)
 
 			return response.data as T
 		} catch (error) {
