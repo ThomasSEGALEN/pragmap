@@ -74,6 +74,10 @@ const onSubmit = handleSubmit(async (values) => {
           </FormField>
 
           <div class="flex flex-col sm:flex-row justify-between">
+						<Button type="button" variant="link" size="sm" as-child>
+              <RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
+            </Button>
+
             <Button v-if="!isSubmitting" type="submit">
               <Send class="w-4 h-4 mr-2" />
               Se connecter
@@ -81,10 +85,6 @@ const onSubmit = handleSubmit(async (values) => {
             <Button v-else type="disabled">
               <Loader2 class="w-4 h-4 mr-2 animate-spin" />
               Connexion...
-            </Button>
-
-            <Button type="button" variant="link" size="sm" as-child>
-              <RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
             </Button>
           </div>
         </form>

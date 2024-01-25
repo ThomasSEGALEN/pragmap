@@ -63,17 +63,17 @@ const onSubmit = handleSubmit(async (values) => {
           </FormField>
 
           <div class="flex flex-col sm:flex-row justify-between">
-            <Button v-if="!isSubmitting" type="submit">
+						<Button type="button" variant="link" size="sm" as-child>
+              <RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
+            </Button>
+
+						<Button v-if="!isSubmitting" type="submit">
               <Send class="w-4 h-4 mr-2" />
               Envoyer
             </Button>
             <Button v-else type="disabled">
               <Loader2 class="w-4 h-4 mr-2 animate-spin" />
               Envoi...
-            </Button>
-
-            <Button type="button" variant="link" size="sm" as-child>
-              <RouterLink to="/login">Retour à la connexion &#8594;</RouterLink>
             </Button>
           </div>
         </form>
