@@ -38,5 +38,27 @@ namespace Pragmap.API.Controllers
             }
             return BadRequest(result.Error);
         }
+
+        [HttpPost("forgot-password")]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordCommand forgotPasswordCommand)
+        {
+            var result = await _mediatR.Send(forgotPasswordCommand);
+            if (result.IsSuccess)
+            {
+                return Ok();
+            }
+            return BadRequest(result.Error);
+        }
+
+        [HttpPost("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordCommand resetPasswordCommand)
+        {
+            var result = await _mediatR.Send(resetPasswordCommand);
+            if (result.IsSuccess)
+            {
+                return Ok();
+            }
+            return BadRequest(result.Error);
+        }
     }
 }

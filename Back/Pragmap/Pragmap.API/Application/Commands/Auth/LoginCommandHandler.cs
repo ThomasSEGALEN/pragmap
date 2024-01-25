@@ -25,7 +25,7 @@ namespace Pragmap.API.Application.Commands.Auth
         }
         public Task<CommandResult<AuthTokensDto>> Handle(LoginCommand request, CancellationToken cancellationToken)
         {
-            if (!User.IsValidEmail(request.Email))
+            if (!ValidationHelper.IsValidEmail(request.Email))
             {
                 return Task.FromResult(CommandResult<AuthTokensDto>.Failed("Le format de l'adresse e-mail est invalide"));
             }

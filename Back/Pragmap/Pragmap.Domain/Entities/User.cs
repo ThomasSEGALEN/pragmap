@@ -43,6 +43,7 @@ namespace Pragmap.Controllers.Entities
         public virtual Role Role { get; set; }
 
         public virtual ICollection<CustomerUser>? UserCustomers { get; set; }
+        public virtual ICollection<ResetPasswordToken>? ResetPasswordTokens { get; set; }
 
         public static string HashPassword(string password)
         {
@@ -50,11 +51,5 @@ namespace Pragmap.Controllers.Entities
             var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
         }
-
-        public static bool IsValidEmail(string email)
-        {
-            return Regex.IsMatch(email, @"^([\w\.\-]+)@([\w\-]+)((\.(\w){2,3})+)$");
-        }
-
     }
 }
