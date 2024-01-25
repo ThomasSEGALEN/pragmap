@@ -38,8 +38,9 @@ import { useUserStore } from '@/stores'
 const { id } = defineProps<{
 	id: string
 }>()
-const { editUser } = useUserStore()
 const { roles } = useAuthStore()
+const userStore = useUserStore()
+const { editUser } = userStore
 const formSchema = toTypedSchema(
   z.object({
 		id: z
@@ -66,6 +67,8 @@ const { handleSubmit, isSubmitting } = useForm({
 const onSubmit = handleSubmit(async (values) => {
   try {
 		await userService.update(id, values)
+		
+		userStore.clearEditUser()
 
     router.push('/users')
   } catch (error) {
