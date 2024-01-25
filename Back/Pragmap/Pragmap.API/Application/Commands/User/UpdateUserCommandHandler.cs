@@ -21,18 +21,10 @@ namespace Pragmap.API.Application.Commands
             var userRepo = _unitOfWork.GetRepository<User>();
             var user = userRepo.Single(request.Id);
 
-            if (request.FirstName != null)
-            {
-                user.FirstName = request.FirstName;
-            }
-            if (request.LastName != null)
-            {
-                user.LastName = request.LastName;
-            }
-            if (request.RoleId != null)
-            {
-                user.RoleId = request.RoleId.Value;
-            }
+            user.Email = request.Email;
+            user.FirstName = request.FirstName;
+            user.LastName = request.LastName;
+            user.RoleId = request.RoleId.Value;
 
             userRepo.Update(user);
             await _unitOfWork.Complete();
