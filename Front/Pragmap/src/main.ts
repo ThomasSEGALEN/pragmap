@@ -57,6 +57,9 @@ api.interceptors.response.use(
 		if (error.response.status === 404) {
 			throw new Error('404 Not Found')
 		}
+		if (error.response.status === 500) {
+			throw new Error('500 Internal Server Error')
+		}
 
 		return Promise.reject(error);
 	}
