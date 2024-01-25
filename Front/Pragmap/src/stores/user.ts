@@ -1,10 +1,10 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { userService } from '@/services'
-import type { IUser } from '@/types'
+import type { IGetUser } from '@/types'
 
 interface State {
-	editUser: Omit<IUser, 'password'> | null
+	editUser: IGetUser | null
 }
 
 export const useUserStore = defineStore('user', {
@@ -13,9 +13,12 @@ export const useUserStore = defineStore('user', {
 	}),
 	actions: {
 		async getEditUserById(id: string) {
-			const user = await userService.getById(id)
+			const user = await userService.getById(id, { select: ['id', 'lastName', 'firstName', 'email', 'roleId'] })
 
-			this.editUser = user
+			this.$state.editUser = user
+		},
+		clearEditUser() {
+			this.$state.editUser = null
 		}
 	}
 })

@@ -13,6 +13,14 @@ export interface IUser {
 	roleId: string
 }
 
+export interface IGetUser {
+	id: string
+	lastName: string
+	firstName: string
+	email: string
+	roleId: string
+}
+
 export interface IPostUser {
 	lastName: string
 	firstName: string

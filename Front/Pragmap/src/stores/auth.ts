@@ -2,10 +2,10 @@ import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { jwtDecode } from 'jwt-decode'
 import { authService, roleService, userService } from '@/services'
-import type { IAuth, IRole, IUser } from '@/types'
+import type { IAuth, IGetUser, IRole } from '@/types'
 
 interface State {
-	user: Omit<IUser, 'password'> | null,
+	user: IGetUser | null,
 	roles: Array<IRole>,
 	accessToken: string,
 	refreshToken: string,
