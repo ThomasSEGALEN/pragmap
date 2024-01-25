@@ -18,7 +18,7 @@ namespace Pragmap.Infrastructure.Migrations
                 {
                     { Guid.NewGuid(), Role.ADMINISTRATOR },
                     { Guid.NewGuid(), Role.MANAGER },
-										{ Guid.NewGuid(), Role.EDITOR },
+		    { Guid.NewGuid(), Role.EDITOR },
                     { Guid.NewGuid(), Role.READER }
                 });
         }
@@ -32,7 +32,7 @@ namespace Pragmap.Infrastructure.Migrations
                 {
                     Role.ADMINISTRATOR,
                     Role.MANAGER,
-										Role.EDITOR,
+		    Role.EDITOR,
                     Role.READER
                 });
         }
