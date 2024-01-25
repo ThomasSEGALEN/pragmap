@@ -10,7 +10,7 @@ namespace Pragmap.Domain.Entities
     {
         public const string ADMINISTRATOR = "Administrateur";
         public const string MANAGER = "Gestionnaire";
-				public const string EDITOR = "Éditeur";
+	public const string EDITOR = "Éditeur";
         public const string READER = "Lecteur";
 
         [Key]
