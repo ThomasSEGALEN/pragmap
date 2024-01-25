@@ -24,7 +24,7 @@ namespace Pragmap.API.Application.Commands
             user.Email = request.Email;
             user.FirstName = request.FirstName;
             user.LastName = request.LastName;
-            user.RoleId = request.RoleId.Value;
+            user.RoleId = request.RoleId;
 
             userRepo.Update(user);
             await _unitOfWork.Complete();
