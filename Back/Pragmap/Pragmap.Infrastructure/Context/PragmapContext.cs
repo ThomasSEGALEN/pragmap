@@ -21,6 +21,7 @@ namespace Pragmap.Infrastructure.Context
         public DbSet<CustomerUser> CustomersUsers { get; set; }
         public DbSet<Customer> Customer { get; set; }
         public DbSet<RoadMap> RoadMaps { get; set; }
+        public DbSet<ResetPasswordToken> ResetPasswordTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -52,6 +53,12 @@ namespace Pragmap.Infrastructure.Context
             modelBuilder.Entity<Role>(entity =>
             {
                 entity.HasMany(u => u.Users).WithOne(r => r.Role).HasForeignKey(u => u.RoleId);
+            });
+
+            modelBuilder.Entity<ResetPasswordToken>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.Token });
+                entity.HasOne(e => e.User).WithMany(u => u.ResetPasswordTokens).HasForeignKey(e => e.UserId);
             });
              
         }

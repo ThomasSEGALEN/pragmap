@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Pragmap.API.Application.Helpers;
 using Pragmap.API.Application.Models;
 using Pragmap.Controllers.Entities;
 using Pragmap.Domain.Entities;
@@ -18,9 +19,14 @@ namespace Pragmap.API.Application.Commands
 
         public Task<CommandResult<User>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
         {
-            if (!User.IsValidEmail(request.Email))
+            if (!ValidationHelper.IsValidEmail(request.Email))
             {
                 return Task.FromResult(CommandResult<User>.Failed("Le format de l'adresse e-mail est invalide"));
+            }
+
+            if(!ValidationHelper.IsValidPassword(request.Password))
+            {
+                return Task.FromResult(CommandResult<User>.Failed("Le mot de passe doit contenir au moins 6 caractères dont une majuscule, une minuscule, un chiffre et un caractère spécial."));
             }
 
             if (_unitOfWork.GetRepository<User>().Any(u => u.Email.Equals(request.Email)))
