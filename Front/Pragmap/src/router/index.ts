@@ -28,7 +28,11 @@ const router = createRouter({
 
 				const userStore = useUserStore()
 
-				userStore.getEditUserById(to.params.id.toString())
+				try {
+					userStore.getEditUserById(to.params.id.toString())
+				} catch (error) {
+					return { name: 'Home' }
+				}
 			},
 			meta: { requiresAuth: true },
 			props: true

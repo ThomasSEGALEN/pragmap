@@ -12,8 +12,6 @@ class RoleService implements IRoleService<IRole> {
 
 			return response.data as Array<IRole>
 		} catch (error) {
-			console.error(error)
-
 			throw new Error('GetAll Error')
 		}
 	}

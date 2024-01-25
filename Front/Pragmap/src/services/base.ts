@@ -1,10 +1,6 @@
 import { api } from "@/main"
 import type { IDisplayUser } from "@/types"
 
-// interface OData<TValue> {
-// 	value: TValue
-// }
-
 interface GetAllOptions {
 	select?: Array<keyof IDisplayUser>
 	expand?: Array<string>
@@ -62,8 +58,6 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 
 			return response.data.value as Array<T>
 		} catch (error) {
-			console.error('GetAll Error: ', error)
-
 			throw new Error('GetAll Error')
 		}
 	}
@@ -74,8 +68,6 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 
 			return response.data as T
 		} catch (error) {
-			console.error('GetById Error: ', error)
-
 			throw new Error('GetById Error')
 		}
 	}
@@ -84,8 +76,6 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		try {
 			await api.post(`/${this.apiPath}`, data)
 		} catch (error) {
-			console.error('Create Error: ', error)
-
 			throw new Error('Create Error')
 		}
 	}
@@ -94,8 +84,6 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		try {
 			await api.put(`/${this.apiPath}/${id}`, data)
 		} catch (error) {
-			console.error('Update Error: ', error)
-
 			throw new Error('Update Error')
 		}
 	}
