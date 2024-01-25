@@ -18,7 +18,7 @@ const mode = useColorMode()
 const switchMode = () => {
   mode.value = mode.value === 'light' ? 'dark' : 'light'
 }
-const components: { title: string; href: string; description: string }[] = [
+const components: Array<{ title: string; href: string; description: string }> = [
   {
     title: 'Alert Dialog',
     href: '/docs/primitives/alert-dialog',
@@ -143,7 +143,7 @@ const components: { title: string; href: string; description: string }[] = [
       </Button>
     </header>
 
-    <main>
+    <main class="flex flex-col justify-center items-center">
       <slot />
     </main>
 
