@@ -54,7 +54,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 
 	async getAll(options?: Options): Promise<Array<T>> {
 		try {
-			const response = await api.get(`/${this.apiPath}${options ? this.applyOptions(options) : null}`)
+			const response = await api.get(`/${this.apiPath}${options ? this.applyOptions(options) : ''}`)
 
 			return response.data.value as Array<T>
 		} catch (error) {
@@ -64,7 +64,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 
 	async getById(id: string, options?: Options): Promise<T> {
 		try {
-			const response = await api.get(`/${this.apiPath}/${id}${options ? this.applyOptions(options) : null}`)
+			const response = await api.get(`/${this.apiPath}/${id}${options ? this.applyOptions(options) : ''}`)
 
 			return response.data as T
 		} catch (error) {
