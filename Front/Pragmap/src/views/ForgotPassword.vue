@@ -11,6 +11,7 @@ import { Input } from '@/components/ui/input'
 import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
+import { authService } from '@/services'
 
 const formSchema = toTypedSchema(
   z.object({
@@ -24,6 +25,8 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
   try {
+		await authService.forgotPassword(values.email)
+
     toast({
       title: 'Succès',
       description: `Un mail a été envoyé à l'adresse e-mail ${values.email}.`,

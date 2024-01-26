@@ -75,22 +75,14 @@ const router = createRouter({
 			component: () => import('@/views/ForgotPassword.vue')
 		},
 		{
-			path: '/reset-password/:token',
+			path: '/reset-password',
 			name: 'ResetPassword',
-			component: () => import('@/views/ResetPassword.vue'),
-			props: true
+			component: () => import('@/views/ResetPassword.vue')
 		},
 		{
 			path: '/:pathMatch(.*)*',
 			name: 'NotFound',
 			component: () => import('@/views/NotFound.vue')
-		},
-		{
-			path: '/roadmaps',
-			name: 'RoadmapsIndex',
-			component: () => import('@/views/VueFlow.vue'),
-			beforeEnter: authMiddleware,
-			meta: { requiresAuth: true }
 		}
 	]
 })
