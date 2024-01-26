@@ -7,21 +7,21 @@ const router = createRouter({
 	routes: [
 		{
 			path: '/users',
-			name: 'users-index',
+			name: 'UsersIndex',
 			component: () => import('@/views/users/Index.vue'),
 			beforeEnter: authMiddleware,
 			meta: { requiresAuth: true }
 		},
 		{
 			path: '/users/create',
-			name: 'users-create',
+			name: 'UsersCreate',
 			component: () => import('@/views/users/Create.vue'),
 			beforeEnter: authMiddleware,
 			meta: { requiresAuth: true }
 		},
 		{
 			path: '/users/:id/edit',
-			name: 'users-edit',
+			name: 'UsersEdit',
 			component: () => import('@/views/users/Edit.vue'),
 			beforeEnter: authMiddleware,
 			meta: { requiresAuth: true },
@@ -29,50 +29,49 @@ const router = createRouter({
 		},
 		{
 			path: '/',
-			name: 'home',
+			name: 'Home',
 			component: () => import('@/views/Home.vue'),
 			beforeEnter: authMiddleware,
 			meta: { requiresAuth: true }
 		},
 		{
 			path: '/about',
-			name: 'about',
+			name: 'About',
 			component: () => import('@/views/About.vue'),
 			beforeEnter: authMiddleware,
 			meta: { requiresAuth: true }
 		},
 		{
 			path: '/logout',
-			name: 'logout',
+			name: 'Logout',
 			redirect: () => {
 				const authStore = useAuthStore()
 
 				authStore.logout()
 
-				return { name: 'login' }
+				return { name: 'Login' }
 			},
 			beforeEnter: authMiddleware,
 			meta: { requiresAuth: true }
 		},
 		{
 			path: '/login',
-			name: 'login',
+			name: 'Login',
 			component: () => import('@/views/Login.vue')
 		},
 		{
 			path: '/forgot-password',
-			name: 'forgot-password',
+			name: 'ForgotPassword',
 			component: () => import('@/views/ForgotPassword.vue')
 		},
 		{
-			path: '/reset-password/:token',
-			name: 'reset-password',
-			component: () => import('@/views/ResetPassword.vue'),
-			props: true
+			path: '/reset-password',
+			name: 'ResetPassword',
+			component: () => import('@/views/ResetPassword.vue')
 		},
 		{
 			path: '/:pathMatch(.*)*',
-			name: 'not-found',
+			name: 'NotFound',
 			component: () => import('@/views/NotFound.vue')
 		}
 	]
@@ -83,8 +82,8 @@ router.beforeEach((to, from, next) => {
 	const isAuthenticated = authStore.isAuthenticated
 	const requiresAuth = to.meta.requiresAuth
 
-	if (!isAuthenticated && requiresAuth) return next({ name: 'login' })
-	if (isAuthenticated && !requiresAuth) return next({ name: 'home' })
+	if (!isAuthenticated && requiresAuth) return next({ name: 'Login' })
+	if (isAuthenticated && !requiresAuth) return next({ name: 'Home' })
 
 	return next()
 })

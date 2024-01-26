@@ -9,48 +9,39 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Loader2 } from 'lucide-vue-next'
-import { RouterLink } from 'vue-router'
+import { Loader2, Send } from 'lucide-vue-next'
+import { RouterLink, useRoute } from 'vue-router'
 import { toast } from '@/components/ui/toast'
+import { authService } from '@/services'
 
-// const props =
-defineProps({
-  token: {
-    type: String,
-    required: true
-  }
-})
+const { query } = useRoute()
 const formSchema = toTypedSchema(
-  z
-    .object({
-      password: z
-        .string({ required_error: 'Le champ est obligatoire' })
-        .min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
-      passwordConfirmation: z
-        .string({ required_error: 'Le champ est obligatoire' })
-        .min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
-    })
-    .superRefine((value, context) => {
-      if (value.password !== value.passwordConfirmation) {
-        return context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Les mots de passe ne correspondent pas',
-          path: ['passwordConfirmation']
-        })
-      }
-    })
+  z.object({
+    password: z
+			.string({ required_error: 'Le champ est obligatoire' })
+			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
+		passwordConfirmation: z
+			.string({ required_error: 'Le champ est obligatoire' })
+			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
+  })
+	.superRefine((value, context) => {
+		if (value.password !== value.passwordConfirmation) {
+			return context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Les mots de passe ne correspondent pas',
+				path: ['passwordConfirmation']
+			})
+		}
+	})
 )
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: formSchema
 })
-const onSubmit = handleSubmit(async (/*values*/) => {
+const onSubmit = handleSubmit(async (values) => {
   try {
-    //TODO: Update user password
-    // await api.post('/auth/reset-password', {
-    // 	password: values.password,
-    // 	passwordConfirmation: values.passwordConfirmation,
-    // 	token: props.token
-    // })
+		if (!query.token) throw new Error('Token is missing')
+
+    authService.resetPassword(query.token.toString(), values.password)
 
     router.push('/login')
   } catch (error) {
@@ -96,17 +87,17 @@ const onSubmit = handleSubmit(async (/*values*/) => {
           </FormField>
 
           <div class="flex flex-col sm:flex-row justify-between">
+						<Button type="button" variant="link" size="sm" as-child>
+              <RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
+            </Button>
+
             <Button v-if="!isSubmitting" type="submit">
-              <FontAwesomeIcon class="mr-2" icon="fa-solid fa-paper-plane" />
+              <Send class="w-4 h-4 mr-2" />
               Réinitialiser
             </Button>
             <Button v-else type="disabled">
               <Loader2 class="w-4 h-4 mr-2 animate-spin" />
               Réinitialisation...
-            </Button>
-
-            <Button type="button" variant="link" size="sm" as-child>
-              <RouterLink to="/login">Retour à la connexion &#8594;</RouterLink>
             </Button>
           </div>
         </form>
