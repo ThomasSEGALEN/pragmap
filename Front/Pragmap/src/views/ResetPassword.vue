@@ -10,46 +10,38 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Loader2, Send } from 'lucide-vue-next'
-import { RouterLink } from 'vue-router'
+import { RouterLink, useRoute } from 'vue-router'
 import { toast } from '@/components/ui/toast'
+import { authService } from '@/services'
 
-const { token } = defineProps({
-  token: {
-    type: String,
-    required: true
-  }
-})
+const { query } = useRoute()
 const formSchema = toTypedSchema(
-  z
-    .object({
-      password: z
-        .string({ required_error: 'Le champ est obligatoire' })
-        .min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
-      passwordConfirmation: z
-        .string({ required_error: 'Le champ est obligatoire' })
-        .min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
-    })
-    .superRefine((value, context) => {
-      if (value.password !== value.passwordConfirmation) {
-        return context.addIssue({
-          code: z.ZodIssueCode.custom,
-          message: 'Les mots de passe ne correspondent pas',
-          path: ['passwordConfirmation']
-        })
-      }
-    })
+  z.object({
+    password: z
+			.string({ required_error: 'Le champ est obligatoire' })
+			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
+		passwordConfirmation: z
+			.string({ required_error: 'Le champ est obligatoire' })
+			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
+  })
+	.superRefine((value, context) => {
+		if (value.password !== value.passwordConfirmation) {
+			return context.addIssue({
+				code: z.ZodIssueCode.custom,
+				message: 'Les mots de passe ne correspondent pas',
+				path: ['passwordConfirmation']
+			})
+		}
+	})
 )
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: formSchema
 })
 const onSubmit = handleSubmit(async (values) => {
   try {
-    //TODO: Update user password
-    // await api.post('/auth/reset-password', {
-    // 	password: values.password,
-    // 	passwordConfirmation: values.passwordConfirmation,
-    // 	token: token
-    // })
+		if (!query.token) throw new Error('Token is missing')
+
+    authService.resetPassword(query.token.toString(), values.password)
 
     router.push('/login')
   } catch (error) {
