@@ -1,4 +1,5 @@
 export * from '@/types/auth'
 export * from '@/types/customer'
-export * from '@/types/role'
 export * from '@/types/user'
+export * from '@/types/roadmap'
+export * from '@/types/role'

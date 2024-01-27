@@ -4,7 +4,7 @@ import { useAuthStore } from '@/stores'
 const authMiddleware: NavigationGuard = (to, from, next) => {
   const authStore = useAuthStore()
 
-  if (!authStore.isAuthenticated) return next({ name: 'login' })
+  if (!authStore.isAuthenticated) return next({ name: 'Login' })
 
   return next()
 }

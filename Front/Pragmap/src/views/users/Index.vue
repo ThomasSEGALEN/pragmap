@@ -3,7 +3,7 @@ import { Layout } from '@/components/layouts'
 </script>
 
 <template>
-  <Layout>
-    <div>Users index</div>
-  </Layout>
+	<Layout>
+		Users Index
+	</Layout>
 </template>
