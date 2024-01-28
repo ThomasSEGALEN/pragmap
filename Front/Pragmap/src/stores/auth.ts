@@ -5,7 +5,7 @@ import { authService, roleService, userService } from '@/services'
 import type { IAuth, IGetUser, IRole } from '@/types'
 
 interface State {
-	user: IGetUser | null,
+	user: IGetUser,
 	roles: Array<IRole>,
 	accessToken: string,
 	refreshToken: string,
@@ -13,7 +13,7 @@ interface State {
 
 export const useAuthStore = defineStore('auth', {
 	state: () => useLocalStorage<State>('authStore', {
-		user: null,
+		user: {} as IGetUser,
 		roles: [],
 		accessToken: "",
 		refreshToken: ""
@@ -31,7 +31,7 @@ export const useAuthStore = defineStore('auth', {
 			this.setToken(accessToken, refreshToken)
 		},
 		logout() {
-			this.$state.user = null
+			this.$state.user = {} as IGetUser
 			this.$state.roles = []
 			this.$state.accessToken = ""
 			this.$state.refreshToken = ""
