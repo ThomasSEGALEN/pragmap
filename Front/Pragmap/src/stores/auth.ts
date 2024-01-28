@@ -39,7 +39,7 @@ export const useAuthStore = defineStore('auth', {
 		async getUser(accessToken: string) {
 			const userId = jwtDecode<{ nameid: string }>(accessToken).nameid
 
-			this.$state.user = await userService.getById(userId)
+			this.$state.user = await userService.getById(userId, { select: ['id', 'lastName', 'firstName', 'email', 'roleId'] })
 		},
 		async getRoles() {
 			this.$state.roles = await roleService.getAll()
