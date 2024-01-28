@@ -1,7 +1,7 @@
 import { api } from '@/main'
 import type { IRole } from '@/types'
 
-export interface IRoleService<T> {
+interface IRoleService<T> {
 	getAll(): Promise<Array<T>>
 }
 
