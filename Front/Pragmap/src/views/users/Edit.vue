@@ -94,7 +94,7 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormItem>
 							<FormLabel>Rôle</FormLabel>
 							<FormControl>
-								<Select v-bind="componentField" :default-value="editUser?.roleId">
+								<Select v-bind="componentField">
 									<SelectTrigger>
 										<SelectValue placeholder="Sélectionnez un rôle" />
 									</SelectTrigger>
@@ -117,7 +117,7 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormItem class="w-full">
 								<FormLabel>Nom</FormLabel>
 								<FormControl>
-									<Input v-bind="componentField" :default-value="editUser?.lastName" />
+									<Input v-bind="componentField" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -127,7 +127,7 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormItem class="w-full">
 								<FormLabel>Prénom</FormLabel>
 								<FormControl>
-									<Input v-bind="componentField" :default-value="editUser?.firstName" />
+									<Input v-bind="componentField" />
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -138,31 +138,11 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormItem>
 							<FormLabel>Adresse e-mail</FormLabel>
 							<FormControl>
-								<Input type="email" v-bind="componentField" :default-value="editUser?.email" />
+								<Input type="email" v-bind="componentField" />
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					</FormField>
-
-					<!-- <FormField v-slot="{ componentField }" name="password">
-						<FormItem>
-							<FormLabel>Mot de passe</FormLabel>
-							<FormControl>
-								<Input type="password" v-bind="componentField" />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-
-					<FormField v-slot="{ componentField }" name="passwordConfirmation">
-						<FormItem>
-							<FormLabel>Confirmation du mot de passe</FormLabel>
-							<FormControl>
-								<Input type="password" v-bind="componentField" />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField> -->
 
 					<div class="flex flex-col sm:flex-row justify-between">
 						<Button type="button" variant="link" size="sm" as-child>
