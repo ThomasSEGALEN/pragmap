@@ -21,7 +21,7 @@ const switchMode = () => {
 const components: { title: string; href: string; description: string }[] = [
   {
     title: 'Alert Dialog',
-    href: '/docs/primitives/alert-dialog',
+    href: '/roadMap',
     description:
       'A modal dialog that interrupts the user with important content and expects a response.'
   },
@@ -99,6 +99,22 @@ const components: { title: string; href: string; description: string }[] = [
                       <div class="text-sm font-medium leading-none">Création d'un utilisateur</div>
                       <p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
                         How to install dependencies and structure your app.
+                      </p>
+                    </div>
+                  </RouterLink>
+                </li>
+                <li>
+                  <RouterLink to="/roadMap">
+                    <div
+                      href="/roadMap"
+                      class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                      data-radix-vue-collection-item=""
+                      data-tabindex=""
+                      tabindex="-1"
+                    >
+                      <div class="text-sm font-medium leading-none">Création d'une RoadMap</div>
+                      <p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
+                        Comment créer une roadmap
                       </p>
                     </div>
                   </RouterLink>
