@@ -8,9 +8,10 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Loader2 } from 'lucide-vue-next'
+import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
+import { authService } from '@/services'
 
 const formSchema = toTypedSchema(
   z.object({
@@ -24,6 +25,8 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
   try {
+		await authService.forgotPassword(values.email)
+
     toast({
       title: 'Succès',
       description: `Un mail a été envoyé à l'adresse e-mail ${values.email}.`,
@@ -63,17 +66,17 @@ const onSubmit = handleSubmit(async (values) => {
           </FormField>
 
           <div class="flex flex-col sm:flex-row justify-between">
-            <Button v-if="!isSubmitting" type="submit">
-              <FontAwesomeIcon class="mr-2" icon="fa-solid fa-paper-plane" />
+						<Button type="button" variant="link" size="sm" as-child>
+              <RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
+            </Button>
+
+						<Button v-if="!isSubmitting" type="submit">
+              <Send class="w-4 h-4 mr-2" />
               Envoyer
             </Button>
             <Button v-else type="disabled">
               <Loader2 class="w-4 h-4 mr-2 animate-spin" />
               Envoi...
-            </Button>
-
-            <Button type="button" variant="link" size="sm" as-child>
-              <RouterLink to="/login">Retour à la connexion &#8594;</RouterLink>
             </Button>
           </div>
         </form>

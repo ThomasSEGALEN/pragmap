@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useColorMode } from '@vueuse/core'
 import { Button } from '@/components/ui/button'
-import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+import { Moon, Sun } from 'lucide-vue-next'
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -18,7 +18,7 @@ const mode = useColorMode()
 const switchMode = () => {
   mode.value = mode.value === 'light' ? 'dark' : 'light'
 }
-const components: { title: string; href: string; description: string }[] = [
+const components: Array<{ title: string; href: string; description: string }> = [
   {
     title: 'Alert Dialog',
     href: '/roadMap',
@@ -154,12 +154,12 @@ const components: { title: string; href: string; description: string }[] = [
       </NavigationMenu>
 
       <Button class="" variant="outline" size="icon" @click="switchMode">
-        <FontAwesomeIcon v-if="mode === 'light'" icon="fa-solid fa-sun" />
-        <FontAwesomeIcon v-if="mode === 'dark'" icon="fa-solid fa-moon" />
+        <Sun v-if="mode === 'light'" class="w-4 h-4" />
+        <Moon v-if="mode === 'dark'" class="w-4 h-4" />
       </Button>
     </header>
 
-    <main>
+    <main class="flex flex-col justify-center items-center">
       <slot />
     </main>
 

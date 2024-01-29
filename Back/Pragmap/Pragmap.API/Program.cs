@@ -7,6 +7,8 @@ using Pragmap.API.OperationFilters;
 using Pragmap.Controllers.Entities;
 using Pragmap.Domain.Entities;
 using Pragmap.Infrastructure.Context;
+using Pragmap.Infrastructure.Mail;
+using Pragmap.Infrastructure.Mail.Service;
 using Pragmap.Infrastructure.Repositories;
 using Pragmap.Infrastructure.Repositories.Interfaces;
 using Pragmap.Infrastructure.UnitOfWork;
@@ -18,6 +20,7 @@ var builder = WebApplication.CreateBuilder(args);
 static IEdmModel GetEdmModel()
 {
     var builder = new ODataConventionModelBuilder();
+    builder.EnableLowerCamelCase();
     builder.EntitySet<User>("User");
     builder.EntitySet<Customer>("Customer");
     return builder.GetEdmModel();
@@ -47,6 +50,9 @@ builder.Services.AddSwaggerGen(c =>
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddTransient<IMailService, MailService>();
+
+builder.Services.Configure<MailSettings>(builder.Configuration.GetSection("MailSettings"));
 
 builder.Services.AddDbContext<PragmapContext>(options =>
     options.UseNpgsql(builder.Configuration["DbSettings:ConnectionString"])

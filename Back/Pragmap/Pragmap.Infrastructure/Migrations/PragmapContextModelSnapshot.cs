@@ -125,6 +125,22 @@ namespace Pragmap.Infrastructure.Migrations
                     b.ToTable("CustomersUsers");
                 });
 
+            modelBuilder.Entity("Pragmap.Domain.Entities.ResetPasswordToken", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("TokenExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("UserId", "Token");
+
+                    b.ToTable("ResetPasswordTokens");
+                });
+
             modelBuilder.Entity("Pragmap.Domain.Entities.RoadMap", b =>
                 {
                     b.Property<Guid>("Id")
@@ -200,8 +216,21 @@ namespace Pragmap.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Pragmap.Domain.Entities.ResetPasswordToken", b =>
+                {
+                    b.HasOne("Pragmap.Controllers.Entities.User", "User")
+                        .WithMany("ResetPasswordTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
                 {
+                    b.Navigation("ResetPasswordTokens");
+
                     b.Navigation("UserCustomers");
                 });
 

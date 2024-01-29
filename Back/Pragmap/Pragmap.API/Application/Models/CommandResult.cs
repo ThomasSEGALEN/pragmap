@@ -47,4 +47,27 @@
             };
         }
     }
+
+    public class CommandResult
+    {
+        public bool IsSuccess { get; set; }
+        public string Error { get; set; }
+
+        public static CommandResult Success()
+        {
+            return new CommandResult
+            {
+                IsSuccess = true
+            };
+        }
+
+        public static CommandResult Failed(string message)
+        {
+            return new CommandResult
+            {
+                IsSuccess = false,
+                Error = message
+            };
+        }
+    }
 }
