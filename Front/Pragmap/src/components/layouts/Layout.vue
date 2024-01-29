@@ -57,7 +57,7 @@ const components: Array<{ title: string; href: string; description: string }> = 
 </script>
 
 <template>
-  <div class="h-full p-6">
+  <div class="p-6">
     <header class="flex justify-between mb-6">
       <NavigationMenu>
         <NavigationMenuList>
@@ -143,7 +143,7 @@ const components: Array<{ title: string; href: string; description: string }> = 
       </Button>
     </header>
 
-    <main class="flex flex-col justify-center items-center">
+    <main class="flex justify-center items-center">
       <slot />
     </main>
 
