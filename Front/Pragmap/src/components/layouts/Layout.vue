@@ -143,7 +143,7 @@ const components: Array<{ title: string; href: string; description: string }> = 
       </Button>
     </header>
 
-    <main class="flex justify-center items-center">
+    <main class="w-full">
       <slot />
     </main>
 
