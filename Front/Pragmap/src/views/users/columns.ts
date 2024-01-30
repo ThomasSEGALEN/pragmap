@@ -10,32 +10,33 @@ export const columns: Array<ColumnDef<IGetUser>> = [
   {
     id: 'Adresse e-mail',
     accessorKey: 'email',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Adresse e-mail' }),
+    header: ({ column }) => h(DataTableColumnHeader<IGetUser>, { column, title: 'Adresse e-mail' }),
     cell: ({ row }) => h('div', row.getValue('Adresse e-mail'))
   },
   {
     id: 'Nom',
     accessorKey: 'lastName',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Nom' }),
+    header: ({ column }) => h(DataTableColumnHeader<IGetUser>, { column, title: 'Nom' }),
     cell: ({ row }) => h('div', row.getValue('Nom'))
   },
   {
     id: 'Prénom',
     accessorKey: 'firstName',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Prénom' }),
+    header: ({ column }) => h(DataTableColumnHeader<IGetUser>, { column, title: 'Prénom' }),
     cell: ({ row }) => h('div', row.getValue('Prénom'))
   },
   {
     id: 'Rôle',
     accessorKey: 'roleId',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Rôle' }),
+    header: ({ column }) => h(DataTableColumnHeader<IGetUser>, { column, title: 'Rôle' }),
     cell: ({ row }) => h('div', getRole(row)),
     sortingFn: (rowA, rowB) => getRole(rowA).localeCompare(getRole(rowB))
   },
   {
     id: 'Date de création',
     accessorKey: 'createdAt',
-    header: ({ column }) => h(DataTableColumnHeader, { column, title: 'Date de création' }),
+    header: ({ column }) =>
+      h(DataTableColumnHeader<IGetUser>, { column, title: 'Date de création' }),
     cell: ({ row }) => h('div', new Date(row.getValue('Date de création')).toLocaleDateString())
   },
   {
