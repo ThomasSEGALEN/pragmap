@@ -8,12 +8,7 @@ const props = defineProps<DialogTitleProps & { class?: string }>()
 <template>
   <DialogTitle
     v-bind="props"
-    :class="
-      cn(
-        'text-lg text-foreground font-semibold leading-none tracking-tight',
-        props.class,
-      )
-    "
+    :class="cn('text-lg text-foreground font-semibold leading-none tracking-tight', props.class)"
   >
     <slot />
   </DialogTitle>
