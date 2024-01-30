@@ -14,7 +14,7 @@ import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
-const authStore = useAuthStore()
+const { login } = useAuthStore()
 const formSchema = toTypedSchema(
   z.object({
     email: z
@@ -30,7 +30,7 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
   try {
-    await authStore.login(values.email, values.password)
+    await login(values.email, values.password)
 
     router.push('/')
   } catch (error) {
@@ -50,7 +50,6 @@ const onSubmit = handleSubmit(async (values) => {
         <CardTitle>Pragmap</CardTitle>
         <CardDescription>Connectez-vous pour accéder à l'application</CardDescription>
       </CardHeader>
-
       <CardContent>
         <form class="space-y-6" @submit="onSubmit">
           <FormField v-slot="{ componentField }" name="email">
@@ -62,7 +61,6 @@ const onSubmit = handleSubmit(async (values) => {
               <FormMessage />
             </FormItem>
           </FormField>
-
           <FormField v-slot="{ componentField }" name="password">
             <FormItem>
               <FormLabel>Mot de passe</FormLabel>
@@ -72,9 +70,8 @@ const onSubmit = handleSubmit(async (values) => {
               <FormMessage />
             </FormItem>
           </FormField>
-
           <div class="flex flex-col sm:flex-row justify-between">
-						<Button type="button" variant="link" size="sm" as-child>
+            <Button type="button" variant="link" size="sm" as-child>
               <RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
             </Button>
 
