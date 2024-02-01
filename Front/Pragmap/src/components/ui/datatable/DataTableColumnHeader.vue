@@ -30,7 +30,7 @@ export default {
     <DropdownMenu>
       <DropdownMenuTrigger as-child>
         <Button variant="ghost" size="sm" class="-ml-3 h-8 data-[state=open]:bg-accent">
-          <span>{{ title }}</span>
+          <span class="whitespace-nowrap">{{ title }}</span>
           <ArrowDown v-if="column.getIsSorted() === 'desc'" class="w-4 h-4 ml-2" />
           <ArrowUp v-else-if="column.getIsSorted() === 'asc'" class="w-4 h-4 ml-2" />
           <ArrowUpDown v-else class="w-4 h-4 ml-2" />
