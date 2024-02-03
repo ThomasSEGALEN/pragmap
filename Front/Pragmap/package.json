@@ -16,16 +16,12 @@
   "dependencies": {
     "@tanstack/vue-table": "^8.11.6",
     "@vee-validate/zod": "^4.12.4",
-<<<<<<< HEAD
     "@vue-flow/additional-components": "latest",
     "@vue-flow/core": "latest",
-=======
     "@vue-flow/background": "^1.2.0",
     "@vue-flow/controls": "^1.1.0",
     "@vue-flow/core": "^1.27.1",
     "@vue-flow/minimap": "^1.4.0",
->>>>>>> 45ee167e1725a2243f347137c62b738e76cb628a
-    "@vueuse/core": "^10.7.1",
     "axios": "^1.6.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
