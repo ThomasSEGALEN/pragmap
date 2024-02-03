@@ -1,47 +1,50 @@
 <script setup lang="ts">
 import router from '@/router'
+import { useRoute } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
+import { authService } from '@/services'
 import { GuestLayout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Loader2, Send } from 'lucide-vue-next'
-import { RouterLink, useRoute } from 'vue-router'
+import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
-import { authService } from '@/services'
 
 const { query } = useRoute()
+const { resetPassword } = authService
 const formSchema = toTypedSchema(
-  z.object({
-    password: z
-			.string({ required_error: 'Le champ est obligatoire' })
-			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
-		passwordConfirmation: z
-			.string({ required_error: 'Le champ est obligatoire' })
-			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
-  })
-	.superRefine((value, context) => {
-		if (value.password !== value.passwordConfirmation) {
-			return context.addIssue({
-				code: z.ZodIssueCode.custom,
-				message: 'Les mots de passe ne correspondent pas',
-				path: ['passwordConfirmation']
-			})
-		}
-	})
+  z
+    .object({
+      password: z
+        .string({ required_error: 'Le champ est obligatoire' })
+        .min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
+      passwordConfirmation: z
+        .string({ required_error: 'Le champ est obligatoire' })
+        .min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
+    })
+    .superRefine((value, context) => {
+      if (value.password !== value.passwordConfirmation) {
+        return context.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: 'Les mots de passe ne correspondent pas',
+          path: ['passwordConfirmation']
+        })
+      }
+    })
 )
 const { handleSubmit, isSubmitting } = useForm({
   validationSchema: formSchema
 })
 const onSubmit = handleSubmit(async (values) => {
   try {
-		if (!query.token) throw new Error('Token is missing')
+    if (!query.token) throw new Error('Token is missing')
 
-    authService.resetPassword(query.token.toString(), values.password)
+    resetPassword(query.token.toString(), values.password)
 
     router.push('/login')
   } catch (error) {
@@ -63,7 +66,6 @@ const onSubmit = handleSubmit(async (values) => {
           Renseignez un nouveau mot de passe afin de le réinitialiser
         </CardDescription>
       </CardHeader>
-
       <CardContent>
         <form class="space-y-6" @submit="onSubmit">
           <FormField v-slot="{ componentField }" name="password">
@@ -75,7 +77,6 @@ const onSubmit = handleSubmit(async (values) => {
               <FormMessage />
             </FormItem>
           </FormField>
-
           <FormField v-slot="{ componentField }" name="passwordConfirmation">
             <FormItem>
               <FormLabel>Confirmation du mot de passe</FormLabel>
@@ -85,12 +86,10 @@ const onSubmit = handleSubmit(async (values) => {
               <FormMessage />
             </FormItem>
           </FormField>
-
-          <div class="flex flex-col sm:flex-row justify-between">
-						<Button type="button" variant="link" size="sm" as-child>
+          <div class="flex flex-col-reverse sm:flex-row justify-between">
+            <Button type="button" variant="link" size="sm" as-child>
               <RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
             </Button>
-
             <Button v-if="!isSubmitting" type="submit">
               <Send class="w-4 h-4 mr-2" />
               Réinitialiser

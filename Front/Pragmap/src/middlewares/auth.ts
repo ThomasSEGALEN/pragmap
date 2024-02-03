@@ -2,9 +2,9 @@ import type { NavigationGuard } from 'vue-router'
 import { useAuthStore } from '@/stores'
 
 const authMiddleware: NavigationGuard = (to, from, next) => {
-  const authStore = useAuthStore()
+  const { isAuthenticated } = useAuthStore()
 
-  if (!authStore.isAuthenticated) return next({ name: 'Login' })
+  if (!isAuthenticated) return next({ name: 'Login' })
 
   return next()
 }

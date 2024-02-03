@@ -14,7 +14,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@tanstack/vue-query": "^5.17.19",
     "@tanstack/vue-table": "^8.11.6",
     "@vee-validate/zod": "^4.12.4",
 <<<<<<< HEAD

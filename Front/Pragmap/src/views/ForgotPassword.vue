@@ -3,6 +3,7 @@ import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
+import { authService } from '@/services'
 import { GuestLayout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -11,8 +12,8 @@ import { Input } from '@/components/ui/input'
 import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
-import { authService } from '@/services'
 
+const { forgotPassword } = authService
 const formSchema = toTypedSchema(
   z.object({
     email: z
@@ -25,7 +26,7 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
   try {
-		await authService.forgotPassword(values.email)
+    await forgotPassword(values.email)
 
     toast({
       title: 'Succès',
@@ -52,7 +53,6 @@ const onSubmit = handleSubmit(async (values) => {
           mot de passe
         </CardDescription>
       </CardHeader>
-
       <CardContent>
         <form class="space-y-6" @submit="onSubmit">
           <FormField v-slot="{ componentField }" name="email">
@@ -64,13 +64,11 @@ const onSubmit = handleSubmit(async (values) => {
               <FormMessage />
             </FormItem>
           </FormField>
-
-          <div class="flex flex-col sm:flex-row justify-between">
-						<Button type="button" variant="link" size="sm" as-child>
+          <div class="flex flex-col-reverse sm:flex-row justify-between">
+            <Button type="button" variant="link" size="sm" as-child>
               <RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
             </Button>
-
-						<Button v-if="!isSubmitting" type="submit">
+            <Button v-if="!isSubmitting" type="submit">
               <Send class="w-4 h-4 mr-2" />
               Envoyer
             </Button>
