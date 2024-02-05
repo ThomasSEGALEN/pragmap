@@ -4,8 +4,8 @@ export interface IRole {
 }
 
 export enum Role {
-	Administrator = "Administrateur",
-	Manager = "Gestionnaire",
-	Editor = "Éditeur",
-	Reader = "Lecteur"
+	Administrator = 'Administrateur',
+	Manager = 'Gestionnaire',
+	Editor = 'Éditeur',
+	Reader = 'Lecteur'
 }

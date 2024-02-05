@@ -22,11 +22,11 @@ export const api = axios.create({
 	}
 })
 
-const authStore = useAuthStore()
+const { isAuthenticated, logout, getToken, resetToken } = useAuthStore()
 
 api.interceptors.request.use((request) => {
-	if (authStore.isAuthenticated) {
-		request.headers.Authorization = `Bearer ${authStore.getToken('accessToken')}`
+	if (isAuthenticated) {
+		request.headers.Authorization = `Bearer ${getToken('accessToken')}`
 	}
 
 	return request
@@ -41,16 +41,16 @@ api.interceptors.response.use(
 			throw new Error('400 Bad Request')
 		}
 		if (error.response.status === 401) {
-			const refreshToken = authStore.getToken('refreshToken')
+			const refreshToken = getToken('refreshToken')
 
 			if (!refreshToken) {
-				authStore.logout()
+				logout()
 				router.push('/login')
 
 				throw new Error('401 Unauthorized')
 			}
 
-			authStore.resetToken(refreshToken)
+			resetToken(refreshToken)
 		}
 		if (error.response.status === 404) {
 			throw new Error('404 Not Found')
@@ -59,6 +59,6 @@ api.interceptors.response.use(
 			throw new Error('500 Internal Server Error')
 		}
 
-		return Promise.reject(error);
+		return Promise.reject(error)
 	}
 )

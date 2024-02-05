@@ -1,8 +1,14 @@
-import { api } from "@/main";
-import type { IAuth } from "@/types";
+import { api } from '@/main'
+import type { IAuth } from '@/types'
 
-class AuthService {
-	async login(email: string, password: string): Promise<IAuth> {
+interface IAuthService {
+	login(email: string, password: string): Promise<IAuth>
+	forgotPassword(email: string): Promise<void>
+	resetPassword(token: string, password: string): Promise<void>
+	refreshToken(refreshToken: string): Promise<IAuth>
+}
+class AuthService implements IAuthService {
+	public async login(email: string, password: string): Promise<IAuth> {
 		try {
 			const response = await api.post('/auth/login', {
 				email: email,
@@ -15,7 +21,7 @@ class AuthService {
 		}
 	}
 
-	async forgotPassword(email: string): Promise<void> {
+	public async forgotPassword(email: string): Promise<void> {
 		try {
 			await api.post('/auth/forgot-password', {
 				email: email
@@ -25,7 +31,7 @@ class AuthService {
 		}
 	}
 
-	async resetPassword(token: string, password: string): Promise<void> {
+	public async resetPassword(token: string, password: string): Promise<void> {
 		try {
 			await api.post('/auth/reset-password', {
 				token: token,
@@ -36,7 +42,7 @@ class AuthService {
 		}
 	}
 
-	async refreshToken(refreshToken: string): Promise<IAuth> {
+	public async refreshToken(refreshToken: string): Promise<IAuth> {
 		try {
 			const response = await api.get(`/auth/refreshToken/${refreshToken}`)
 
