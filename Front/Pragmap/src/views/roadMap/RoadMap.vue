@@ -37,7 +37,8 @@ onConnect((params) => {
 const elements = ref<Elements>([])
 var json = JSON.stringify(elements.value)
 const addNode = (type: string, text: String) => {
-  const id = (elements.value.length + 1).toString();
+  const id = (elements.value.length + 1);
+  console.log(id);
   elements.value.push({
     id,
     type,
