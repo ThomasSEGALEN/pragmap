@@ -9,28 +9,31 @@ import { columns } from './columns'
 const { getPageIndex, getPageSize, getData } = usePaginationStore()
 const data = ref<Array<IGetUser>>([])
 onMounted(async () => {
-  data.value = await getData()
+	data.value = await getData()
 })
 watch(
-  () => getPageIndex(),
-  async () => {
-    const users = await getData()
+	() => getPageIndex(),
+	async () => {
+		const users = await getData()
 
-    data.value = users
-  }
+		data.value = users
+	}
 )
 watch(
-  () => getPageSize(),
-  async () => {
-    const users = await getData()
+	() => getPageSize(),
+	async () => {
+		const users = await getData()
 
-    data.value = users
-  }
+		data.value = users
+	}
 )
 </script>
 
 <template>
-  <Layout>
-    <DataTable :data="data" :columns="columns" />
-  </Layout>
+	<Layout>
+		<DataTable
+			:data="data"
+			:columns="columns"
+		/>
+	</Layout>
 </template>
