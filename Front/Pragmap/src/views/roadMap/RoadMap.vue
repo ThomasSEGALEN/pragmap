@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <div style="background-color: #f2f2f2">
+    <div>
       <div class="navbar">
         <button @click="addNode('inputed', 'inputed')">Input</button>
         <button @click="addNode('outputed','outputed')">Output</button>

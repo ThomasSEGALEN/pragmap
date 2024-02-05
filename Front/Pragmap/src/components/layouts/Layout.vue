@@ -162,10 +162,6 @@ const components: Array<{ title: string; href: string; description: string }> = 
 				/>
 			</Button>
 		</header>
-
-    <main>
-      <slot />
-    </main>
 		<main class="w-full">
 			<slot />
 		</main>
