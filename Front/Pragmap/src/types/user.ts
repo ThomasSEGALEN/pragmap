@@ -1,5 +1,3 @@
-import type { IRole } from "@/types"
-
 export interface IUser {
 	id: string
 	lastName: string
@@ -19,6 +17,7 @@ export interface IGetUser {
 	firstName: string
 	email: string
 	roleId: string
+	createdAt: string
 }
 
 export interface IPostUser {
@@ -36,12 +35,4 @@ export interface IPutUser {
 	firstName: string
 	email: string
 	roleId: string
-}
-
-export interface IDisplayUser {
-	id: string
-	lastName: string
-	firstName: string
-	email: string
-	role: IRole
 }

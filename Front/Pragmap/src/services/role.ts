@@ -1,12 +1,12 @@
 import { api } from '@/main'
 import type { IRole } from '@/types'
 
-export interface IRoleService<T> {
+interface IRoleService<T> {
 	getAll(): Promise<Array<T>>
 }
 
 class RoleService implements IRoleService<IRole> {
-	async getAll(): Promise<Array<IRole>> {
+	public async getAll(): Promise<Array<IRole>> {
 		try {
 			const response = await api.get('/role')
 

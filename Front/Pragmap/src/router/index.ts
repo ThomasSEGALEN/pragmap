@@ -60,10 +60,10 @@ const router = createRouter({
 			beforeEnter: (to) => {
 				authMiddleware
 
-				const userStore = useUserStore()
+				const { getEditUserById } = useUserStore()
 
 				try {
-					userStore.getEditUserById(to.params.id.toString())
+					getEditUserById(to.params.id.toString())
 				} catch (error) {
 					return { name: 'Home' }
 				}
@@ -89,9 +89,9 @@ const router = createRouter({
 			path: '/logout',
 			name: 'Logout',
 			redirect: () => {
-				const authStore = useAuthStore()
+				const { logout } = useAuthStore()
 
-				authStore.logout()
+				logout()
 
 				return { name: 'Login' }
 			},
@@ -122,8 +122,7 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-	const authStore = useAuthStore()
-	const isAuthenticated = authStore.isAuthenticated
+	const { isAuthenticated } = useAuthStore()
 	const requiresAuth = to.meta.requiresAuth
 
 	if (!isAuthenticated && requiresAuth) return next({ name: 'Login' })

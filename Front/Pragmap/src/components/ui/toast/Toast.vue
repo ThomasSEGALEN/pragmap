@@ -5,9 +5,9 @@ import type { VariantProps } from 'class-variance-authority'
 interface ToastVariantProps extends VariantProps<typeof toastVariants> {}
 
 export interface ToastProps extends ToastRootProps {
-  class?: string
-  variant?: ToastVariantProps['variant']
-  onOpenChange?: ((value: boolean) => void) | undefined
+	class?: string
+	variant?: ToastVariantProps['variant']
+	onOpenChange?: ((value: boolean) => void) | undefined
 }
 </script>
 
@@ -22,11 +22,11 @@ const emits = defineEmits<ToastRootEmits>()
 </script>
 
 <template>
-  <ToastRoot
-    v-bind="{ ...props, ...useEmitAsProps(emits) }"
-    :class="cn(toastVariants({ variant: props.variant }), props.class)"
-    @update:open="onOpenChange"
-  >
-    <slot />
-  </ToastRoot>
+	<ToastRoot
+		v-bind="{ ...props, ...useEmitAsProps(emits) }"
+		:class="cn(toastVariants({ variant: props.variant }), props.class)"
+		@update:open="onOpenChange"
+	>
+		<slot />
+	</ToastRoot>
 </template>

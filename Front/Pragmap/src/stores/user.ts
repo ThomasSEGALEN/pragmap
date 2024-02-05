@@ -8,16 +8,19 @@ interface State {
 }
 
 export const useUserStore = defineStore('user', {
-	state: () => useLocalStorage<State>('userStore', {
-		editUser: null
-	}),
+	state: () =>
+		useLocalStorage<State>('userStore', {
+			editUser: null
+		}),
 	actions: {
-		async getEditUserById(id: string) {
-			const user = await userService.getById(id, { select: ['id', 'lastName', 'firstName', 'email', 'roleId'] })
+		async getEditUserById(id: string): Promise<void> {
+			const user = await userService.getById(id, {
+				select: ['id', 'lastName', 'firstName', 'email', 'roleId']
+			})
 
 			this.$state.editUser = user
 		},
-		clearEditUser() {
+		clearEditUser(): void {
 			this.$state.editUser = null
 		}
 	}

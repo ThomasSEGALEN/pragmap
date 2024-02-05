@@ -3,9 +3,9 @@ import { Toaster } from '@/components/ui/toast'
 </script>
 
 <template>
-  <div class="h-full flex justify-center items-center">
-    <slot />
+	<div class="h-screen flex justify-center items-center p-4">
+		<slot />
 
-    <Toaster />
-  </div>
+		<Toaster />
+	</div>
 </template>
