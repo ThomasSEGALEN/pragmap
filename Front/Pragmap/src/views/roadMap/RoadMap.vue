@@ -40,7 +40,7 @@ const addNode = (type: string, text: String) => {
   const id = (elements.value.length + 1);
   console.log(id);
   elements.value.push({
-    id,
+    id: id.toString(),
     type,
     data: { label: `Node ${id}`},
     position: {
