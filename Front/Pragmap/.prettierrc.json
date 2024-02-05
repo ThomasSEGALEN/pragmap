@@ -3,8 +3,8 @@
 	"printWidth": 100,
 	"tabWidth": 2,
 	"useTabs": true,
-  	"semi": false,
-  	"singleQuote": true,
+  "semi": false,
+  "singleQuote": true,
 	"quoteProps": "as-needed",
 	"jsxSingleQuote": false,
 	"trailingComma": "none",
@@ -20,7 +20,7 @@
 	"proseWrap": "preserve",
 	"htmlWhitespaceSensitivity": "css",
 	"vueIndentScriptAndStyle": false,
-	"endOfLine": "lf",
+	"endOfLine": "crlf",
 	"embeddedLanguageFormatting": "auto",
 	"singleAttributePerLine": true
 }
