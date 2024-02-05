@@ -6,13 +6,13 @@ import { cn } from '@/lib/utils'
 interface BadgeVariantProps extends VariantProps<typeof badgeVariants> {}
 
 interface Props {
-  variant?: BadgeVariantProps['variant']
+	variant?: BadgeVariantProps['variant']
 }
 defineProps<Props>()
 </script>
 
 <template>
-  <div :class="cn(badgeVariants({ variant }), $attrs.class ?? '')">
-    <slot />
-  </div>
+	<div :class="cn(badgeVariants({ variant }), $attrs.class ?? '')">
+		<slot />
+	</div>
 </template>

@@ -6,10 +6,10 @@ const props = defineProps<SeparatorProps & { class?: string }>()
 </script>
 
 <template>
-  <Separator
-    :class="[
-      cn('shrink-0 bg-border', props.class),
-      props.orientation === 'vertical' ? 'w-px h-full' : 'h-px w-full'
-    ]"
-  />
+	<Separator
+		:class="[
+			cn('shrink-0 bg-border', props.class),
+			props.orientation === 'vertical' ? 'w-px h-full' : 'h-px w-full'
+		]"
+	/>
 </template>

@@ -62,7 +62,10 @@ const components: Array<{ title: string; href: string; description: string }> = 
 			<NavigationMenu>
 				<NavigationMenuList>
 					<NavigationMenuItem>
-						<NavigationMenuLink :class="navigationMenuTriggerStyle()" as-child>
+						<NavigationMenuLink
+							:class="navigationMenuTriggerStyle()"
+							as-child
+						>
 							<RouterLink to="/">Accueil</RouterLink>
 						</NavigationMenuLink>
 					</NavigationMenuItem>
@@ -74,7 +77,10 @@ const components: Array<{ title: string; href: string; description: string }> = 
 									<RouterLink to="/users">
 										<div
 											class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-											data-radix-vue-collection-item="" data-tabindex="" tabindex="-1">
+											data-radix-vue-collection-item=""
+											data-tabindex=""
+											tabindex="-1"
+										>
 											<div class="text-sm font-medium leading-none">
 												Tableau de bord des utilisateurs
 											</div>
@@ -86,9 +92,13 @@ const components: Array<{ title: string; href: string; description: string }> = 
 								</li>
 								<li>
 									<RouterLink to="/users/create">
-										<div href="/users/create"
+										<div
+											href="/users/create"
 											class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-											data-radix-vue-collection-item="" data-tabindex="" tabindex="-1">
+											data-radix-vue-collection-item=""
+											data-tabindex=""
+											tabindex="-1"
+										>
 											<div class="text-sm font-medium leading-none">Création d'un utilisateur</div>
 											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
 												How to install dependencies and structure your app.
@@ -103,10 +113,17 @@ const components: Array<{ title: string; href: string; description: string }> = 
 						<NavigationMenuTrigger>Components</NavigationMenuTrigger>
 						<NavigationMenuContent>
 							<ul class="grid w-[400px] gap-2 p-4 md:w-[600px] md:grid-cols-2">
-								<li v-for="component in components" :key="component.title">
-									<a :href="component.href"
+								<li
+									v-for="component in components"
+									:key="component.title"
+								>
+									<a
+										:href="component.href"
 										class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-										data-radix-vue-collection-item="" data-tabindex="" tabindex="-1">
+										data-radix-vue-collection-item=""
+										data-tabindex=""
+										tabindex="-1"
+									>
 										<div class="text-sm font-medium leading-none">
 											{{ component.title }}
 										</div>
@@ -119,16 +136,30 @@ const components: Array<{ title: string; href: string; description: string }> = 
 						</NavigationMenuContent>
 					</NavigationMenuItem>
 					<NavigationMenuItem>
-						<NavigationMenuLink :class="navigationMenuTriggerStyle()" as-child>
+						<NavigationMenuLink
+							:class="navigationMenuTriggerStyle()"
+							as-child
+						>
 							<RouterLink to="/logout">Déconnexion</RouterLink>
 						</NavigationMenuLink>
 					</NavigationMenuItem>
 				</NavigationMenuList>
 			</NavigationMenu>
 
-			<Button class="" variant="outline" size="icon" @click="switchMode">
-				<Sun v-if="mode === 'light'" class="w-4 h-4" />
-				<Moon v-if="mode === 'dark'" class="w-4 h-4" />
+			<Button
+				class=""
+				variant="outline"
+				size="icon"
+				@click="switchMode"
+			>
+				<Sun
+					v-if="mode === 'light'"
+					class="w-4 h-4"
+				/>
+				<Moon
+					v-if="mode === 'dark'"
+					class="w-4 h-4"
+				/>
 			</Button>
 		</header>
 

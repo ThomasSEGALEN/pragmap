@@ -15,70 +15,90 @@ import { toast } from '@/components/ui/toast'
 
 const { forgotPassword } = authService
 const formSchema = toTypedSchema(
-  z.object({
-    email: z
-      .string({ required_error: 'Le champ est obligatoire' })
-      .email({ message: 'Le champ doit être une adresse e-mail valide' })
-  })
+	z.object({
+		email: z
+			.string({ required_error: 'Le champ est obligatoire' })
+			.email({ message: 'Le champ doit être une adresse e-mail valide' })
+	})
 )
 const { handleSubmit, isSubmitting } = useForm({
-  validationSchema: formSchema
+	validationSchema: formSchema
 })
 const onSubmit = handleSubmit(async (values) => {
-  try {
-    await forgotPassword(values.email)
+	try {
+		await forgotPassword(values.email)
 
-    toast({
-      title: 'Succès',
-      description: `Un mail a été envoyé à l'adresse e-mail ${values.email}.`,
-      duration: 5000
-    })
-  } catch (error) {
-    toast({
-      title: 'Erreur',
-      description: `Nous ne sommes pas parvenus à envoyer un mail à l'adresse e-mail ${values.email}.`,
-      duration: 5000
-    })
-  }
+		toast({
+			title: 'Succès',
+			description: `Un mail a été envoyé à l'adresse e-mail ${values.email}.`,
+			duration: 5000
+		})
+	} catch (error) {
+		toast({
+			title: 'Erreur',
+			description: `Nous ne sommes pas parvenus à envoyer un mail à l'adresse e-mail ${values.email}.`,
+			duration: 5000
+		})
+	}
 })
 </script>
 
 <template>
-  <GuestLayout>
-    <Card :class="cn('w-[420px]', $attrs.class ?? '')">
-      <CardHeader>
-        <CardTitle>Pragmap</CardTitle>
-        <CardDescription>
-          Veuillez renseigner votre adresse e-mail afin de recevoir un lien de réinitialisation de
-          mot de passe
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form class="space-y-6" @submit="onSubmit">
-          <FormField v-slot="{ componentField }" name="email">
-            <FormItem>
-              <FormLabel>Adresse e-mail</FormLabel>
-              <FormControl>
-                <Input type="email" v-bind="componentField" />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          </FormField>
-          <div class="flex flex-col-reverse sm:flex-row justify-between">
-            <Button type="button" variant="link" size="sm" as-child>
-              <RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
-            </Button>
-            <Button v-if="!isSubmitting" type="submit">
-              <Send class="w-4 h-4 mr-2" />
-              Envoyer
-            </Button>
-            <Button v-else type="disabled">
-              <Loader2 class="w-4 h-4 mr-2 animate-spin" />
-              Envoi...
-            </Button>
-          </div>
-        </form>
-      </CardContent>
-    </Card>
-  </GuestLayout>
+	<GuestLayout>
+		<Card :class="cn('w-[420px]', $attrs.class ?? '')">
+			<CardHeader>
+				<CardTitle>Pragmap</CardTitle>
+				<CardDescription>
+					Veuillez renseigner votre adresse e-mail afin de recevoir un lien de réinitialisation de
+					mot de passe
+				</CardDescription>
+			</CardHeader>
+			<CardContent>
+				<form
+					class="space-y-6"
+					@submit="onSubmit"
+				>
+					<FormField
+						v-slot="{ componentField }"
+						name="email"
+					>
+						<FormItem>
+							<FormLabel>Adresse e-mail</FormLabel>
+							<FormControl>
+								<Input
+									type="email"
+									v-bind="componentField"
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					</FormField>
+					<div class="flex flex-col-reverse sm:flex-row justify-between">
+						<Button
+							type="button"
+							variant="link"
+							size="sm"
+							as-child
+						>
+							<RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
+						</Button>
+						<Button
+							v-if="!isSubmitting"
+							type="submit"
+						>
+							<Send class="w-4 h-4 mr-2" />
+							Envoyer
+						</Button>
+						<Button
+							v-else
+							type="disabled"
+						>
+							<Loader2 class="w-4 h-4 mr-2 animate-spin" />
+							Envoi...
+						</Button>
+					</div>
+				</form>
+			</CardContent>
+		</Card>
+	</GuestLayout>
 </template>

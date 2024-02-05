@@ -10,7 +10,7 @@ import { useId } from 'radix-vue'
 import { cn } from '@/lib/utils'
 
 defineOptions({
-  inheritAttrs: false
+	inheritAttrs: false
 })
 
 const id = useId()
@@ -20,7 +20,10 @@ const { class: className, ...rest } = useAttrs()
 </script>
 
 <template>
-  <div :class="cn('space-y-2', className ?? '')" v-bind="rest">
-    <slot />
-  </div>
+	<div
+		:class="cn('space-y-2', className ?? '')"
+		v-bind="rest"
+	>
+		<slot />
+	</div>
 </template>

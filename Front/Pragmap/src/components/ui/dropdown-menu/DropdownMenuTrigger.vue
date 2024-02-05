@@ -5,7 +5,10 @@ const props = defineProps<DropdownMenuTriggerProps>()
 </script>
 
 <template>
-  <DropdownMenuTrigger class="outline-none" v-bind="props">
-    <slot />
-  </DropdownMenuTrigger>
+	<DropdownMenuTrigger
+		class="outline-none"
+		v-bind="props"
+	>
+		<slot />
+	</DropdownMenuTrigger>
 </template>
