@@ -1,43 +1,65 @@
 <template>
-  <div style="height: 100vh;">
-    <div class="navbar">
-      <button @click="addNode('input')">Ajouter un nœud d'entrée</button>
-      <button @click="addNode('output')">Ajouter un nœud de sortie</button>
-      <button @click="addNode('default')">Ajouter un nœud par défaut</button>
+  <Layout>
+    <div style="background-color: #f2f2f2">
+      <div class="navbar">
+        <button @click="addNode('inputed', 'inputed')">Input</button>
+        <button @click="addNode('outputed','outputed')">Output</button>
+        <button @click="saveNode()">Save</button>
+        <button @click="importNode()">Load</button>
+      </div>
+      <VueFlow v-model="elements" class="vue-flow-basic-example" :default-zoom="1" :min-zoom="0.2" :max-zoom="4" style="height: 80vh;">
+        <Background pattern-color="#aaa" gap="8" />
+        <MiniMap />
+        <template #node-inputed="nodeProps">
+          <InputNode v-bind="nodeProps" />
+        </template>
+        <template #node-outputed="nodeProps">
+          <OutputNode v-bind="nodeProps" />
+        </template>
+      </VueFlow>
     </div>
-    <VueFlow v-model="elements" class="vue-flow-basic-example" :default-zoom="1.5" :min-zoom="0.2" :max-zoom="4">
-      <Background pattern-color="#aaa" gap="8" />
-      <MiniMap />
-    </VueFlow>
-  </div>
+  </Layout>
 </template>
 
 <script lang="ts" setup>
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import { useVueFlow } from '@vue-flow/core';
+import { Layout } from '@/components/layouts'
+import { useVueFlow } from '@vue-flow/core'
 import { VueFlow, type Elements } from '@vue-flow/core'
-import { ref } from 'vue'
+import InputNode from './nodes/InputNode.vue'
+import OutputNode from './nodes/OutputNode.vue'
+import { ref, watch } from 'vue'
 import '../css/roadap.css'
 const { onConnect, addEdges } = useVueFlow()
 onConnect((params) => {
   addEdges([params])
 })
 const elements = ref<Elements>([])
-
-const addNode = (type: string) => {
+var json = JSON.stringify(elements.value)
+const addNode = (type: string, text: String) => {
   const id = (elements.value.length + 1).toString();
   elements.value.push({
     id,
     type,
-    data: { label: `Node ${id}` },
+    data: { label: `Node ${id}`},
     position: {
-      x: Math.random() * 400,
-      y: Math.random() * 400,
+      x: window.innerWidth / 2,
+      y: window.innerHeight / 2,
     },
+    label: text,
+    animated: true
   });
 };
+const saveNode = () => {
+  json = JSON.stringify(elements.value);
+  console.log(json);
+};
+const importNode = () => {
+  if (json) {
+    elements.value = JSON.parse(json);
+  }
+};
 </script>
-
 <style>
 .navbar {
   display: flex;

@@ -2,7 +2,6 @@ import '@/assets/main.css'
 import axios from 'axios'
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
-import { VueQueryPlugin } from '@tanstack/vue-query'
 import App from '@/App.vue'
 import router from '@/router'
 import { useAuthStore } from '@/stores'
@@ -12,7 +11,6 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
-app.use(VueQueryPlugin)
 
 app.mount('#app')
 
