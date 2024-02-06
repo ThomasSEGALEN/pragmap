@@ -25,7 +25,7 @@ const {
 
 <template>
 	<div
-		class="flex flex-col space-y-2 sm:flex-row-reverse sm:space-y-0 justify-between items-center"
+		class="flex flex-col space-y-2 md:flex-row-reverse md:space-y-0 justify-between items-center"
 	>
 		<div class="flex items-center space-x-2">
 			<div class="flex items-center justify-center text-sm font-medium">

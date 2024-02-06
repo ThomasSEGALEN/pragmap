@@ -16,9 +16,9 @@ defineProps<{
 </script>
 
 <template>
-	<div class="flex flex-col justify-between space-y-2 sm:flex-row sm:space-y-0">
+	<div class="flex flex-col justify-between space-y-2 md:flex-row md:space-y-0">
 		<Input
-			class="sm:max-w-[250px]"
+			class="md:max-w-[250px]"
 			placeholder="Rechercher par adresse e-mail"
 			:model-value="table.getColumn('Adresse e-mail')?.getFilterValue() as string"
 			@update:model-value="table.getColumn('Adresse e-mail')?.setFilterValue($event)"
