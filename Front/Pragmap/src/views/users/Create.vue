@@ -178,14 +178,14 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormMessage />
 						</FormItem>
 					</FormField>
-					<div class="flex flex-col sm:flex-row justify-between">
+					<div class="flex flex-col-reverse md:flex-row justify-between">
 						<Button
 							type="button"
 							variant="link"
 							size="sm"
 							as-child
 						>
-							<RouterLink to="/login">&#x2190; Retour</RouterLink>
+							<RouterLink to="/users">&#x2190; Retour</RouterLink>
 						</Button>
 						<Button
 							v-if="!isSubmitting"

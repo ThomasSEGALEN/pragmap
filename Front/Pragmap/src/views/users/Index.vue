@@ -6,27 +6,16 @@ import { Layout } from '@/components/layouts'
 import { DataTable } from '@/components/ui/datatable'
 import { columns } from './columns'
 
-const { getPageIndex, getPageSize, getData } = usePaginationStore()
+const { getPageIndex, getPageSize, getUserData } = usePaginationStore()
 const data = ref<Array<IGetUser>>([])
 onMounted(async () => {
-	data.value = await getData()
+	data.value = await getUserData()
 })
-watch(
-	() => getPageIndex(),
-	async () => {
-		const users = await getData()
+watch([() => getPageIndex(), () => getPageSize(), data], async () => {
+	const users = await getUserData()
 
-		data.value = users
-	}
-)
-watch(
-	() => getPageSize(),
-	async () => {
-		const users = await getData()
-
-		data.value = users
-	}
-)
+	data.value = users
+})
 </script>
 
 <template>
