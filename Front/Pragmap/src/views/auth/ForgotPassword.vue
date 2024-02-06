@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import router from '@/router'
-import { useRoute } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -15,42 +13,30 @@ import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
-const { query } = useRoute()
-const { resetPassword } = authService
+const { forgotPassword } = authService
 const formSchema = toTypedSchema(
-	z
-		.object({
-			password: z
-				.string({ required_error: 'Le champ est obligatoire' })
-				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
-			passwordConfirmation: z
-				.string({ required_error: 'Le champ est obligatoire' })
-				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
-		})
-		.superRefine((value, context) => {
-			if (value.password !== value.passwordConfirmation) {
-				return context.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: 'Les mots de passe ne correspondent pas',
-					path: ['passwordConfirmation']
-				})
-			}
-		})
+	z.object({
+		email: z
+			.string({ required_error: 'Le champ est obligatoire' })
+			.email({ message: 'Le champ doit être une adresse e-mail valide' })
+	})
 )
 const { handleSubmit, isSubmitting } = useForm({
 	validationSchema: formSchema
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		if (!query.token) throw new Error('Token is missing')
+		await forgotPassword(values.email)
 
-		resetPassword(query.token.toString(), values.password)
-
-		router.push('/login')
+		toast({
+			title: 'Succès',
+			description: `Un mail a été envoyé à l'adresse e-mail ${values.email}.`,
+			duration: 5000
+		})
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: 'Nous ne sommes pas parvenus à réinitialiser votre mot de passe.',
+			description: `Nous ne sommes pas parvenus à envoyer un mail à l'adresse e-mail ${values.email}.`,
 			duration: 5000
 		})
 	}
@@ -63,7 +49,8 @@ const onSubmit = handleSubmit(async (values) => {
 			<CardHeader>
 				<CardTitle>Pragmap</CardTitle>
 				<CardDescription>
-					Renseignez un nouveau mot de passe afin de le réinitialiser
+					Veuillez renseigner votre adresse e-mail afin de recevoir un lien de réinitialisation de
+					mot de passe
 				</CardDescription>
 			</CardHeader>
 			<CardContent>
@@ -73,28 +60,13 @@ const onSubmit = handleSubmit(async (values) => {
 				>
 					<FormField
 						v-slot="{ componentField }"
-						name="password"
+						name="email"
 					>
 						<FormItem>
-							<FormLabel>Mot de passe</FormLabel>
+							<FormLabel>Adresse e-mail</FormLabel>
 							<FormControl>
 								<Input
-									type="password"
-									v-bind="componentField"
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<FormField
-						v-slot="{ componentField }"
-						name="passwordConfirmation"
-					>
-						<FormItem>
-							<FormLabel>Confirmation du mot de passe</FormLabel>
-							<FormControl>
-								<Input
-									type="password"
+									type="email"
 									v-bind="componentField"
 								/>
 							</FormControl>
@@ -114,15 +86,15 @@ const onSubmit = handleSubmit(async (values) => {
 							v-if="!isSubmitting"
 							type="submit"
 						>
-							<Send class="w-4 h-4 mr-2" />
-							Réinitialiser
+							<Send class="h-4 w-4 mr-2" />
+							Envoyer
 						</Button>
 						<Button
 							v-else
 							type="disabled"
 						>
-							<Loader2 class="w-4 h-4 mr-2 animate-spin" />
-							Réinitialisation...
+							<Loader2 class="h-4 w-4 mr-2 animate-spin" />
+							Envoi...
 						</Button>
 					</div>
 				</form>

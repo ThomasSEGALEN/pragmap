@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import router from '@/router'
+import { useRoute } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
-import { useAuthStore } from '@/stores'
+import { authService } from '@/services'
 import { GuestLayout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,29 +15,42 @@ import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
-const { login } = useAuthStore()
+const { query } = useRoute()
+const { resetPassword } = authService
 const formSchema = toTypedSchema(
-	z.object({
-		email: z
-			.string({ required_error: 'Le champ est obligatoire' })
-			.email({ message: 'Le champ doit être une adresse e-mail valide' }),
-		password: z
-			.string({ required_error: 'Le champ est obligatoire' })
-			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
-	})
+	z
+		.object({
+			password: z
+				.string({ required_error: 'Le champ est obligatoire' })
+				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
+			passwordConfirmation: z
+				.string({ required_error: 'Le champ est obligatoire' })
+				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
+		})
+		.superRefine((value, context) => {
+			if (value.password !== value.passwordConfirmation) {
+				return context.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: 'Les mots de passe ne correspondent pas',
+					path: ['passwordConfirmation']
+				})
+			}
+		})
 )
 const { handleSubmit, isSubmitting } = useForm({
 	validationSchema: formSchema
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await login(values.email, values.password)
+		if (!query.token) throw new Error('Token is missing')
 
-		router.push('/')
+		resetPassword(query.token.toString(), values.password)
+
+		router.push('/login')
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à vous connecter avec ces identifiants.`,
+			description: 'Nous ne sommes pas parvenus à réinitialiser votre mot de passe.',
 			duration: 5000
 		})
 	}
@@ -48,7 +62,9 @@ const onSubmit = handleSubmit(async (values) => {
 		<Card :class="cn('w-[420px]', $attrs.class ?? '')">
 			<CardHeader>
 				<CardTitle>Pragmap</CardTitle>
-				<CardDescription>Connectez-vous pour accéder à l'application</CardDescription>
+				<CardDescription>
+					Renseignez un nouveau mot de passe afin de le réinitialiser
+				</CardDescription>
 			</CardHeader>
 			<CardContent>
 				<form
@@ -57,13 +73,13 @@ const onSubmit = handleSubmit(async (values) => {
 				>
 					<FormField
 						v-slot="{ componentField }"
-						name="email"
+						name="password"
 					>
 						<FormItem>
-							<FormLabel>Adresse e-mail</FormLabel>
+							<FormLabel>Mot de passe</FormLabel>
 							<FormControl>
 								<Input
-									type="email"
+									type="password"
 									v-bind="componentField"
 								/>
 							</FormControl>
@@ -72,10 +88,10 @@ const onSubmit = handleSubmit(async (values) => {
 					</FormField>
 					<FormField
 						v-slot="{ componentField }"
-						name="password"
+						name="passwordConfirmation"
 					>
 						<FormItem>
-							<FormLabel>Mot de passe</FormLabel>
+							<FormLabel>Confirmation du mot de passe</FormLabel>
 							<FormControl>
 								<Input
 									type="password"
@@ -92,22 +108,21 @@ const onSubmit = handleSubmit(async (values) => {
 							size="sm"
 							as-child
 						>
-							<RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
+							<RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
 						</Button>
-
 						<Button
 							v-if="!isSubmitting"
 							type="submit"
 						>
-							<Send class="w-4 h-4 mr-2" />
-							Se connecter
+							<Send class="h-4 w-4 mr-2" />
+							Réinitialiser
 						</Button>
 						<Button
 							v-else
 							type="disabled"
 						>
-							<Loader2 class="w-4 h-4 mr-2 animate-spin" />
-							Connexion...
+							<Loader2 class="h-4 w-4 mr-2 animate-spin" />
+							Réinitialisation...
 						</Button>
 					</div>
 				</form>
