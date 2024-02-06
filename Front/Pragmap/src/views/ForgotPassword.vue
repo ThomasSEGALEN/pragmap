@@ -73,7 +73,7 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormMessage />
 						</FormItem>
 					</FormField>
-					<div class="flex flex-col-reverse sm:flex-row justify-between">
+					<div class="flex flex-col-reverse md:flex-row justify-between">
 						<Button
 							type="button"
 							variant="link"
