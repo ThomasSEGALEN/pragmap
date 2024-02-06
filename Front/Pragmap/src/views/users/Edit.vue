@@ -67,10 +67,10 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
 	<Layout>
-		<Card :class="cn('w-[420px]', $attrs.class ?? '')">
-			<CardHeader>
-				<CardTitle>Modification d'un utilisateur</CardTitle>
-			</CardHeader>
+		<template #header>
+			<h1>Modification d'un utilisateur</h1>
+		</template>
+		<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
 			<CardContent>
 				<form
 					class="space-y-6"
@@ -164,7 +164,7 @@ const onSubmit = handleSubmit(async (values) => {
 							v-else
 							type="disabled"
 						>
-							<Loader2 class="w-4 h-4 mr-2 animate-spin" />
+							<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 							Modification...
 						</Button>
 					</div>

@@ -20,6 +20,9 @@ watch([() => getPageIndex(), () => getPageSize(), data], async () => {
 
 <template>
 	<Layout>
+		<template #header>
+			<h1>Liste des utilisateurs</h1>
+		</template>
 		<DataTable
 			:data="data"
 			:columns="columns"
