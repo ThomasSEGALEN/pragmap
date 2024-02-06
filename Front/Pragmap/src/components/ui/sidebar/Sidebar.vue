@@ -1,10 +1,14 @@
 <script setup lang="ts">
-import { useColorMode } from '@vueuse/core'
+import { useColorMode, useLocalStorage } from '@vueuse/core'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
+import { ChevronDown, ChevronUp } from 'lucide-vue-next'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { Moon, Sun } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 
+const isUserOpen = useLocalStorage('isUserOpen', true)
+const isCustomerOpen = useLocalStorage('isCustomerOpen', true)
 const mode = useColorMode()
 const switchMode = () => {
 	mode.value = mode.value === 'light' ? 'dark' : 'light'
@@ -36,42 +40,70 @@ const switchMode = () => {
 			</div>
 			<div class="space-y-4">
 				<div>
-					<h2 class="text-lg font-semibold tracking-tight mr-2">Utilisateurs</h2>
-					<RouterLink to="/users">
-						<Button
-							variant="ghost"
-							class="h-8 w-full justify-start"
-						>
-							Liste
-						</Button>
-					</RouterLink>
-					<RouterLink to="/users/create">
-						<Button
-							variant="ghost"
-							class="h-8 w-full justify-start"
-						>
-							Création
-						</Button>
-					</RouterLink>
+					<Collapsible v-model:open="isUserOpen">
+						<CollapsibleTrigger class="flex justify-between items-center">
+							<h2 class="text-lg font-semibold tracking-tight mr-2">Utilisateurs</h2>
+							<ChevronDown
+								v-if="!isUserOpen"
+								class="w-4 h-4"
+							/>
+							<ChevronUp
+								v-else
+								class="w-4 h-4"
+							/>
+						</CollapsibleTrigger>
+						<CollapsibleContent>
+							<RouterLink to="/users">
+								<Button
+									variant="ghost"
+									class="h-8 w-full justify-start"
+								>
+									Liste
+								</Button>
+							</RouterLink>
+							<RouterLink to="/users/create">
+								<Button
+									variant="ghost"
+									class="h-8 w-full justify-start"
+								>
+									Création
+								</Button>
+							</RouterLink>
+						</CollapsibleContent>
+					</Collapsible>
 				</div>
 				<div>
-					<h2 class="text-lg font-semibold tracking-tight mr-2">Clients</h2>
-					<RouterLink to="/users">
-						<Button
-							variant="ghost"
-							class="h-8 w-full justify-start"
-						>
-							Liste
-						</Button>
-					</RouterLink>
-					<RouterLink to="/users/create">
-						<Button
-							variant="ghost"
-							class="h-8 w-full justify-start"
-						>
-							Création
-						</Button>
-					</RouterLink>
+					<Collapsible v-model:open="isCustomerOpen">
+						<CollapsibleTrigger class="flex justify-between items-center">
+							<h2 class="text-lg font-semibold tracking-tight mr-2">Clients</h2>
+							<ChevronDown
+								v-if="!isCustomerOpen"
+								class="w-4 h-4"
+							/>
+							<ChevronUp
+								v-else
+								class="w-4 h-4"
+							/>
+						</CollapsibleTrigger>
+						<CollapsibleContent>
+							<RouterLink to="/customers">
+								<Button
+									variant="ghost"
+									class="h-8 w-full justify-start"
+								>
+									Liste
+								</Button>
+							</RouterLink>
+							<RouterLink to="/customers/create">
+								<Button
+									variant="ghost"
+									class="h-8 w-full justify-start"
+								>
+									Création
+								</Button>
+							</RouterLink>
+						</CollapsibleContent>
+					</Collapsible>
 				</div>
 			</div>
 		</div>
