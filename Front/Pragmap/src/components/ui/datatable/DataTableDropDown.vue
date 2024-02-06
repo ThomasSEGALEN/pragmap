@@ -26,10 +26,10 @@ const deleteUser = async (id: string) => await userService.delete(id)
 		<DropdownMenuTrigger as-child>
 			<Button
 				variant="ghost"
-				class="w-8 h-8 relative p-0"
+				class="h-8 w-8 relative p-0"
 			>
 				<span class="sr-only">Ouvrir le menu</span>
-				<MoreHorizontal class="w-4 h-4" />
+				<MoreHorizontal class="h-4 w-4" />
 			</Button>
 		</DropdownMenuTrigger>
 		<DropdownMenuContent align="end">

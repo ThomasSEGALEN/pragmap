@@ -26,8 +26,8 @@ defineProps<{
 		<DropdownMenu>
 			<DropdownMenuTrigger as-child>
 				<Button variant="outline">
-					Columns
-					<ChevronDown class="w-4 h-4 ml-2" />
+					Colonnes
+					<ChevronDown class="h-4 w-4 ml-2" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">
