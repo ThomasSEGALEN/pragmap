@@ -12,7 +12,7 @@ import {
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Menu, X } from 'lucide-vue-next'
-import { Sidebar } from '@/components/ui/sidebar'
+import { ResponsiveSidebar, Sidebar } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores'
 import { ref } from 'vue'
@@ -109,12 +109,7 @@ const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</header>
-			<div
-				class="min-h-80 w-full border-b"
-				:class="isToggled ? 'block' : 'hidden'"
-			>
-				TODO: RESPONSIVE SIDEBAR
-			</div>
+			<ResponsiveSidebar :is-toggled="isToggled" />
 			<main class="h-fit w-full flex justify-center p-6 md:p-12">
 				<slot />
 			</main>
