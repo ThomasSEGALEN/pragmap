@@ -14,7 +14,7 @@ namespace Pragmap.Domain.Entities
         public string Name { get; set; }
 
         [Column(TypeName = "jsonb")]
-        public string Data { get; set; } 
+        public string? Data { get; set; } 
 
         public Guid CustomerId { get; set; }
 
