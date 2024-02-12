@@ -41,8 +41,8 @@ export const applyOptions = <T>(options?: IApiOptions<T>): string => {
 }
 
 interface IBaseService<T, S, U> {
-	getCount(options?: IApiOptions<IUser>): Promise<number>
-	getAll(options: IApiOptions<IUser>): Promise<Array<T>>
+	getCount(options?: IApiOptions<T>): Promise<number>
+	getAll(options: IApiOptions<T>): Promise<Array<T>>
 	getById(id: string): Promise<T>
 	create(data: S): Promise<void>
 	update(id: string, data: U): Promise<void>
@@ -56,7 +56,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		this.apiPath = apiPath
 	}
 
-	public async getCount(options?: IApiOptions<IUser>): Promise<number> {
+	public async getCount(options?: IApiOptions<T>): Promise<number> {
 		try {
 			const response = await api.get(
 				`/${this.apiPath}/$count${options ? applyOptions(options) : ''}`
@@ -68,7 +68,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		}
 	}
 
-	public async getAll(options?: IApiOptions<IUser>): Promise<Array<T>> {
+	public async getAll(options?: IApiOptions<T>): Promise<Array<T>> {
 		try {
 			const response = await api.get(`/${this.apiPath}${options ? applyOptions(options) : ''}`)
 
@@ -78,7 +78,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		}
 	}
 
-	public async getById(id: string, options?: IApiOptions<IUser>): Promise<T> {
+	public async getById(id: string, options?: IApiOptions<T>): Promise<T> {
 		try {
 			const response = await api.get(
 				`/${this.apiPath}/${id}${options ? applyOptions(options) : ''}`

@@ -1,5 +1,3 @@
-import type { nullable } from "zod"
-
 export interface ICustomer {
 	id: string
 	name: string
@@ -8,7 +6,7 @@ export interface ICustomer {
 	createdAt: string
 	updatedAt: string
 }
-export interface IGetCustomer {
+export interface 	IGetCustomer {
 	id: string
 	name: string
 	logo?: string 

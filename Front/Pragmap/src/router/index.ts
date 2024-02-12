@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore, useUserStore } from '@/stores'
 import authMiddleware from '@/middlewares/auth'
+import { useCustomerStore } from '@/stores/customer'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -20,24 +21,24 @@ const router = createRouter({
 			beforeEnter: authMiddleware,
 			meta: { requiresAuth: true }
 		},
-		// {
-		// 	path: '/customers/:id/edit',
-		// 	name: 'CustomersEdit',
-		// 	component: () => import('@/views/customers/Edit.vue'),
-		// 	beforeEnter: (to) => {
-		// 		authMiddleware
+		{
+			path: '/customers/:id/edit',
+			name: 'CustomersEdit',
+			component: () => import('@/views/customers/EditCustomers.vue'),
+			beforeEnter: (to) => {
+				authMiddleware
 
-		// 		const userStore = useUserStore()
+				const customerStore = useCustomerStore()
 
-		// 		try {
-		// 			userStore.getEditCustomerById(to.params.id.toString())
-		// 		} catch (error) {
-		// 			return { name: 'Home' }
-		// 		}
-		// 	},
-		// 	meta: { requiresAuth: true },
-		// 	props: true
-		// },
+				try {
+					customerStore.getEditCustomerById(to.params.id.toString())
+				} catch (error) {
+					return { name: 'Home' }
+				}
+			},
+			meta: { requiresAuth: true },
+			props: true
+		},
 		// Users
 		{
 			path: '/users',

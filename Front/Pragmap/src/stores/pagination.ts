@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
-import { userService } from '@/services'
-import type { IGetUser } from '@/types'
+import { customerService, userService } from '@/services'
+import type { IGetCustomer, IGetUser } from '@/types'
 
 interface State {
 	pageSize: number
@@ -57,6 +57,19 @@ export const usePaginationStore = defineStore('pagination', {
 			this.setPageCount(Math.ceil(count / this.pageSize))
 
 			return users
+		},
+		async getDataCustomer(): Promise<Array<IGetCustomer>> {
+			const count = await customerService.getCount()
+			const customer = await customerService.getAll({
+				select: ['id', 'name', 'createdAt'],
+				top: this.pageSize,
+				skip: this.pageSize * this.pageIndex,
+				orderBy: { column: 'createdAt', order: 'asc' }
+			})
+
+			this.setPageCount(Math.ceil(count / this.pageSize))
+
+			return customer
 		}
 	}
 })
