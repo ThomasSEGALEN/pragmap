@@ -1,6 +1,6 @@
 <template>
   <Layout>
-    <div>
+    <div style="width: 100%;">
       <div class="navbar">
         <button @click="addNode('tache')">Tache</button>
         <button @click="addNode('jalon')">Jalon</button>
@@ -70,7 +70,7 @@ const addNode = (type: string) => {
       nom: `Nouveau `+ type,
       description: `Description de `+ type,
       durrée: 0,
-      commencer: true,
+      commencer: false,
      },
     position: {
       x: newX ,
