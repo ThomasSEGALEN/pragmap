@@ -42,16 +42,16 @@ const addNode = (type: string, text: String) => {
   const id = (elements.value.length + 1).toString() as unknown as string;
   console.log(id);
   elements.value.push({
-    id: id,
     type: type,
-    data: { label: `Node ${id}`},
+    data: { label: `Node ${id}` },
     position: {
-      x: window.innerWidth / 2,
-      y: window.innerHeight / 2,
+    x: window.innerWidth / 2,
+    y: window.innerHeight / 2,
     },
     label: text,
-    animated: true
-  });
+    animated: true,
+    id: ''
+    });
 };
 const saveNode = () => {
   json = JSON.stringify(elements.value);
