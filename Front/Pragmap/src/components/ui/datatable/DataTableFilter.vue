@@ -16,9 +16,9 @@ defineProps<{
 </script>
 
 <template>
-	<div class="flex flex-col justify-between space-y-2 sm:flex-row sm:space-y-0">
+	<div class="flex flex-col justify-between space-y-2 md:flex-row md:space-y-0">
 		<Input
-			class="sm:max-w-[250px]"
+			class="md:max-w-[250px]"
 			placeholder="Rechercher par adresse e-mail"
 			:model-value="table.getColumn('Adresse e-mail')?.getFilterValue() as string"
 			@update:model-value="table.getColumn('Adresse e-mail')?.setFilterValue($event)"
@@ -26,8 +26,8 @@ defineProps<{
 		<DropdownMenu>
 			<DropdownMenuTrigger as-child>
 				<Button variant="outline">
-					Columns
-					<ChevronDown class="w-4 h-4 ml-2" />
+					Colonnes
+					<ChevronDown class="h-4 w-4 ml-2" />
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end">

@@ -45,7 +45,7 @@ export const usePaginationStore = defineStore('pagination', {
 		getCanNextPage(): boolean {
 			return this.pageIndex < this.pageCount - 1
 		},
-		async getData(): Promise<Array<IGetUser>> {
+		async getUserData(): Promise<Array<IGetUser>> {
 			const count = await userService.getCount()
 			const users = await userService.getAll({
 				select: ['id', 'lastName', 'firstName', 'email', 'roleId', 'createdAt'],

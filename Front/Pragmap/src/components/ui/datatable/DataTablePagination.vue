@@ -25,7 +25,7 @@ const {
 
 <template>
 	<div
-		class="flex flex-col space-y-2 sm:flex-row-reverse sm:space-y-0 justify-between items-center"
+		class="flex flex-col space-y-2 md:flex-row-reverse md:space-y-0 justify-between items-center"
 	>
 		<div class="flex items-center space-x-2">
 			<div class="flex items-center justify-center text-sm font-medium">
@@ -33,39 +33,39 @@ const {
 			</div>
 			<Button
 				variant="outline"
-				class="w-8 h-8 p-0"
+				class="h-8 w-8 p-0"
 				:disabled="!getCanPreviousPage()"
 				@click="setPageIndex(0)"
 			>
 				<span class="sr-only">Aller à la première page</span>
-				<ChevronsLeft class="w-4 h-4" />
+				<ChevronsLeft class="h-4 w-4" />
 			</Button>
 			<Button
 				variant="outline"
-				class="w-8 h-8 p-0"
+				class="h-8 w-8 p-0"
 				:disabled="!getCanPreviousPage()"
 				@click="previousPage()"
 			>
 				<span class="sr-only">Aller à la page précédente</span>
-				<ChevronLeft class="w-4 h-4" />
+				<ChevronLeft class="h-4 w-4" />
 			</Button>
 			<Button
 				variant="outline"
-				class="w-8 h-8 p-0"
+				class="h-8 w-8 p-0"
 				:disabled="!getCanNextPage()"
 				@click="nextPage()"
 			>
 				<span class="sr-only">Aller à la page suivante</span>
-				<ChevronRight class="w-4 h-4" />
+				<ChevronRight class="h-4 w-4" />
 			</Button>
 			<Button
 				variant="outline"
-				class="w-8 h-8 p-0"
+				class="h-8 w-8 p-0"
 				:disabled="!getCanNextPage()"
 				@click="setPageIndex(getPageCount() - 1)"
 			>
 				<span class="sr-only">Aller à la dernière page</span>
-				<ChevronsRight class="w-4 h-4" />
+				<ChevronsRight class="h-4 w-4" />
 			</Button>
 		</div>
 		<div class="flex items-center space-x-2">

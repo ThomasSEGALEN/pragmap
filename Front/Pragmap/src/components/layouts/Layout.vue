@@ -1,172 +1,119 @@
 <script setup lang="ts">
 import { useColorMode } from '@vueuse/core'
+import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import { Moon, Sun } from 'lucide-vue-next'
 import {
-	NavigationMenu,
-	NavigationMenuContent,
-	NavigationMenuItem,
-	NavigationMenuLink,
-	NavigationMenuList,
-	NavigationMenuTrigger,
-	navigationMenuTriggerStyle
-} from '@/components/ui/navigation-menu'
-import { RouterLink } from 'vue-router'
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { Menu, X } from 'lucide-vue-next'
+import { ResponsiveSidebar, Sidebar } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/toast'
+import { useAuthStore } from '@/stores'
+import { ref } from 'vue'
+import {
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
+} from '@/components/ui/select'
 
-const mode = useColorMode()
-const switchMode = () => {
-	mode.value = mode.value === 'light' ? 'dark' : 'light'
-}
-const components: Array<{ title: string; href: string; description: string }> = [
-	{
-		title: 'Alert Dialog',
-		href: '/docs/primitives/alert-dialog',
-		description:
-			'A modal dialog that interrupts the user with important content and expects a response.'
-	},
-	{
-		title: 'Hover Card',
-		href: '/docs/primitives/hover-card',
-		description: 'For sighted users to preview content available behind a link.'
-	},
-	{
-		title: 'Progress',
-		href: '/docs/primitives/progress',
-		description:
-			'Displays an indicator showing the completion progress of a task, typically displayed as a progress bar.'
-	},
-	{
-		title: 'Scroll-area',
-		href: '/docs/primitives/scroll-area',
-		description: 'Visually or semantically separates content.'
-	},
-	{
-		title: 'Tabs',
-		href: '/docs/primitives/tabs',
-		description:
-			'A set of layered sections of content—known as tab panels—that are displayed one at a time.'
-	},
-	{
-		title: 'Tooltip',
-		href: '/docs/primitives/tooltip',
-		description:
-			'A popup that displays information related to an element when the element receives keyboard focus or the mouse hovers over it.'
-	}
-]
+const theme = useColorMode()
+const selectTheme = (value: string) => (theme.value = value as 'light' | 'dark')
+const isToggled = ref(false)
+const toggleSidebar = () => (isToggled.value = !isToggled.value)
+const { user } = useAuthStore()
+const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
 </script>
 
 <template>
-	<div class="p-4">
-		<header class="flex justify-between mb-6">
-			<NavigationMenu>
-				<NavigationMenuList>
-					<NavigationMenuItem>
-						<NavigationMenuLink
-							:class="navigationMenuTriggerStyle()"
-							as-child
-						>
-							<RouterLink to="/">Accueil</RouterLink>
-						</NavigationMenuLink>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuTrigger>Utlisateurs</NavigationMenuTrigger>
-						<NavigationMenuContent>
-							<ul class="grid gap-2 p-4 md:w-[400px]">
-								<li>
-									<RouterLink to="/users">
-										<div
-											class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-											data-radix-vue-collection-item=""
-											data-tabindex=""
-											tabindex="-1"
-										>
-											<div class="text-sm font-medium leading-none">
-												Tableau de bord des utilisateurs
-											</div>
-											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
-												Re-usable components built using Radix UI and Tailwind CSS.
-											</p>
-										</div>
-									</RouterLink>
-								</li>
-								<li>
-									<RouterLink to="/users/create">
-										<div
-											href="/users/create"
-											class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-											data-radix-vue-collection-item=""
-											data-tabindex=""
-											tabindex="-1"
-										>
-											<div class="text-sm font-medium leading-none">Création d'un utilisateur</div>
-											<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
-												How to install dependencies and structure your app.
-											</p>
-										</div>
-									</RouterLink>
-								</li>
-							</ul>
-						</NavigationMenuContent>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuTrigger>Components</NavigationMenuTrigger>
-						<NavigationMenuContent>
-							<ul class="grid w-[400px] gap-2 p-4 md:w-[600px] md:grid-cols-2">
-								<li
-									v-for="component in components"
-									:key="component.title"
-								>
-									<a
-										:href="component.href"
-										class="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
-										data-radix-vue-collection-item=""
-										data-tabindex=""
-										tabindex="-1"
-									>
-										<div class="text-sm font-medium leading-none">
-											{{ component.title }}
-										</div>
-										<p class="line-clamp-2 text-sm leading-snug text-muted-foreground">
-											{{ component.description }}
-										</p>
-									</a>
-								</li>
-							</ul>
-						</NavigationMenuContent>
-					</NavigationMenuItem>
-					<NavigationMenuItem>
-						<NavigationMenuLink
-							:class="navigationMenuTriggerStyle()"
-							as-child
-						>
-							<RouterLink to="/logout">Déconnexion</RouterLink>
-						</NavigationMenuLink>
-					</NavigationMenuItem>
-				</NavigationMenuList>
-			</NavigationMenu>
-
-			<Button
-				class=""
-				variant="outline"
-				size="icon"
-				@click="switchMode"
+	<div class="flex">
+		<Sidebar class="min-h-screen min-w-60 hidden md:block border-r" />
+		<div class="w-full flex flex-col">
+			<header
+				v-if="$slots.header"
+				class="flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b"
 			>
-				<Sun
-					v-if="mode === 'light'"
-					class="w-4 h-4"
-				/>
-				<Moon
-					v-if="mode === 'dark'"
-					class="w-4 h-4"
-				/>
-			</Button>
-		</header>
-
-		<main class="w-full">
-			<slot />
-		</main>
-
+				<Button
+					class="md:hidden h-8 w-8"
+					variant="ghost"
+					size="icon"
+					@click="toggleSidebar"
+				>
+					<Menu v-if="!isToggled" />
+					<X v-else />
+				</Button>
+				<slot name="header" />
+				<DropdownMenu>
+					<DropdownMenuTrigger as-child>
+						<Button
+							variant="ghost"
+							class="relative h-8 w-8 rounded-full"
+						>
+							<Avatar class="h-8 w-8">
+								{{ getInitials() }}
+							</Avatar>
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent
+						class="w-56"
+						align="end"
+					>
+						<DropdownMenuLabel class="font-normal flex">
+							<div class="flex flex-col space-y-1">
+								<p class="text-sm font-medium leading-none break-words">
+									{{ user.firstName }} {{ user.lastName }}
+								</p>
+								<p class="text-xs leading-none text-muted-foreground break-words">
+									{{ user.email }}
+								</p>
+							</div>
+						</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuGroup>
+							<RouterLink to="/profile">
+								<DropdownMenuItem>Profil</DropdownMenuItem>
+							</RouterLink>
+							<DropdownMenuItem as-child>
+								<Select
+									:default-value="theme"
+									@update:model-value="selectTheme"
+								>
+									<SelectTrigger
+										class="h-fit w-full border-none outline-none focus:outline-none ring-0 focus:ring-0 ring-offset-0 focus:ring-offset-0 px-2 py-1.5"
+									>
+										<SelectValue
+											:placeholder="theme === 'light' ? 'Thème clair' : 'Thème sombre'"
+										/>
+									</SelectTrigger>
+									<SelectContent>
+										<SelectGroup>
+											<SelectItem value="light">Thème clair </SelectItem>
+											<SelectItem value="dark">Thème sombre</SelectItem>
+										</SelectGroup>
+									</SelectContent>
+								</Select>
+							</DropdownMenuItem>
+						</DropdownMenuGroup>
+						<DropdownMenuSeparator />
+						<RouterLink to="/logout">
+							<DropdownMenuItem>Déconnexion</DropdownMenuItem>
+						</RouterLink>
+					</DropdownMenuContent>
+				</DropdownMenu>
+			</header>
+			<ResponsiveSidebar :is-toggled="isToggled" />
+			<main class="h-fit w-full flex justify-center p-6 md:p-12">
+				<slot />
+			</main>
+		</div>
 		<Toaster />
 	</div>
 </template>

@@ -13,14 +13,12 @@
 	"arrowParens": "always",
 	"rangeStart": 0,
 	"rangeEnd": 1e1000,
-	"parser": "",
-	"filepath": "",
 	"requirePragma": false,
 	"insertPragma": false,
 	"proseWrap": "preserve",
 	"htmlWhitespaceSensitivity": "css",
 	"vueIndentScriptAndStyle": false,
-	"endOfLine": "crlf",
+	"endOfLine": "lf",
 	"embeddedLanguageFormatting": "auto",
 	"singleAttributePerLine": true
 }
