@@ -23,6 +23,7 @@ static IEdmModel GetEdmModel()
     builder.EnableLowerCamelCase();
     builder.EntitySet<User>("User");
     builder.EntitySet<Customer>("Customer");
+    builder.EntitySet<RoadMap>("RoadMap");
     return builder.GetEdmModel();
 }
 
