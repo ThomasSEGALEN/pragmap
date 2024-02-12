@@ -4,6 +4,9 @@ import { Layout } from '@/components/layouts'
 
 <template>
 	<Layout>
+		<template #header>
+			<h1>Home</h1>
+		</template>
 		<div>Home page</div>
 	</Layout>
 </template>

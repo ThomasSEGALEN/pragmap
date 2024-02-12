@@ -6,6 +6,7 @@ import { DataTableColumnHeader, DataTableDropDown } from '@/components/ui/datata
 
 const { roles } = useAuthStore()
 const getRole = (row: Row<IGetUser>) => roles.find((role) => role.id === row.getValue('Rôle'))!.name
+
 export const columns: Array<ColumnDef<IGetUser>> = [
 	{
 		id: 'Adresse e-mail',

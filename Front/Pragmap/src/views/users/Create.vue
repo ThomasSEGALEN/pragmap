@@ -8,7 +8,7 @@ import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Layout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import {
@@ -70,10 +70,10 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
 	<Layout>
-		<Card :class="cn('w-[420px]', $attrs.class ?? '')">
-			<CardHeader>
-				<CardTitle>Création d'un utilisateur</CardTitle>
-			</CardHeader>
+		<template #header>
+			<h1>Création d'un utilisateur</h1>
+		</template>
+		<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
 			<CardContent>
 				<form
 					class="space-y-6"
@@ -178,14 +178,14 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormMessage />
 						</FormItem>
 					</FormField>
-					<div class="flex flex-col sm:flex-row justify-between">
+					<div class="flex flex-col-reverse md:flex-row justify-between">
 						<Button
 							type="button"
 							variant="link"
 							size="sm"
 							as-child
 						>
-							<RouterLink to="/login">&#x2190; Retour</RouterLink>
+							<RouterLink to="/users">&#x2190; Retour</RouterLink>
 						</Button>
 						<Button
 							v-if="!isSubmitting"
@@ -197,7 +197,7 @@ const onSubmit = handleSubmit(async (values) => {
 							v-else
 							type="disabled"
 						>
-							<Loader2 class="w-4 h-4 mr-2 animate-spin" />
+							<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 							Création...
 						</Button>
 					</div>

@@ -1,5 +1,4 @@
 import { api } from '@/main'
-import type { IUser } from '@/types'
 
 export interface IApiOptions<T> {
 	select?: Array<keyof T>
@@ -40,23 +39,23 @@ export const applyOptions = <T>(options?: IApiOptions<T>): string => {
 	return parameters
 }
 
-interface IBaseService<T, S, U> {
-	getCount(options?: IApiOptions<IUser>): Promise<number>
-	getAll(options: IApiOptions<IUser>): Promise<Array<T>>
-	getById(id: string): Promise<T>
-	create(data: S): Promise<void>
-	update(id: string, data: U): Promise<void>
+interface IBaseService<T, S, U, V> {
+	getCount(options?: IApiOptions<T>): Promise<number>
+	getAll(options: IApiOptions<T>): Promise<Array<T>>
+	getById(id: string): Promise<S>
+	create(data: U): Promise<void>
+	update(id: string, data: V): Promise<void>
 	delete(id: string): Promise<void>
 }
 
-export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
+export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V> {
 	private apiPath: string
 
 	constructor(apiPath: string) {
 		this.apiPath = apiPath
 	}
 
-	public async getCount(options?: IApiOptions<IUser>): Promise<number> {
+	public async getCount(options?: IApiOptions<T>): Promise<number> {
 		try {
 			const response = await api.get(
 				`/${this.apiPath}/$count${options ? applyOptions(options) : ''}`
@@ -68,7 +67,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		}
 	}
 
-	public async getAll(options?: IApiOptions<IUser>): Promise<Array<T>> {
+	public async getAll(options?: IApiOptions<T>): Promise<Array<T>> {
 		try {
 			const response = await api.get(`/${this.apiPath}${options ? applyOptions(options) : ''}`)
 
@@ -78,19 +77,19 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		}
 	}
 
-	public async getById(id: string, options?: IApiOptions<IUser>): Promise<T> {
+	public async getById(id: string, options?: IApiOptions<S>): Promise<S> {
 		try {
 			const response = await api.get(
 				`/${this.apiPath}/${id}${options ? applyOptions(options) : ''}`
 			)
 
-			return response.data as T
+			return response.data as S
 		} catch (error) {
 			throw new Error('GetById Error')
 		}
 	}
 
-	public async create(data: S): Promise<void> {
+	public async create(data: U): Promise<void> {
 		try {
 			console.log(data)
 			await api.post(`/${this.apiPath}`, data)
@@ -99,7 +98,7 @@ export abstract class BaseService<T, S, U> implements IBaseService<T, S, U> {
 		}
 	}
 
-	public async update(id: string, data: U): Promise<void> {
+	public async update(id: string, data: V): Promise<void> {
 		try {
 			await api.put(`/${this.apiPath}/${id}`, data)
 		} catch (error) {
