@@ -40,15 +40,15 @@ export default {
 					<span class="whitespace-nowrap">{{ title }}</span>
 					<ArrowDown
 						v-if="column.getIsSorted() === 'desc'"
-						class="w-4 h-4 ml-2"
+						class="h-4 w-4 ml-2"
 					/>
 					<ArrowUp
 						v-else-if="column.getIsSorted() === 'asc'"
-						class="w-4 h-4 ml-2"
+						class="h-4 w-4 ml-2"
 					/>
 					<ArrowUpDown
 						v-else
-						class="w-4 h-4 ml-2"
+						class="h-4 w-4 ml-2"
 					/>
 				</Button>
 			</DropdownMenuTrigger>
