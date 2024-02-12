@@ -39,10 +39,10 @@ const elements = ref<Elements>([])
 var json = JSON.stringify(elements.value)
 
 const addNode = (type: string, text: String) => {
-  const id = (elements.value.length + 1);
+  const id = (elements.value.length + 1).toString();
   console.log(id);
   elements.value.push({
-    id: '1',
+    id: id,
     type: type,
     data: { label: `Node ${id}`},
     position: {
