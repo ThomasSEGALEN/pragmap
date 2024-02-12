@@ -8,7 +8,7 @@
         <button @click="importNode()">Load</button>
       </div>
       <VueFlow v-model="elements" class="vue-flow-basic-example" :default-zoom="1" :min-zoom="0.2" :max-zoom="4" style="height: 80vh;">
-        <Background pattern-color="#aaa" gap="8" />
+        <Background pattern-color="#aaa" :gap="8" />
         <MiniMap />
         <template #node-inputed="nodeProps">
           <InputNode v-bind="nodeProps" />
@@ -50,7 +50,7 @@ const addNode = (type: string, text: String) => {
     },
     label: text,
     animated: true,
-    id: ''
+    id: id
     });
 };
 const saveNode = () => {
