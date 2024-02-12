@@ -30,18 +30,20 @@ import InputNode from './nodes/InputNode.vue'
 import OutputNode from './nodes/OutputNode.vue'
 import { ref, watch } from 'vue'
 import '../css/roadap.css'
+import type { ElementData } from '@vue-flow/core'
 const { onConnect, addEdges } = useVueFlow()
 onConnect((params) => {
   addEdges([params])
 })
 const elements = ref<Elements>([])
 var json = JSON.stringify(elements.value)
+
 const addNode = (type: string, text: String) => {
   const id = (elements.value.length + 1);
   console.log(id);
   elements.value.push({
-    id: id.toString(),
-    type,
+    id: id,
+    type: type,
     data: { label: `Node ${id}`},
     position: {
       x: window.innerWidth / 2,
