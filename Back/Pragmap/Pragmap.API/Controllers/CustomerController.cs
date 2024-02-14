@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Pragmap.API.Application.Commands;
 using Pragmap.API.Application.Commands.Controller;
+using Pragmap.Controllers.Entities;
 using Pragmap.Domain.Entities;
 using Pragmap.Infrastructure.UnitOfWork;
 
@@ -51,6 +52,19 @@ namespace Pragmap.API.Controllers
                 return Ok(result.Data);
             }
             return BadRequest(result.Error);
+        }
+
+        public async Task<IActionResult> Delete([FromRoute] Guid key)
+        {
+            var customerRepository = _unitOfWork.GetRepository<Customer>();
+            Customer? customer = customerRepository.Single(u => u.Id.Equals(key));
+            if (customer == null)
+            {
+                return BadRequest();
+            }
+            customerRepository.Delete(customer);
+            await _unitOfWork.Complete();
+            return NoContent();
         }
     }
 }
