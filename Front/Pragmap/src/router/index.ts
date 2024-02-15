@@ -117,10 +117,10 @@ const router = createRouter({
 			component: () => import('@/views/NotFound.vue')
 		},
 		{
-			path: '/roadMap',
-			name: 'roadMap',
-			component: () => import('@/views/roadMap/RoadMap.vue'),
-			beforeEnter: authMiddleware, meta: {requiresAuth: true}
+			path: '/roadmap',
+			name: 'roadmap',
+			component: () => import('@/views/roadMap/Roadmap.vue'),
+			beforeEnter: authMiddleware, meta: { requiresAuth: true }
 		}
 	]
 })
