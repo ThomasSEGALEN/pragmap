@@ -3,13 +3,13 @@ import { useColorMode } from '@vueuse/core'
 import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuLabel,
-    DropdownMenuSeparator,
-    DropdownMenuTrigger
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuGroup,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Menu, X } from 'lucide-vue-next'
 import { ResponsiveSidebar, Sidebar } from '@/components/ui/sidebar'
@@ -17,12 +17,12 @@ import { Toaster } from '@/components/ui/toast'
 import { useAuthStore } from '@/stores'
 import { ref } from 'vue'
 import {
-    Select,
-    SelectContent,
-    SelectGroup,
-    SelectItem,
-    SelectTrigger,
-    SelectValue
+	Select,
+	SelectContent,
+	SelectGroup,
+	SelectItem,
+	SelectTrigger,
+	SelectValue
 } from '@/components/ui/select'
 
 const theme = useColorMode()
@@ -30,7 +30,8 @@ const selectTheme = (value: string) => (theme.value = value as 'light' | 'dark')
 const isToggled = ref(false)
 const toggleSidebar = () => (isToggled.value = !isToggled.value)
 const { user } = useAuthStore()
-const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
+const getInitials = () =>
+	`${user.firstName.charAt(0).toUpperCase()}${user.lastName.charAt(0).toUpperCase()}`.toUpperCase()
 </script>
 
 <template>
@@ -69,7 +70,8 @@ const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}
 						<DropdownMenuLabel class="font-normal flex">
 							<div class="flex flex-col space-y-1">
 								<p class="text-sm font-medium leading-none break-words">
-									{{ user.firstName }} {{ user.lastName }}
+									{{ user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1) }}
+									{{ user.lastName.charAt(0).toUpperCase() + user.lastName.substring(1) }}
 								</p>
 								<p class="text-xs leading-none text-muted-foreground break-words">
 									{{ user.email }}

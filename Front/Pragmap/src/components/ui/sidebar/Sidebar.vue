@@ -136,7 +136,8 @@ const isRoadmapOpen = useLocalStorage('isRoadmapOpen', true)
 				<div>
 					<div class="flex flex-col space-y-2 px-2">
 						<p class="font-medium leading-none break-words">
-							{{ user.firstName }} {{ user.lastName }}
+							{{ user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1) }}
+							{{ user.lastName.charAt(0).toUpperCase() + user.lastName.substring(1) }}
 						</p>
 						<p class="text-sm leading-none text-muted-foreground break-words">
 							{{ user.email }}
