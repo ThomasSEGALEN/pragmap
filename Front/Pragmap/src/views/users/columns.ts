@@ -1,8 +1,11 @@
 import { h } from 'vue'
 import type { ColumnDef, Row } from '@tanstack/vue-table'
+import router from '@/router'
+import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import type { IGetUser } from '@/types'
 import { DataTableColumnHeader, DataTableDropDown } from '@/components/ui/datatable'
+import { toast } from '@/components/ui/toast'
 
 const { roles } = useAuthStore()
 const getRole = (row: Row<IGetUser>) => roles.find((role) => role.id === row.getValue('Rôle'))!.name
@@ -45,7 +48,21 @@ export const columns: Array<ColumnDef<IGetUser>> = [
 		cell: ({ row }) =>
 			h(
 				'div',
-				h(DataTableDropDown, { name: 'UsersEdit', id: row.original.id, email: row.original.email })
+				h(DataTableDropDown, {
+					name: 'UsersEdit', id: row.original.id, deleteEntity: async (id: string) => {
+						try {
+							await userService.delete(id)
+
+							router.go(0)
+						} catch (error) {
+							toast({
+								title: 'Erreur',
+								description: `Nous ne sommes pas parvenus à supprimer cet utilisateur.`,
+								duration: 5000
+							})
+						}
+					}
+				})
 			),
 		enableHiding: false
 	}

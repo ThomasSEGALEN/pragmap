@@ -55,7 +55,7 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		userService.create(values)
+		await userService.create(values)
 
 		router.push('/users')
 	} catch (error) {
@@ -88,7 +88,7 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormControl>
 								<Select v-bind="componentField">
 									<SelectTrigger>
-										<SelectValue placeholder="Sélectionnez un rôle" />
+										<SelectValue placeholder="Sélectionner un rôle" />
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>

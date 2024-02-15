@@ -58,7 +58,7 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à créer un utilisateur.`,
+			description: `Nous ne sommes pas parvenus à modifier cet utilisateur.`,
 			duration: 5000
 		})
 	}
@@ -85,7 +85,7 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormControl>
 								<Select v-bind="componentField">
 									<SelectTrigger>
-										<SelectValue placeholder="Sélectionnez un rôle" />
+										<SelectValue placeholder="Sélectionner un rôle" />
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>
