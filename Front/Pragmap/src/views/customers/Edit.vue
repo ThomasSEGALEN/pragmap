@@ -5,32 +5,22 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { customerService } from '@/services'
-import { useAuthStore } from '@/stores'
 import { useCustomerStore } from '@/stores'
 import { Layout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectLabel,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select'
 import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
 const { id } = defineProps<{
 	id: string
 }>()
-const  handleLogoChange = (event) =>{
-        const file = event.target.files[0]
-        // Faites quelque chose avec le fichier, par exemple l'envoyer au serveur
-    }
+const handleLogoChange = (event) => {
+	const file = event.target.files[0]
+	// Faites quelque chose avec le fichier, par exemple l'envoyer au serveur
+}
 const { editCustomer, clearEditCustomer } = useCustomerStore()
 const formSchema = toTypedSchema(
 	z.object({
@@ -39,8 +29,9 @@ const formSchema = toTypedSchema(
 			.string({ required_error: 'Le champ est obligatoire' })
 			.default(editCustomer?.name ?? ''),
 		logo: z
-			.string({ required_error: 'Le champ est obligatoire' }).optional()
-			.default(editCustomer?.logo ?? ''),
+			.string({ required_error: 'Le champ est obligatoire' })
+			.optional()
+			.default(editCustomer?.logo ?? '')
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -56,7 +47,7 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à créer un client.`,
+			description: `Nous ne sommes pas parvenus à modifier ce client.`,
 			duration: 5000
 		})
 	}
@@ -88,16 +79,24 @@ const onSubmit = handleSubmit(async (values) => {
 							</FormItem>
 						</FormField>
 					</div>
-					<FormField v-slot="{ componentField }" name="logo">
-                            <FormItem class="w-full">
-                                <FormLabel>Logo</FormLabel>
-                                <FormControl>
-                                    <!-- Champ d'entrée de l'image -->
-                                    <Input v-bind="componentField" type="file" accept="image/*" @change="handleLogoChange" />
-                                </FormControl>
-                                <FormMessage />
-                            </FormItem>
-                        </FormField>
+					<FormField
+						v-slot="{ componentField }"
+						name="logo"
+					>
+						<FormItem class="w-full">
+							<FormLabel>Logo</FormLabel>
+							<FormControl>
+								<!-- Champ d'entrée de l'image -->
+								<Input
+									v-bind="componentField"
+									type="file"
+									accept="image/*"
+									@change="handleLogoChange"
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					</FormField>
 					<div class="flex flex-col sm:flex-row justify-between">
 						<Button
 							type="button"
@@ -105,7 +104,7 @@ const onSubmit = handleSubmit(async (values) => {
 							size="sm"
 							as-child
 						>
-							<RouterLink to="/login">&#x2190; Retour</RouterLink>
+							<RouterLink to="/customers">&#x2190; Retour</RouterLink>
 						</Button>
 						<Button
 							v-if="!isSubmitting"
