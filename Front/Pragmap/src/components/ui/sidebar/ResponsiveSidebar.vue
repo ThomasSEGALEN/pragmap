@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Button } from '@/components/ui/button'
-import { Handshake, UserRound } from 'lucide-vue-next'
+import { GanttChart, Handshake, UserRound } from 'lucide-vue-next'
 
 defineProps({
 	isToggled: Boolean
@@ -9,9 +9,25 @@ defineProps({
 
 <template>
 	<div
-		class="h-fit w-full p-2 space-y-2 border-b md:hidden"
-		:class="isToggled ? 'block sm:flex sm:flex-col sm:items-center' : 'hidden'"
+		class="h-fit w-full space-y-2 border-y p-2 mt-16 bg-background md:hidden"
+		:class="isToggled ? 'fixed sm:flex sm:flex-col sm:items-center' : 'hidden'"
 	>
+		<div class="w-full flex flex-col md:hidden">
+			<div
+				class="flex justify-start sm:justify-center items-center font-semibold text-sm ml-2 sm:ml-0 mb-2 text-muted-foreground"
+			>
+				<GanttChart class="h-4 w-4 mr-2" />
+				Pragmap
+			</div>
+			<RouterLink to="/users/create">
+				<Button
+					variant="ghost"
+					class="h-8 w-full justify-start sm:justify-center"
+				>
+					Accueil
+				</Button>
+			</RouterLink>
+		</div>
 		<div class="w-full flex flex-col md:hidden">
 			<div
 				class="flex justify-start sm:justify-center items-center font-semibold text-sm ml-2 sm:ml-0 mb-2 text-muted-foreground"

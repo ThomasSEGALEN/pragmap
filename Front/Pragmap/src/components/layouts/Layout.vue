@@ -36,11 +36,11 @@ const getInitials = () =>
 
 <template>
 	<div class="flex">
-		<Sidebar class="min-h-screen min-w-60 hidden md:block border-r" />
-		<div class="w-full flex flex-col">
+		<Sidebar class="fixed h-full min-w-60 hidden md:block border-r z-50 overflow-y-auto" />
+		<div class="w-full flex flex-col md:ml-60">
 			<header
 				v-if="$slots.header"
-				class="flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b"
+				class="w-full fixed flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b bg-background z-50"
 			>
 				<Button
 					class="md:hidden h-8 w-8"
@@ -111,8 +111,11 @@ const getInitials = () =>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</header>
-			<ResponsiveSidebar :is-toggled="isToggled" />
-			<main class="h-fit w-full flex justify-center p-6 md:p-12">
+			<ResponsiveSidebar
+				class="z-50"
+				:is-toggled="isToggled"
+			/>
+			<main class="h-fit w-full flex justify-center p-6 mt-16 md:p-12">
 				<slot />
 			</main>
 		</div>
