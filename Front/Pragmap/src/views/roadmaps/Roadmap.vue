@@ -86,7 +86,6 @@ import TacheNode from './nodes/TacheNode.vue'
 import JalonNode from './nodes/JalonNode.vue'
 import LivrableNode from './nodes/LivrableNode.vue'
 import { ref, computed } from 'vue'
-import '../css/roadap.css'
 const { onConnect, addEdges } = useVueFlow()
 const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
