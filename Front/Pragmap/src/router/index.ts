@@ -115,6 +115,12 @@ const router = createRouter({
 			path: '/:pathMatch(.*)*',
 			name: 'NotFound',
 			component: () => import('@/views/NotFound.vue')
+		},
+		{
+			path: '/roadMap',
+			name: 'roadMap',
+			component: () => import('@/views/roadMap/RoadMap.vue'),
+			beforeEnter: authMiddleware, meta: {requiresAuth: true}
 		}
 	]
 })
