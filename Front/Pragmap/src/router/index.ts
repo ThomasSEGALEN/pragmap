@@ -1,45 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore, useUserStore } from '@/stores'
-import authMiddleware from '@/middlewares/auth'
-import { useCustomerStore } from '@/stores/customer'
+import { authMiddleware } from '@/middlewares'
+import { useAuthStore, useCustomerStore, useUserStore } from '@/stores'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
-		// Customers
-		{
-			path: '/customers',
-			name: 'CustomersIndex',
-			component: () => import('@/views/customers/IndexCustomers.vue'),
-			beforeEnter: authMiddleware,
-			meta: { requiresAuth: true }
-		},
-		{
-			path: '/customers/create',
-			name: 'CustomersCreate',
-			component: () => import('@/views/customers/CreateCustomers.vue'),
-			beforeEnter: authMiddleware,
-			meta: { requiresAuth: true }
-		},
-		{
-			path: '/customers/:id/edit',
-			name: 'CustomersEdit',
-			component: () => import('@/views/customers/EditCustomers.vue'),
-			beforeEnter: (to) => {
-				authMiddleware
-
-				const customerStore = useCustomerStore()
-
-				try {
-					customerStore.getEditCustomerById(to.params.id.toString())
-				} catch (error) {
-					return { name: 'Home' }
-				}
-			},
-			meta: { requiresAuth: true },
-			props: true
-		},
-		// Users
 		{
 			path: '/users',
 			name: 'UsersIndex',
@@ -65,6 +30,38 @@ const router = createRouter({
 
 				try {
 					getEditUserById(to.params.id.toString())
+				} catch (error) {
+					return { name: 'Home' }
+				}
+			},
+			meta: { requiresAuth: true },
+			props: true
+		},
+		{
+			path: '/customers',
+			name: 'CustomersIndex',
+			component: () => import('@/views/customers/Index.vue'),
+			beforeEnter: authMiddleware,
+			meta: { requiresAuth: true }
+		},
+		{
+			path: '/customers/create',
+			name: 'CustomersCreate',
+			component: () => import('@/views/customers/Create.vue'),
+			beforeEnter: authMiddleware,
+			meta: { requiresAuth: true }
+		},
+		{
+			path: '/customers/:id/edit',
+			name: 'CustomersEdit',
+			component: () => import('@/views/customers/Edit.vue'),
+			beforeEnter: (to) => {
+				authMiddleware
+
+				const customerStore = useCustomerStore()
+
+				try {
+					customerStore.getEditCustomerById(to.params.id.toString())
 				} catch (error) {
 					return { name: 'Home' }
 				}
