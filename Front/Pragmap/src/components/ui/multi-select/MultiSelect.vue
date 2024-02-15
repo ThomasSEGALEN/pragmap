@@ -23,28 +23,30 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 </script>
 
 <template>
-	<Multiselect
-		:class="cn('flex h-10 w-full', props.class ?? '')"
-		v-model="modelValue"
-		:options="options"
-		:value="String"
-		:multiple="true"
-		:close-on-select="false"
-		:clear-on-select="false"
-		:preserve-search="true"
-		:placeholder="placeholder ?? 'Sélectionner des options'"
-		label="label"
-		track-by="value"
-		:preselect-first="false"
-		select-label=""
-		deselect-label=""
-		selected-label=""
-		:limit="0"
-		:limit-text="
-			(count: number) =>
-				`${count} ${count === 1 ? limitText?.singular ?? 'option sélectionnée' : limitText?.plural ?? 'option(s) sélectionnée(s)'}`
-		"
-	/>
+	<div class="relative z-0">
+		<Multiselect
+			:class="cn('flex h-10 w-full', props.class ?? '')"
+			v-model="modelValue"
+			:options="options"
+			:value="String"
+			:multiple="true"
+			:close-on-select="false"
+			:clear-on-select="false"
+			:preserve-search="true"
+			:placeholder="placeholder ?? 'Sélectionner des options'"
+			label="label"
+			track-by="value"
+			:preselect-first="false"
+			select-label=""
+			deselect-label=""
+			selected-label=""
+			:limit="0"
+			:limit-text="
+				(count: number) =>
+					`${count} ${count === 1 ? limitText?.singular ?? 'option sélectionnée' : limitText?.plural ?? 'option(s) sélectionnée(s)'}`
+			"
+		/>
+	</div>
 </template>
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
