@@ -29,7 +29,7 @@ const {
 	>
 		<div class="flex items-center space-x-2">
 			<div class="flex items-center justify-center text-sm font-medium">
-				Page {{ getPageIndex() + 1 }} sur {{ getPageCount() }}
+				Page {{ getPageIndex() + 1 }} sur {{ getPageCount() === 0 ? 1 : getPageCount() }}
 			</div>
 			<Button
 				variant="outline"
