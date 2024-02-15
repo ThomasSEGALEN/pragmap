@@ -51,7 +51,6 @@
 		<div
 			v-for="(value, key) in selectedNode.data"
 			:key="key"
-			v-if="selectedNode"
 		>
 			<label>{{ key }}</label>
 			<textarea
