@@ -119,7 +119,7 @@ const router = createRouter({
 		{
 			path: '/roadmap',
 			name: 'roadmap',
-			component: () => import('@/views/roadMap/Roadmap.vue'),
+			component: () => import('@/views/roadmaps/Roadmap.vue'),
 			beforeEnter: authMiddleware, meta: { requiresAuth: true }
 		}
 	]
