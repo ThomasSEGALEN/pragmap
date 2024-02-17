@@ -1,6 +1,8 @@
 <template>
 	<Layout>
-		<template #header>Roadmap</template>
+		<template #header>
+			<h1>Roadmap</h1>
+		</template>
 		<div style="width: 100%">
 			<div class="navbar">
 				<button @click="addNode('tache')">Tache</button>
