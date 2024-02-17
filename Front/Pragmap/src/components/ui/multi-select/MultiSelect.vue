@@ -8,6 +8,7 @@ const props = defineProps<{
 	modelValue: Array<Record<'label' | 'value', string>> | Array<string> | null
 	options: Array<Record<'label' | 'value', string>>
 	placeholder?: string
+	message?: string
 	limitText?: Record<'singular' | 'plural', string>
 	class?: string
 }>()
@@ -43,9 +44,12 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 			:limit="0"
 			:limit-text="
 				(count: number) =>
-					`${count} ${count === 1 ? limitText?.singular ?? 'option sélectionnée' : limitText?.plural ?? 'option(s) sélectionnée(s)'}`
+					`${count} ${count === 1 ? limitText?.singular ?? 'option sélectionnée' : limitText?.plural ?? 'options sélectionnées'}`
 			"
-		/>
+		>
+			<template #noOptions>{{ message ?? 'Aucune option trouvée' }}</template>
+			<template #noResult>{{ message ?? 'Aucun résultat trouvé' }}</template>
+		</Multiselect>
 	</div>
 </template>
 
@@ -68,7 +72,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 	@apply space-x-1;
 }
 .multiselect__strong {
-	@apply p-0 m-0 text-sm font-medium;
+	@apply p-0 m-0 text-sm font-medium text-primary;
 }
 .multiselect__tags {
 	@apply py-0 px-2 flex justify-start items-center space-x-2 rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
@@ -83,7 +87,7 @@ input:focus {
 .multiselect__placeholder {
 	@apply p-0 m-0 text-primary;
 }
-.multiselect__tag {
+/* .multiselect__tag {
 	@apply m-0 inline-flex justify-center items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90;
 }
 .multiselect__tag-icon {
@@ -91,20 +95,20 @@ input:focus {
 }
 .multiselect__tag-icon::after {
 	@apply text-secondary;
-}
+} */
 .multiselect__single {
 	@apply hidden;
 }
 .multiselect__content-wrapper {
-	@apply text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary-foreground text-primary hover:bg-primary-foreground;
+	@apply text-sm font-medium border border-input ring-offset-background transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary-foreground text-primary;
 }
 .multiselect__option--selected {
-	@apply bg-primary text-secondary;
+	@apply bg-primary text-primary-foreground;
 }
 .multiselect__option--highlight {
-	@apply bg-primary/90;
+	@apply bg-primary/90 text-primary-foreground;
 }
 .multiselect__option--selected.multiselect__option--highlight {
-	@apply bg-primary;
+	@apply bg-primary text-primary-foreground;
 }
 </style>
