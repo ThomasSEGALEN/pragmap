@@ -40,7 +40,7 @@ const getInitials = () =>
 		<div class="w-full flex flex-col md:ml-60">
 			<header
 				v-if="$slots.header"
-				class="w-full fixed flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b bg-background z-50"
+				class="w-full flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b bg-background z-50"
 			>
 				<Button
 					class="md:hidden h-8 w-8"
@@ -67,7 +67,7 @@ const getInitials = () =>
 						class="w-56"
 						align="end"
 					>
-						<DropdownMenuLabel class="font-normal flex">
+						<DropdownMenuLabel>
 							<div class="flex flex-col space-y-1">
 								<p class="text-sm font-medium leading-none break-words">
 									{{ user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1) }}
@@ -115,7 +115,7 @@ const getInitials = () =>
 				class="z-50"
 				:is-toggled="isToggled"
 			/>
-			<main class="h-fit w-full flex justify-center p-6 mt-16 md:p-12">
+			<main class="h-fit w-full flex justify-center p-6 md:p-12">
 				<slot />
 			</main>
 		</div>

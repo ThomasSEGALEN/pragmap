@@ -9,8 +9,8 @@ defineProps({
 
 <template>
 	<div
-		class="h-fit w-full space-y-2 border-y p-2 mt-16 bg-background md:hidden"
-		:class="isToggled ? 'fixed sm:flex sm:flex-col sm:items-center' : 'hidden'"
+		class="h-fit w-full space-y-2 border-y p-2 bg-background md:hidden"
+		:class="isToggled ? 'absolute top-16 sm:flex sm:flex-col sm:items-center' : 'hidden'"
 	>
 		<div class="w-full flex flex-col md:hidden">
 			<div
