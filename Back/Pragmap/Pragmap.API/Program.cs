@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Pragmap;
+using Pragmap.API.Hubs;
 using Pragmap.API.OperationFilters;
 using Pragmap.Controllers.Entities;
 using Pragmap.Domain.Entities;
@@ -29,6 +30,7 @@ static IEdmModel GetEdmModel()
 
 // Add services to the container.
 
+builder.Services.AddSignalR();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddControllers()
     .AddOData(options =>
@@ -84,6 +86,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 app.UseAuthentication();
 app.MapControllers();
+app.MapHub<RoadMapHub>("/roadmaphub");
 
 app.UseCors("AllowSpecificOrigin");
 
