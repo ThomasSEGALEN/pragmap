@@ -42,7 +42,8 @@ const formSchema = toTypedSchema(
 			.string({ required_error: 'Le champ est obligatoire' })
 			.email({ message: 'Le champ doit être une adresse e-mail valide' })
 			.default(editUser?.email ?? ''),
-		roleId: z.string({ required_error: 'Le champ est obligatoire' }).default(editUser?.roleId ?? '')
+		roleId: z.string({ required_error: 'Le champ est obligatoire' })
+		.default(editUser?.roleId ?? '')
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
