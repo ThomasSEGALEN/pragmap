@@ -2,8 +2,6 @@ export interface IRoadmap {
 	id: string
 	name: string
 	data: string
-<<<<<<< Updated upstream
-=======
 	customerId: string
 	createdAt: string
 	updatedAt: string
@@ -32,7 +30,6 @@ export interface IDisplayRoadMap {
 	name: string
 	data: string
 	customerId: string
->>>>>>> Stashed changes
 	createdAt: string
 	updatedAt: string
 }
