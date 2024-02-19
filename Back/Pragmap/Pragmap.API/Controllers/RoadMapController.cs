@@ -32,7 +32,7 @@ namespace Pragmap.API.Controllers
             return _unitOfWork.GetRepository<RoadMap>().Single(key);
         }
 
-        public async Task<IActionResult> Post(CreateRoadMapCommand createRoadMapCommand)
+        public async Task<IActionResult> Post([FromBody] CreateRoadMapCommand createRoadMapCommand)
         {
             var result = await _mediatR.Send(createRoadMapCommand);
             if (result.IsSuccess)
