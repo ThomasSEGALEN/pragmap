@@ -85,6 +85,7 @@ const getInitials = () =>
 							</RouterLink>
 							<DropdownMenuItem as-child>
 								<Select
+									name="theme"
 									:default-value="theme"
 									@update:model-value="selectTheme"
 								>

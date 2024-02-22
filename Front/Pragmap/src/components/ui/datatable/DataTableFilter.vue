@@ -19,7 +19,9 @@ defineProps<{
 	<div class="flex flex-col justify-between space-y-2 md:flex-row md:space-y-0">
 		<Input
 			class="md:max-w-[250px]"
+			name="search"
 			placeholder="Rechercher par adresse e-mail"
+			autofocus
 			:model-value="table.getColumn(table.getAllColumns()[0].id)?.getFilterValue() as string"
 			@update:model-value="table.getColumn(table.getAllColumns()[0].id)?.setFilterValue($event)"
 		/>

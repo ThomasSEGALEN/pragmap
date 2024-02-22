@@ -71,6 +71,7 @@ const {
 		<div class="flex items-center space-x-2">
 			<p class="text-sm font-medium">Lignes par page</p>
 			<Select
+				name="pageSize"
 				:model-value="`${getPageSize()}`"
 				@update:model-value="setPageSize(parseInt($event))"
 			>
