@@ -5,7 +5,7 @@ import { customerService } from '@/services'
 import type { ICustomerUser, IGetCustomer } from '@/types'
 import { DataTableColumnHeader, DataTableDropDown } from '@/components/ui/datatable'
 import { toast } from '@/components/ui/toast'
-import CustomerPopover from './CustomerPopover.vue'
+import UsersPopover from './UsersPopover.vue'
 
 export const columns: Array<ColumnDef<IGetCustomer>> = [
 	{
@@ -19,7 +19,8 @@ export const columns: Array<ColumnDef<IGetCustomer>> = [
 		accessorKey: 'customerUsers',
 		header: ({ column }) =>
 			h(DataTableColumnHeader<IGetCustomer>, { column, title: 'Utilisateurs' }),
-		cell: ({ row }) => h(CustomerPopover, { customerUsers: row.getValue('Utilisateurs') as Array<ICustomerUser> }),
+		cell: ({ row }) =>
+			h(UsersPopover, { customerUsers: row.getValue('Utilisateurs') as Array<ICustomerUser> }),
 		enableSorting: false
 	},
 	{
@@ -35,7 +36,9 @@ export const columns: Array<ColumnDef<IGetCustomer>> = [
 			h(
 				'div',
 				h(DataTableDropDown, {
-					name: 'CustomersEdit', id: row.original.id, deleteEntity: async (id: string) => {
+					name: 'CustomersEdit',
+					id: row.original.id,
+					deleteEntity: async (id: string) => {
 						try {
 							await customerService.delete(id)
 

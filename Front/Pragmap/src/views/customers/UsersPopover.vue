@@ -1,9 +1,9 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
+import { userService } from '@/services'
+import { type ICustomerUser } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { type ICustomerUser } from '@/types'
-import { userService } from '@/services'
 
 const { customerUsers } = defineProps<{ customerUsers: Array<ICustomerUser> }>()
 const users = ref<Array<Record<'id' | 'name', string>>>([])
@@ -21,6 +21,8 @@ onMounted(async () => {
 			}
 		})
 	)
+
+	users.value.sort((a, b) => a.name.localeCompare(b.name))
 })
 </script>
 
@@ -35,10 +37,12 @@ onMounted(async () => {
 			</Button>
 		</PopoverTrigger>
 		<PopoverContent>
-			<ul>
+			<h4 class="font-medium leading-none">Utilisateurs :</h4>
+			<ul class="mt-2">
 				<li
 					v-for="user in users"
 					:key="user.id"
+					class="ml-6 list-disc"
 				>
 					{{ user.name }}
 				</li>
