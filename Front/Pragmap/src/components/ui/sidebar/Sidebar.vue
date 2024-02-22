@@ -1,25 +1,12 @@
 <script setup lang="ts">
-import { useLocalStorage } from '@vueuse/core'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import {
-	ChevronDown,
-	ChevronUp,
-	FolderKanban,
-	Handshake,
-	LogOut,
-	UserRound,
-	UserRoundCog
-} from 'lucide-vue-next'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
+import { FolderKanban, Handshake, LogOut, UserRound, UserRoundCog } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { Separator } from '@/components/ui/separator'
 import { useAuthStore } from '@/stores'
 
 const { user } = useAuthStore()
-const isUserOpen = useLocalStorage('isUserOpen', true)
-const isCustomerOpen = useLocalStorage('isCustomerOpen', true)
-const isRoadmapOpen = useLocalStorage('isRoadmapOpen', true)
 </script>
 
 <template>
@@ -29,109 +16,85 @@ const isRoadmapOpen = useLocalStorage('isRoadmapOpen', true)
 				<h2 class="text-2xl font-semibold leading-none tracking-tighter px-4 py-2">Pragmap</h2>
 			</RouterLink>
 			<div class="h-full flex flex-col justify-between">
-				<div class="space-y-4 py-10 px-4">
-					<Collapsible v-model:open="isUserOpen">
-						<CollapsibleTrigger class="flex justify-between items-center mb-2">
-							<div class="flex items-center font-semibold text-sm mr-2">
-								<UserRound class="h-4 w-4 mr-2" />
-								Utilisateurs
-							</div>
-							<ChevronDown
-								v-if="!isUserOpen"
-								class="h-4 w-4"
-							/>
-							<ChevronUp
-								v-else
-								class="h-4 w-4"
-							/>
-						</CollapsibleTrigger>
-						<CollapsibleContent class="flex flex-col space-y-2">
+				<div class="space-y-4 py-10">
+					<div>
+						<div class="flex items-center font-semibold text-sm text-muted-foreground px-4 mb-2">
+							<UserRound class="h-4 w-4 mr-2" />
+							Utilisateurs
+						</div>
+						<div class="flex flex-col space-y-2">
 							<RouterLink to="/users">
 								<Button
-									variant="ghost"
 									class="h-8 w-full justify-start"
+									variant="ghost"
+									tabindex="-1"
 								>
 									Lister
 								</Button>
 							</RouterLink>
 							<RouterLink to="/users/create">
 								<Button
-									variant="ghost"
 									class="h-8 w-full justify-start"
+									variant="ghost"
+									tabindex="-1"
 								>
 									Créer
 								</Button>
 							</RouterLink>
-						</CollapsibleContent>
-					</Collapsible>
-					<Collapsible v-model:open="isCustomerOpen">
-						<CollapsibleTrigger class="flex justify-between items-center mb-2">
-							<div class="flex items-center font-semibold text-sm mr-2">
-								<Handshake class="h-4 w-4 mr-2" />
-								Clients
-							</div>
-							<ChevronDown
-								v-if="!isCustomerOpen"
-								class="h-4 w-4"
-							/>
-							<ChevronUp
-								v-else
-								class="h-4 w-4"
-							/>
-						</CollapsibleTrigger>
-						<CollapsibleContent class="flex flex-col space-y-2">
+						</div>
+					</div>
+					<div>
+						<div class="flex items-center font-semibold text-sm text-muted-foreground px-4 mb-2">
+							<Handshake class="h-4 w-4 mr-2" />
+							Clients
+						</div>
+						<div class="flex flex-col space-y-2">
 							<RouterLink to="/customers">
 								<Button
-									variant="ghost"
 									class="h-8 w-full justify-start"
+									variant="ghost"
+									tabindex="-1"
 								>
 									Lister
 								</Button>
 							</RouterLink>
 							<RouterLink to="/customers/create">
 								<Button
-									variant="ghost"
 									class="h-8 w-full justify-start"
+									variant="ghost"
+									tabindex="-1"
 								>
 									Créer
 								</Button>
 							</RouterLink>
-						</CollapsibleContent>
-					</Collapsible>
-					<Collapsible v-model:open="isRoadmapOpen">
-						<CollapsibleTrigger class="flex justify-between items-center mb-2">
-							<div class="flex items-center font-semibold text-sm mr-2">
-								<FolderKanban class="h-4 w-4 mr-2" />
-								Roadmaps
-							</div>
-							<ChevronDown
-								v-if="!isRoadmapOpen"
-								class="h-4 w-4"
-							/>
-							<ChevronUp
-								v-else
-								class="h-4 w-4"
-							/>
-						</CollapsibleTrigger>
-						<CollapsibleContent class="flex flex-col space-y-2">
+						</div>
+					</div>
+					<div>
+						<div class="flex items-center font-semibold text-sm text-muted-foreground px-4 mb-2">
+							<FolderKanban class="h-4 w-4 mr-2" />
+							Roadmaps
+						</div>
+						<div class="flex flex-col space-y-2">
 							<RouterLink to="/roadmaps">
 								<Button
-									variant="ghost"
 									class="h-8 w-full justify-start"
+									variant="ghost"
+									tabindex="-1"
 								>
 									Lister
 								</Button>
 							</RouterLink>
 							<RouterLink to="/roadmaps/create">
 								<Button
-									variant="ghost"
 									class="h-8 w-full justify-start"
+									variant="ghost"
+									tabindex="-1"
 								>
 									Créer
 								</Button>
 							</RouterLink>
-						</CollapsibleContent>
-					</Collapsible>
+						</div>
+					</div>
 				</div>
 				<div>
 					<div class="flex flex-col space-y-2 px-2">
@@ -147,8 +110,9 @@ const isRoadmapOpen = useLocalStorage('isRoadmapOpen', true)
 					<div class="flex flex-col space-y-2">
 						<RouterLink to="/profile">
 							<Button
-								variant="ghost"
 								class="h-8 w-full justify-start"
+								variant="ghost"
+								tabindex="-1"
 							>
 								<div class="flex items-center font-semibold">
 									<UserRoundCog class="h-4 w-4 mr-2" />
@@ -158,8 +122,9 @@ const isRoadmapOpen = useLocalStorage('isRoadmapOpen', true)
 						</RouterLink>
 						<RouterLink to="/logout">
 							<Button
-								variant="ghost"
 								class="h-8 w-full justify-start"
+								variant="ghost"
+								tabindex="-1"
 							>
 								<div class="flex items-center font-semibold">
 									<LogOut class="h-4 w-4 mr-2" />
