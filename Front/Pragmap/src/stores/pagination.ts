@@ -62,7 +62,7 @@ export const usePaginationStore = defineStore('pagination', {
 			const count = await customerService.getCount()
 			const customers = await customerService.getAll({
 				select: ['id', 'name', 'createdAt'],
-				expand: ['CustomerUsers'],
+				expand: ['CustomerUsers($select=userId)'],
 				top: this.pageSize,
 				skip: this.pageSize * this.pageIndex,
 				orderBy: { column: 'createdAt', order: 'asc' }

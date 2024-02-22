@@ -15,7 +15,8 @@ export const useCustomerStore = defineStore('customer', {
 	actions: {
 		async getEditCustomerById(id: string): Promise<void> {
 			const customer = await customerService.getById(id, {
-				select: ['id', 'name' ]
+				select: ['id', 'name', 'logo'],
+				expand: ['CustomerUsers($select=userId)']
 			})
 
 			this.$state.editCustomer = customer
