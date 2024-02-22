@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import { useAuthStore, useUserStore } from '@/stores'
-import authMiddleware from '@/middlewares/auth'
+import { authMiddleware } from '@/middlewares'
+import { useAuthStore, useCustomerStore, useUserStore } from '@/stores'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,13 +23,45 @@ const router = createRouter({
 			path: '/users/:id/edit',
 			name: 'UsersEdit',
 			component: () => import('@/views/users/Edit.vue'),
-			beforeEnter: (to) => {
+			beforeEnter: async (to) => {
 				authMiddleware
 
 				const { getEditUserById } = useUserStore()
 
 				try {
-					getEditUserById(to.params.id.toString())
+					await getEditUserById(to.params.id.toString())
+				} catch (error) {
+					return { name: 'Home' }
+				}
+			},
+			meta: { requiresAuth: true },
+			props: true
+		},
+		{
+			path: '/customers',
+			name: 'CustomersIndex',
+			component: () => import('@/views/customers/Index.vue'),
+			beforeEnter: authMiddleware,
+			meta: { requiresAuth: true }
+		},
+		{
+			path: '/customers/create',
+			name: 'CustomersCreate',
+			component: () => import('@/views/customers/Create.vue'),
+			beforeEnter: authMiddleware,
+			meta: { requiresAuth: true }
+		},
+		{
+			path: '/customers/:id/edit',
+			name: 'CustomersEdit',
+			component: () => import('@/views/customers/Edit.vue'),
+			beforeEnter: async (to) => {
+				authMiddleware
+
+				const { getEditCustomerById } = useCustomerStore()
+
+				try {
+					await getEditCustomerById(to.params.id.toString())
 				} catch (error) {
 					return { name: 'Home' }
 				}
@@ -85,10 +117,11 @@ const router = createRouter({
 			component: () => import('@/views/NotFound.vue')
 		},
 		{
-			path: '/roadMap',
-			name: 'roadMap',
-			component: () => import('@/views/roadMap/RoadMap.vue'),
-			beforeEnter: authMiddleware, meta: {requiresAuth: true}
+			path: '/roadmap',
+			name: 'roadmap',
+			component: () => import('@/views/roadmaps/Roadmap.vue'),
+			beforeEnter: authMiddleware,
+			meta: { requiresAuth: true }
 		}
 	]
 })

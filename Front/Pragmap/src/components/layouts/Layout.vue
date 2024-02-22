@@ -30,16 +30,17 @@ const selectTheme = (value: string) => (theme.value = value as 'light' | 'dark')
 const isToggled = ref(false)
 const toggleSidebar = () => (isToggled.value = !isToggled.value)
 const { user } = useAuthStore()
-const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
+const getInitials = () =>
+	`${user.firstName.charAt(0).toUpperCase()}${user.lastName.charAt(0).toUpperCase()}`.toUpperCase()
 </script>
 
 <template>
 	<div class="flex">
-		<Sidebar class="min-h-screen min-w-60 hidden md:block border-r" />
-		<div class="w-full flex flex-col">
+		<Sidebar class="fixed h-full min-w-60 hidden md:block border-r z-50 overflow-y-auto" />
+		<div class="w-full flex flex-col md:ml-60">
 			<header
 				v-if="$slots.header"
-				class="flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b"
+				class="w-full flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b bg-background z-50"
 			>
 				<Button
 					class="md:hidden h-8 w-8"
@@ -66,10 +67,11 @@ const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}
 						class="w-56"
 						align="end"
 					>
-						<DropdownMenuLabel class="font-normal flex">
+						<DropdownMenuLabel>
 							<div class="flex flex-col space-y-1">
 								<p class="text-sm font-medium leading-none break-words">
-									{{ user.firstName }} {{ user.lastName }}
+									{{ user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1) }}
+									{{ user.lastName.charAt(0).toUpperCase() + user.lastName.substring(1) }}
 								</p>
 								<p class="text-xs leading-none text-muted-foreground break-words">
 									{{ user.email }}
@@ -83,6 +85,7 @@ const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}
 							</RouterLink>
 							<DropdownMenuItem as-child>
 								<Select
+									name="theme"
 									:default-value="theme"
 									@update:model-value="selectTheme"
 								>
@@ -109,7 +112,10 @@ const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</header>
-			<ResponsiveSidebar :is-toggled="isToggled" />
+			<ResponsiveSidebar
+				class="z-50"
+				:is-toggled="isToggled"
+			/>
 			<main class="h-fit w-full flex justify-center p-6 md:p-12">
 				<slot />
 			</main>

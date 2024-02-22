@@ -5,8 +5,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { userService } from '@/services'
-import { useAuthStore } from '@/stores'
-import { useUserStore } from '@/stores'
+import { useAuthStore, useUserStore } from '@/stores'
 import { Layout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -33,14 +32,26 @@ const formSchema = toTypedSchema(
 	z.object({
 		id: z.string().default(id),
 		firstName: z
-			.string({ required_error: 'Le champ est obligatoire' })
+			.string({
+				required_error: 'Le champ est obligatoire',
+				invalid_type_error: 'Le champ est invalide'
+			})
+			.min(1, { message: 'Le champ est obligatoire' })
 			.default(editUser?.firstName ?? ''),
 		lastName: z
-			.string({ required_error: 'Le champ est obligatoire' })
+			.string({
+				required_error: 'Le champ est obligatoire',
+				invalid_type_error: 'Le champ est invalide'
+			})
+			.min(1, { message: 'Le champ est obligatoire' })
 			.default(editUser?.lastName ?? ''),
 		email: z
-			.string({ required_error: 'Le champ est obligatoire' })
+			.string({
+				required_error: 'Le champ est obligatoire',
+				invalid_type_error: 'Le champ est invalide'
+			})
 			.email({ message: 'Le champ doit être une adresse e-mail valide' })
+			.min(1, { message: 'Le champ est obligatoire' })
 			.default(editUser?.email ?? ''),
 		roleId: z.string({ required_error: 'Le champ est obligatoire' }).default(editUser?.roleId ?? '')
 	})
@@ -58,7 +69,7 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à créer un utilisateur.`,
+			description: `Nous ne sommes pas parvenus à modifier cet utilisateur.`,
 			duration: 5000
 		})
 	}
@@ -85,7 +96,7 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormControl>
 								<Select v-bind="componentField">
 									<SelectTrigger>
-										<SelectValue placeholder="Sélectionnez un rôle" />
+										<SelectValue placeholder="Sélectionner un rôle" />
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>
@@ -112,7 +123,10 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormItem class="w-full">
 								<FormLabel>Nom</FormLabel>
 								<FormControl>
-									<Input v-bind="componentField" />
+									<Input
+										v-bind="componentField"
+										autocomplete="family-name"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -124,7 +138,10 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormItem class="w-full">
 								<FormLabel>Prénom</FormLabel>
 								<FormControl>
-									<Input v-bind="componentField" />
+									<Input
+										v-bind="componentField"
+										autocomplete="given-name"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -138,8 +155,9 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormLabel>Adresse e-mail</FormLabel>
 							<FormControl>
 								<Input
-									type="email"
 									v-bind="componentField"
+									type="email"
+									autocomplete="email"
 								/>
 							</FormControl>
 							<FormMessage />

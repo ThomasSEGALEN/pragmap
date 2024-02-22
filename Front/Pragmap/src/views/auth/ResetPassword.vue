@@ -21,10 +21,18 @@ const formSchema = toTypedSchema(
 	z
 		.object({
 			password: z
-				.string({ required_error: 'Le champ est obligatoire' })
+				.string({
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				})
+				.min(1, { message: 'Le champ est obligatoire' })
 				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
 			passwordConfirmation: z
-				.string({ required_error: 'Le champ est obligatoire' })
+				.string({
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				})
+				.min(1, { message: 'Le champ est obligatoire' })
 				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
 		})
 		.superRefine((value, context) => {
@@ -79,8 +87,10 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormLabel>Mot de passe</FormLabel>
 							<FormControl>
 								<Input
-									type="password"
 									v-bind="componentField"
+									type="password"
+									autocomplete="new-password"
+									autofocus
 								/>
 							</FormControl>
 							<FormMessage />
@@ -94,8 +104,9 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormLabel>Confirmation du mot de passe</FormLabel>
 							<FormControl>
 								<Input
-									type="password"
 									v-bind="componentField"
+									type="password"
+									autocomplete="new-password"
 								/>
 							</FormControl>
 							<FormMessage />

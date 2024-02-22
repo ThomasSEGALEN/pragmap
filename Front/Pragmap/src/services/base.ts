@@ -91,7 +91,6 @@ export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V
 
 	public async create(data: U): Promise<void> {
 		try {
-			console.log(data)
 			await api.post(`/${this.apiPath}`, data)
 		} catch (error) {
 			throw new Error('Create Error')

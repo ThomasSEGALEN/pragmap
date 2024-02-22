@@ -6,19 +6,14 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { userService } from '@/services'
 
 defineProps<{
 	name: string
 	id: string
-	email: string
+	deleteEntity: (id: string) => void
 }>()
-
-const copyEmail = (email: string) => navigator.clipboard.writeText(email)
-const deleteUser = async (id: string) => await userService.delete(id)
 </script>
 
 <template>
@@ -34,12 +29,10 @@ const deleteUser = async (id: string) => await userService.delete(id)
 		</DropdownMenuTrigger>
 		<DropdownMenuContent align="end">
 			<DropdownMenuLabel>Actions</DropdownMenuLabel>
-			<DropdownMenuItem @click="copyEmail(email)">Copier l'adresse e-mail</DropdownMenuItem>
-			<DropdownMenuSeparator />
 			<RouterLink :to="{ name: name, params: { id: id } }">
 				<DropdownMenuItem>Modifier</DropdownMenuItem>
 			</RouterLink>
-			<DropdownMenuItem @click="deleteUser(id)">Supprimer</DropdownMenuItem>
+			<DropdownMenuItem @click="deleteEntity(id)">Supprimer</DropdownMenuItem>
 		</DropdownMenuContent>
 	</DropdownMenu>
 </template>
