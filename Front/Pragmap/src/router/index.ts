@@ -23,13 +23,13 @@ const router = createRouter({
 			path: '/users/:id/edit',
 			name: 'UsersEdit',
 			component: () => import('@/views/users/Edit.vue'),
-			beforeEnter: (to) => {
+			beforeEnter: async (to) => {
 				authMiddleware
 
 				const { getEditUserById } = useUserStore()
 
 				try {
-					getEditUserById(to.params.id.toString())
+					await getEditUserById(to.params.id.toString())
 				} catch (error) {
 					return { name: 'Home' }
 				}
@@ -55,13 +55,13 @@ const router = createRouter({
 			path: '/customers/:id/edit',
 			name: 'CustomersEdit',
 			component: () => import('@/views/customers/Edit.vue'),
-			beforeEnter: (to) => {
+			beforeEnter: async (to) => {
 				authMiddleware
 
-				const customerStore = useCustomerStore()
+				const { getEditCustomerById } = useCustomerStore()
 
 				try {
-					customerStore.getEditCustomerById(to.params.id.toString())
+					await getEditCustomerById(to.params.id.toString())
 				} catch (error) {
 					return { name: 'Home' }
 				}
@@ -120,7 +120,8 @@ const router = createRouter({
 			path: '/roadmap',
 			name: 'roadmap',
 			component: () => import('@/views/roadmaps/Roadmap.vue'),
-			beforeEnter: authMiddleware, meta: { requiresAuth: true }
+			beforeEnter: authMiddleware,
+			meta: { requiresAuth: true }
 		}
 	]
 })
