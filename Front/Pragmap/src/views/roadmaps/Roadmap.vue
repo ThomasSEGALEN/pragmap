@@ -1,3 +1,58 @@
+<script setup lang="ts">
+import { MiniMap, Background } from '@vue-flow/additional-components'
+import { Layout } from '@/components/layouts'
+import { useVueFlow } from '@vue-flow/core'
+import { VueFlow, type Elements } from '@vue-flow/core'
+import TacheNode from './nodes/TacheNode.vue'
+import JalonNode from './nodes/JalonNode.vue'
+import LivrableNode from './nodes/LivrableNode.vue'
+import { ref, computed } from 'vue'
+const { onConnect, addEdges } = useVueFlow()
+const selectedNodeId = ref(null)
+const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
+
+onConnect((params) => {
+	addEdges([params])
+})
+const elements = ref<Elements>([])
+let json = JSON.stringify(elements.value)
+const addNode = (type: string) => {
+	const id = (elements.value.length + 1).toString() as unknown as string
+	const lastNode = elements.value[elements.value.length - 1] as
+		| { position: { x: number; y: number } }
+		| undefined
+	const newX = lastNode ? lastNode.position.x + 20 : window.innerWidth / 2
+	const newY = lastNode ? lastNode.position.y - 20 : window.innerHeight / 2
+
+	elements.value.push({
+		type: type,
+		data: {
+			nom: `Nouveau ` + type,
+			description: `Description de ` + type,
+			durrée: 0,
+			commencer: false
+		},
+		position: {
+			x: newX,
+			y: newY
+		},
+		animated: true,
+		id: id,
+		label: type
+	})
+}
+
+const saveNode = () => {
+	json = JSON.stringify(elements.value)
+	console.log(json)
+}
+const importNode = () => {
+	if (json) {
+		elements.value = JSON.parse(json)
+	}
+}
+</script>
+
 <template>
 	<Layout>
 		<template #header>
@@ -79,63 +134,7 @@
 	</div>
 </template>
 
-<script lang="ts" setup>
-import { MiniMap, Background } from '@vue-flow/additional-components'
-import { Layout } from '@/components/layouts'
-import { useVueFlow } from '@vue-flow/core'
-import { VueFlow, type Elements } from '@vue-flow/core'
-import TacheNode from './nodes/TacheNode.vue'
-import JalonNode from './nodes/JalonNode.vue'
-import LivrableNode from './nodes/LivrableNode.vue'
-import { ref, computed } from 'vue'
-const { onConnect, addEdges } = useVueFlow()
-const selectedNodeId = ref(null)
-const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
-
-onConnect((params) => {
-	addEdges([params])
-})
-const elements = ref<Elements>([])
-
-var json = JSON.stringify(elements.value)
-const addNode = (type: string) => {
-	const id = (elements.value.length + 1).toString() as unknown as string
-	// Calculate the x and y position for the new node
-	const lastNode = elements.value[elements.value.length - 1] as
-		| { position: { x: number; y: number } }
-		| undefined
-	const newX = lastNode ? lastNode.position.x + 20 : window.innerWidth / 2
-	const newY = lastNode ? lastNode.position.y - 20 : window.innerHeight / 2
-
-	elements.value.push({
-		type: type,
-		data: {
-			nom: `Nouveau ` + type,
-			description: `Description de ` + type,
-			durrée: 0,
-			commencer: false
-		},
-		position: {
-			x: newX,
-			y: newY
-		},
-		animated: true,
-		id: id,
-		label: type
-	})
-}
-
-const saveNode = () => {
-	json = JSON.stringify(elements.value)
-	console.log(json)
-}
-const importNode = () => {
-	if (json) {
-		elements.value = JSON.parse(json)
-	}
-}
-</script>
-<style>
+<style scoped>
 .navbar {
 	display: flex;
 	justify-content: space-between;
