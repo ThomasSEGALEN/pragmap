@@ -1,22 +1,20 @@
 <script setup lang="ts">
-import { cn } from '@/lib/utils'
 import { useVModel } from '@vueuse/core'
+import { cn } from '@/lib/utils'
 import Multiselect from 'vue-multiselect'
 
 const props = defineProps<{
-	defaultValue?: Array<Record<'label' | 'value', string>> | Array<string> | null
-	modelValue: Array<Record<'label' | 'value', string>> | Array<string> | null
+	defaultValue?: Array<Record<'label' | 'value', string>> | null
+	modelValue: Array<Record<'label' | 'value', string>> | null
 	options: Array<Record<'label' | 'value', string>>
 	placeholder?: string
 	message?: string
 	limitText?: Record<'singular' | 'plural', string>
 	class?: string
 }>()
-
 const emits = defineEmits<{
 	(e: 'update:modelValue', payload: string | number): void
 }>()
-
 const modelValue = useVModel(props, 'modelValue', emits, {
 	passive: true,
 	defaultValue: props.defaultValue
@@ -24,33 +22,31 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 </script>
 
 <template>
-	<div class="relative z-0">
-		<Multiselect
-			:class="cn('flex h-10 w-full', props.class ?? '')"
-			v-model="modelValue"
-			:options="options"
-			:value="String"
-			:multiple="true"
-			:close-on-select="false"
-			:clear-on-select="false"
-			:preserve-search="true"
-			:placeholder="placeholder ?? 'Sélectionner des options'"
-			label="label"
-			track-by="value"
-			:preselect-first="false"
-			select-label=""
-			deselect-label=""
-			selected-label=""
-			:limit="0"
-			:limit-text="
-				(count: number) =>
-					`${count} ${count === 1 ? limitText?.singular ?? 'option sélectionnée' : limitText?.plural ?? 'options sélectionnées'}`
-			"
-		>
-			<template #noOptions>{{ message ?? 'Aucune option trouvée' }}</template>
-			<template #noResult>{{ message ?? 'Aucun résultat trouvé' }}</template>
-		</Multiselect>
-	</div>
+	<Multiselect
+		:class="cn('flex h-10 w-full', props.class ?? '')"
+		v-model="modelValue"
+		:options="options"
+		:value="String"
+		:multiple="true"
+		:close-on-select="false"
+		:clear-on-select="false"
+		:preserve-search="true"
+		:placeholder="placeholder ?? 'Sélectionner des options'"
+		label="label"
+		track-by="value"
+		:preselect-first="false"
+		select-label=""
+		deselect-label=""
+		selected-label=""
+		:limit="0"
+		:limit-text="
+			(count: number) =>
+				`${count} ${count === 1 ? limitText?.singular ?? 'option sélectionnée' : limitText?.plural ?? 'options sélectionnées'}`
+		"
+	>
+		<template #noOptions>{{ message ?? 'Aucune option trouvée' }}</template>
+		<template #noResult>{{ message ?? 'Aucun résultat trouvé' }}</template>
+	</Multiselect>
 </template>
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>
