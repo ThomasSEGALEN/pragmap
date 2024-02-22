@@ -27,18 +27,45 @@ const { roles } = useAuthStore()
 const formSchema = toTypedSchema(
 	z
 		.object({
-			firstName: z.string({ required_error: 'Le champ est obligatoire' }),
-			lastName: z.string({ required_error: 'Le champ est obligatoire' }),
+			firstName: z
+				.string({
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				})
+				.min(1, { message: 'Le champ est obligatoire' }),
+			lastName: z
+				.string({
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				})
+				.min(1, { message: 'Le champ est obligatoire' }),
 			email: z
-				.string({ required_error: 'Le champ est obligatoire' })
-				.email({ message: 'Le champ doit être une adresse e-mail valide' }),
+				.string({
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				})
+				.email({ message: 'Le champ doit être une adresse e-mail valide' })
+				.min(1, { message: 'Le champ est obligatoire' }),
 			password: z
-				.string({ required_error: 'Le champ est obligatoire' })
+				.string({
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				})
+				.min(1, { message: 'Le champ est obligatoire' })
 				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
 			passwordConfirmation: z
-				.string({ required_error: 'Le champ est obligatoire' })
+				.string({
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				})
+				.min(1, { message: 'Le champ est obligatoire' })
 				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
-			roleId: z.string({ required_error: 'Le champ est obligatoire' })
+			roleId: z
+				.string({
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				})
+				.min(1, { message: 'Le champ est obligatoire' })
 		})
 		.superRefine((value, context) => {
 			if (value.password !== value.passwordConfirmation) {
@@ -115,7 +142,11 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormItem class="w-full">
 								<FormLabel>Nom</FormLabel>
 								<FormControl>
-									<Input v-bind="componentField" />
+									<Input
+										v-bind="componentField"
+										autocomplete="family-name"
+										autofocus
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -127,7 +158,10 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormItem class="w-full">
 								<FormLabel>Prénom</FormLabel>
 								<FormControl>
-									<Input v-bind="componentField" />
+									<Input
+										v-bind="componentField"
+										autocomplete="given-name"
+									/>
 								</FormControl>
 								<FormMessage />
 							</FormItem>
@@ -141,8 +175,9 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormLabel>Adresse e-mail</FormLabel>
 							<FormControl>
 								<Input
-									type="email"
 									v-bind="componentField"
+									type="email"
+									autocomplete="email"
 								/>
 							</FormControl>
 							<FormMessage />
@@ -156,8 +191,9 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormLabel>Mot de passe</FormLabel>
 							<FormControl>
 								<Input
-									type="password"
 									v-bind="componentField"
+									type="password"
+									autocomplete="new-password"
 								/>
 							</FormControl>
 							<FormMessage />
@@ -171,8 +207,9 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormLabel>Confirmation du mot de passe</FormLabel>
 							<FormControl>
 								<Input
-									type="password"
 									v-bind="componentField"
+									type="password"
+									autocomplete="new-password"
 								/>
 							</FormControl>
 							<FormMessage />

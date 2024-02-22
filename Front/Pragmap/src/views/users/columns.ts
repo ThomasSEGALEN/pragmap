@@ -49,7 +49,9 @@ export const columns: Array<ColumnDef<IGetUser>> = [
 			h(
 				'div',
 				h(DataTableDropDown, {
-					name: 'UsersEdit', id: row.original.id, deleteEntity: async (id: string) => {
+					name: 'UsersEdit',
+					id: row.original.id,
+					deleteEntity: async (id: string) => {
 						try {
 							await userService.delete(id)
 
