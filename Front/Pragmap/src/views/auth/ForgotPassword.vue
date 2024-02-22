@@ -17,8 +17,12 @@ const { forgotPassword } = authService
 const formSchema = toTypedSchema(
 	z.object({
 		email: z
-			.string({ required_error: 'Le champ est obligatoire' })
+			.string({
+				required_error: 'Le champ est obligatoire',
+				invalid_type_error: 'Le champ est invalide'
+			})
 			.email({ message: 'Le champ doit être une adresse e-mail valide' })
+			.min(1, { message: 'Le champ est obligatoire' })
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -66,8 +70,10 @@ const onSubmit = handleSubmit(async (values) => {
 							<FormLabel>Adresse e-mail</FormLabel>
 							<FormControl>
 								<Input
-									type="email"
 									v-bind="componentField"
+									type="email"
+									autocomplete="email"
+									autofocus
 								/>
 							</FormControl>
 							<FormMessage />
