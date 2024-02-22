@@ -1,41 +1,63 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import router from '@/router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
+import { customerService, userService } from '@/services'
 import { Layout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
-import { toast } from '@/components/ui/toast'
-import { customerService, userService } from '@/services'
-import { onMounted, ref } from 'vue'
 import { MultiSelect } from '@/components/ui/multi-select'
+import { toast } from '@/components/ui/toast'
 
+const selected = ref<Array<Record<'label' | 'value', string>>>([])
+const options = ref<Array<Record<'label' | 'value', string>>>([])
+onMounted(async () => {
+	options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
+		(user) => ({
+			label: `${user.firstName} ${user.lastName}`,
+			value: user.id
+		})
+	)
+})
 const formSchema = toTypedSchema(
 	z.object({
-		name: z.string({ required_error: 'Le champ est obligatoire' }),
-		logo: z.instanceof(File).optional(),
+		name: z
+			.string({
+				required_error: 'Le champ est obligatoire',
+				invalid_type_error: 'Le champ est invalide'
+			})
+			.min(1, { message: 'Le champ est obligatoire' }),
+		logo: z
+			.instanceof(File)
+			.default(new File([], ''))
+			.superRefine((value, context) => {
+				if (!value.name) {
+					return context.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'Le champ est obligatoire',
+						path: ['logo']
+					})
+				}
+			}),
 		userIds: z
 			.array(
 				z.object({
 					label: z.string(),
 					value: z.string()
-				})
-			)
-			.optional()
-			.superRefine((value, context) => {
-				if (value === undefined || value.length === 0) {
-					return context.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: 'Le champ est obligatoire',
-						path: ['userIds']
-					})
+				}),
+				{
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
 				}
-			})
+			)
+			.default([])
+			.optional()
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -45,8 +67,8 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		await customerService.create({
 			...values,
-			logo: `${file.value?.lastModified}_${file.value?.name}`,
-			userIds: values.userIds!.map((userId) => userId.value)
+			logo: `${values.logo.lastModified}_${values.logo.name}`,
+			userIds: values.userIds?.map((userId) => userId.value)
 		})
 
 		router.push('/customers')
@@ -58,18 +80,6 @@ const onSubmit = handleSubmit(async (values) => {
 		})
 	}
 })
-
-const options = ref<Array<Record<'value' | 'label', string>>>([])
-onMounted(async () => {
-	options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
-		(user) => ({
-			value: user.id,
-			label: `${user.firstName} ${user.lastName}`
-		})
-	)
-})
-const selected = ref<Array<Record<'label' | 'value', string>> | Array<string>>([])
-const file = ref<File>()
 </script>
 
 <template>
@@ -90,19 +100,25 @@ const file = ref<File>()
 						<FormItem class="w-full">
 							<FormLabel>Nom</FormLabel>
 							<FormControl>
-								<Input v-bind="componentField" />
+								<Input
+									v-bind="componentField"
+									autocomplete="organization"
+								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					</FormField>
-					<FormField name="logo">
+					<FormField
+						v-slot="{ handleChange }"
+						name="logo"
+					>
 						<FormItem class="w-full">
 							<FormLabel>Logo</FormLabel>
 							<FormControl>
 								<Input
 									type="file"
-									accept="image/*"
-									@change="(e: Event) => (file = (e.target as HTMLInputElement).files![0])"
+									accept="image/png, image/jpeg, image/jpg"
+									@change="handleChange"
 								/>
 							</FormControl>
 							<FormMessage />
@@ -112,7 +128,7 @@ const file = ref<File>()
 						v-slot="{ componentField }"
 						name="userIds"
 					>
-						<FormItem class="w-full">
+						<FormItem class="w-full relative z-0">
 							<FormLabel>Utilisateurs</FormLabel>
 							<FormControl>
 								<MultiSelect
@@ -120,16 +136,16 @@ const file = ref<File>()
 									v-model="selected"
 									:options="options"
 									placeholder="Sélectionner des utilisateurs"
+									message="Aucun utilisateur trouvé"
 									:limit-text="{
 										singular: 'utilisateur sélectionné',
-										plural: 'utilisateur(s) sélectionné(s)'
+										plural: 'utilisateurs sélectionnés'
 									}"
 								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					</FormField>
-
 					<div class="flex flex-col-reverse sm:flex-row justify-between">
 						<Button
 							type="button"

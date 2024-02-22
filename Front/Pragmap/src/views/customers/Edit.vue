@@ -1,37 +1,74 @@
 <script setup lang="ts">
+import { onMounted, ref } from 'vue'
 import router from '@/router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
-import { customerService } from '@/services'
+import { customerService, userService } from '@/services'
 import { useCustomerStore } from '@/stores'
 import { Layout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
+import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 
 const { id } = defineProps<{
 	id: string
 }>()
-const handleLogoChange = (event) => {
-	const file = event.target.files[0]
-	// Faites quelque chose avec le fichier, par exemple l'envoyer au serveur
-}
+const selected = ref<Array<{ label: string; value: string }>>([])
+const options = ref<Array<{ label: string; value: string }>>([])
 const { editCustomer, clearEditCustomer } = useCustomerStore()
+onMounted(async () => {
+	options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
+		(user) => ({
+			label: `${user.firstName} ${user.lastName}`,
+			value: user.id
+		})
+	)
+	const userIds = editCustomer?.customerUsers?.map(
+		(customerUser) => customerUser.userId
+	) as Array<string>
+	selected.value = await Promise.all(
+		userIds?.map(async (userId) => {
+			const user = await userService.getById(userId, {
+				select: ['id', 'lastName', 'firstName']
+			})
+
+			return {
+				label: `${user.lastName} ${user.firstName}`,
+				value: user.id
+			}
+		})
+	)
+})
 const formSchema = toTypedSchema(
 	z.object({
 		id: z.string().default(id),
 		name: z
-			.string({ required_error: 'Le champ est obligatoire' })
+			.string({
+				required_error: 'Le champ est obligatoire',
+				invalid_type_error: 'Le champ est invalide'
+			})
+			.min(1, { message: 'Le champ est obligatoire' })
 			.default(editCustomer?.name ?? ''),
-		logo: z
-			.string({ required_error: 'Le champ est obligatoire' })
+		logo: z.instanceof(File).default(new File([], '')),
+		userIds: z
+			.array(
+				z.object({
+					label: z.string(),
+					value: z.string()
+				}),
+				{
+					required_error: 'Le champ est obligatoire',
+					invalid_type_error: 'Le champ est invalide'
+				}
+			)
+			.default(selected.value)
 			.optional()
-			.default(editCustomer?.logo ?? '')
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -39,7 +76,13 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await customerService.update(id, values)
+		await customerService.update(id, {
+			...values,
+			logo: values.logo.name
+				? `${values.logo.lastModified}_${values.logo.name}`
+				: editCustomer!.logo,
+			userIds: selected.value.map((userId) => userId.value)
+		})
 
 		clearEditCustomer()
 
@@ -56,48 +99,69 @@ const onSubmit = handleSubmit(async (values) => {
 
 <template>
 	<Layout>
-		<Card :class="cn('w-[420px]', $attrs.class ?? '')">
-			<CardHeader>
-				<CardTitle>Modification d'un Client</CardTitle>
-			</CardHeader>
+		<template #header>
+			<h1>Modification d'un client</h1>
+		</template>
+		<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
 			<CardContent>
 				<form
 					class="space-y-6"
 					@submit="onSubmit"
 				>
-					<div class="flex flex-row justify-between space-x-4">
-						<FormField
-							v-slot="{ componentField }"
-							name="name"
-						>
-							<FormItem class="w-full">
-								<FormLabel>Nom</FormLabel>
-								<FormControl>
-									<Input v-bind="componentField" />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						</FormField>
-					</div>
 					<FormField
 						v-slot="{ componentField }"
-						name="logo"
+						name="name"
 					>
 						<FormItem class="w-full">
-							<FormLabel>Logo</FormLabel>
+							<FormLabel>Nom</FormLabel>
 							<FormControl>
-								<!-- Champ d'entrée de l'image -->
 								<Input
 									v-bind="componentField"
-									type="file"
-									accept="image/*"
-									@change="handleLogoChange"
+									autocomplete="organization"
 								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					</FormField>
-					<div class="flex flex-col sm:flex-row justify-between">
+					<FormField
+						v-slot="{ handleChange }"
+						name="logo"
+					>
+						<FormItem class="w-full">
+							<FormLabel>Logo</FormLabel>
+							<FormControl>
+								<Input
+									type="file"
+									accept="image/png, image/jpeg, image/jpg"
+									@change="handleChange"
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					</FormField>
+					<FormField
+						v-slot="{ componentField }"
+						name="userIds"
+					>
+						<FormItem class="w-full relative z-0">
+							<FormLabel>Utilisateurs</FormLabel>
+							<FormControl>
+								<MultiSelect
+									v-bind="componentField"
+									v-model="selected"
+									:options="options"
+									placeholder="Sélectionner des utilisateurs"
+									message="Aucun utilisateur trouvé"
+									:limit-text="{
+										singular: 'utilisateur sélectionné',
+										plural: 'utilisateurs sélectionnés'
+									}"
+								/>
+							</FormControl>
+							<FormMessage />
+						</FormItem>
+					</FormField>
+					<div class="flex flex-col-reverse sm:flex-row justify-between">
 						<Button
 							type="button"
 							variant="link"
