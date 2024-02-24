@@ -4,7 +4,7 @@ import { usePaginationStore } from '@/stores'
 import type { IGetUser } from '@/types'
 import { Layout } from '@/components/layouts'
 import { DataTable } from '@/components/ui/datatable'
-import { columns } from './columns'
+import { columns } from './partials/columns'
 
 const { getPageIndex, getPageSize, getUsersData } = usePaginationStore()
 const data = ref<Array<IGetUser>>([])

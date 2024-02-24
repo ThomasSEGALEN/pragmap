@@ -3,9 +3,9 @@ import { MiniMap, Background } from '@vue-flow/additional-components'
 import { Layout } from '@/components/layouts'
 import { useVueFlow } from '@vue-flow/core'
 import { VueFlow, type Elements } from '@vue-flow/core'
-import TacheNode from './nodes/TacheNode.vue'
-import JalonNode from './nodes/JalonNode.vue'
-import LivrableNode from './nodes/LivrableNode.vue'
+import TacheNode from './partials/TacheNode.vue'
+import JalonNode from './partials/JalonNode.vue'
+import LivrableNode from './partials/LivrableNode.vue'
 import { ref, computed } from 'vue'
 const { onConnect, addEdges } = useVueFlow()
 const selectedNodeId = ref(null)
