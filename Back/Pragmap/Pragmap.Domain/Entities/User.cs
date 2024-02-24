@@ -18,6 +18,7 @@ namespace Pragmap.Controllers.Entities
 
         [Required]
         [JsonIgnore]
+        [IgnoreDataMember]
         public string PasswordHash { get; set; }
 
         [Required]
