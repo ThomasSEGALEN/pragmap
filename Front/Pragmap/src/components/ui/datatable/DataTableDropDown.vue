@@ -20,8 +20,8 @@ defineProps<{
 	<DropdownMenu>
 		<DropdownMenuTrigger as-child>
 			<Button
-				variant="ghost"
 				class="h-8 w-8 relative p-0"
+				variant="ghost"
 			>
 				<span class="sr-only">Ouvrir le menu</span>
 				<MoreHorizontal class="h-4 w-4" />

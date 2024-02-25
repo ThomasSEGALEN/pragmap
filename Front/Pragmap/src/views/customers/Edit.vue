@@ -181,7 +181,7 @@ const onSubmit = handleSubmit(async (values) => {
 						v-else
 						type="disabled"
 					>
-						<Loader2 class="w-4 h-4 mr-2 animate-spin" />
+						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 						Modification...
 					</Button>
 				</div>

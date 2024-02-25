@@ -32,8 +32,8 @@ const {
 				Page {{ getPageIndex() + 1 }} sur {{ getPageCount() === 0 ? 1 : getPageCount() }}
 			</div>
 			<Button
-				variant="outline"
 				class="h-8 w-8 p-0"
+				variant="outline"
 				:disabled="!getCanPreviousPage()"
 				@click="setPageIndex(0)"
 			>
@@ -41,8 +41,8 @@ const {
 				<ChevronsLeft class="h-4 w-4" />
 			</Button>
 			<Button
-				variant="outline"
 				class="h-8 w-8 p-0"
+				variant="outline"
 				:disabled="!getCanPreviousPage()"
 				@click="previousPage()"
 			>
@@ -50,8 +50,8 @@ const {
 				<ChevronLeft class="h-4 w-4" />
 			</Button>
 			<Button
-				variant="outline"
 				class="h-8 w-8 p-0"
+				variant="outline"
 				:disabled="!getCanNextPage()"
 				@click="nextPage()"
 			>
@@ -59,8 +59,8 @@ const {
 				<ChevronRight class="h-4 w-4" />
 			</Button>
 			<Button
-				variant="outline"
 				class="h-8 w-8 p-0"
+				variant="outline"
 				:disabled="!getCanNextPage()"
 				@click="setPageIndex(getPageCount() - 1)"
 			>

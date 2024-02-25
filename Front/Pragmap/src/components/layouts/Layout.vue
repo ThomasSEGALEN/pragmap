@@ -55,8 +55,8 @@ const getInitials = () =>
 				<DropdownMenu>
 					<DropdownMenuTrigger as-child>
 						<Button
-							variant="ghost"
 							class="relative h-8 w-8 rounded-full"
+							variant="ghost"
 						>
 							<Avatar class="h-8 w-8">
 								{{ getInitials() }}
