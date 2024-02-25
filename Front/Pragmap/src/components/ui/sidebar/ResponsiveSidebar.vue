@@ -1,10 +1,13 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { FolderKanban, GanttChart, Handshake, UserRound } from 'lucide-vue-next'
 
 defineProps({
 	isToggled: Boolean
 })
+
+const route = useRoute()
 </script>
 
 <template>
@@ -19,9 +22,10 @@ defineProps({
 				<GanttChart class="h-4 w-4 mr-2" />
 				Pragmap
 			</div>
-			<RouterLink to="/users/create">
+			<RouterLink to="/">
 				<Button
 					class="h-8 w-full justify-start sm:justify-center"
+					:class="{ 'bg-accent text-accent-foreground': route.path === '/' }"
 					variant="ghost"
 					tabindex="-1"
 				>
@@ -39,6 +43,7 @@ defineProps({
 			<RouterLink to="/users">
 				<Button
 					class="h-8 w-full justify-start sm:justify-center"
+					:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
 					variant="ghost"
 					tabindex="-1"
 				>
@@ -48,6 +53,7 @@ defineProps({
 			<RouterLink to="/users/create">
 				<Button
 					class="h-8 w-full justify-start sm:justify-center"
+					:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
 					variant="ghost"
 					tabindex="-1"
 				>
@@ -65,6 +71,7 @@ defineProps({
 			<RouterLink to="/customers">
 				<Button
 					class="h-8 w-full justify-start sm:justify-center"
+					:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
 					variant="ghost"
 					tabindex="-1"
 				>
@@ -74,6 +81,7 @@ defineProps({
 			<RouterLink to="/customers/create">
 				<Button
 					class="h-8 w-full justify-start sm:justify-center"
+					:class="{ 'bg-accent text-accent-foreground': route.path === '/customers/create' }"
 					variant="ghost"
 					tabindex="-1"
 				>
@@ -91,6 +99,7 @@ defineProps({
 			<RouterLink to="/roadmaps">
 				<Button
 					class="h-8 w-full justify-start sm:justify-center"
+					:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
 					variant="ghost"
 					tabindex="-1"
 				>
@@ -100,6 +109,7 @@ defineProps({
 			<RouterLink to="/roadmaps/create">
 				<Button
 					class="h-8 w-full justify-start sm:justify-center"
+					:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
 					variant="ghost"
 					tabindex="-1"
 				>

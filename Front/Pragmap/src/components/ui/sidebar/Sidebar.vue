@@ -1,11 +1,13 @@
 <script setup lang="ts">
+import { useRoute } from 'vue-router'
 import { cn } from '@/lib/utils'
+import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
 import { FolderKanban, Handshake, LogOut, UserRound, UserRoundCog } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { Separator } from '@/components/ui/separator'
-import { useAuthStore } from '@/stores'
 
+const route = useRoute()
 const { user } = useAuthStore()
 </script>
 
@@ -26,6 +28,7 @@ const { user } = useAuthStore()
 							<RouterLink to="/users">
 								<Button
 									class="h-8 w-full justify-start"
+									:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
 									variant="ghost"
 									tabindex="-1"
 								>
@@ -35,6 +38,7 @@ const { user } = useAuthStore()
 							<RouterLink to="/users/create">
 								<Button
 									class="h-8 w-full justify-start"
+									:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
 									variant="ghost"
 									tabindex="-1"
 								>
@@ -52,6 +56,7 @@ const { user } = useAuthStore()
 							<RouterLink to="/customers">
 								<Button
 									class="h-8 w-full justify-start"
+									:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
 									variant="ghost"
 									tabindex="-1"
 								>
@@ -61,6 +66,9 @@ const { user } = useAuthStore()
 							<RouterLink to="/customers/create">
 								<Button
 									class="h-8 w-full justify-start"
+									:class="{
+										'bg-accent text-accent-foreground': route.path === '/customers/create'
+									}"
 									variant="ghost"
 									tabindex="-1"
 								>
@@ -78,6 +86,7 @@ const { user } = useAuthStore()
 							<RouterLink to="/roadmaps">
 								<Button
 									class="h-8 w-full justify-start"
+									:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
 									variant="ghost"
 									tabindex="-1"
 								>
@@ -87,6 +96,7 @@ const { user } = useAuthStore()
 							<RouterLink to="/roadmaps/create">
 								<Button
 									class="h-8 w-full justify-start"
+									:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
 									variant="ghost"
 									tabindex="-1"
 								>
@@ -111,6 +121,7 @@ const { user } = useAuthStore()
 						<RouterLink to="/profile">
 							<Button
 								class="h-8 w-full justify-start"
+								:class="{ 'bg-accent text-accent-foreground': route.path === '/profile' }"
 								variant="ghost"
 								tabindex="-1"
 							>
