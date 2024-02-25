@@ -14,9 +14,15 @@ const { user } = useAuthStore()
 <template>
 	<div :class="cn('pb-12', $attrs.class ?? '')">
 		<div class="h-full p-2">
-			<RouterLink to="/">
-				<h2 class="text-2xl font-semibold leading-none tracking-tighter px-4 py-2">Pragmap</h2>
-			</RouterLink>
+			<Button
+				class="h-8 w-full justify-start p-0"
+				variant="link"
+				as-child
+			>
+				<RouterLink to="/">
+					<h2 class="text-2xl font-semibold leading-none tracking-tighter px-4 py-2">Pragmap</h2>
+				</RouterLink>
+			</Button>
 			<div class="h-full flex flex-col justify-between">
 				<div class="space-y-4 py-10">
 					<div>
@@ -25,26 +31,22 @@ const { user } = useAuthStore()
 							Utilisateurs
 						</div>
 						<div class="flex flex-col space-y-2">
-							<RouterLink to="/users">
-								<Button
-									class="h-8 w-full justify-start"
-									:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
-									variant="ghost"
-									tabindex="-1"
-								>
-									Lister
-								</Button>
-							</RouterLink>
-							<RouterLink to="/users/create">
-								<Button
-									class="h-8 w-full justify-start"
-									:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
-									variant="ghost"
-									tabindex="-1"
-								>
-									Créer
-								</Button>
-							</RouterLink>
+							<Button
+								class="h-8 w-full justify-start"
+								:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
+								variant="ghost"
+								as-child
+							>
+								<RouterLink to="/users">Lister</RouterLink>
+							</Button>
+							<Button
+								class="h-8 w-full justify-start"
+								:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
+								variant="ghost"
+								as-child
+							>
+								<RouterLink to="/users/create">Créer</RouterLink>
+							</Button>
 						</div>
 					</div>
 					<div>
@@ -53,28 +55,24 @@ const { user } = useAuthStore()
 							Clients
 						</div>
 						<div class="flex flex-col space-y-2">
-							<RouterLink to="/customers">
-								<Button
-									class="h-8 w-full justify-start"
-									:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
-									variant="ghost"
-									tabindex="-1"
-								>
-									Lister
-								</Button>
-							</RouterLink>
-							<RouterLink to="/customers/create">
-								<Button
-									class="h-8 w-full justify-start"
-									:class="{
-										'bg-accent text-accent-foreground': route.path === '/customers/create'
-									}"
-									variant="ghost"
-									tabindex="-1"
-								>
-									Créer
-								</Button>
-							</RouterLink>
+							<Button
+								class="h-8 w-full justify-start"
+								:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
+								variant="ghost"
+								as-child
+							>
+								<RouterLink to="/customers">Lister</RouterLink>
+							</Button>
+							<Button
+								class="h-8 w-full justify-start"
+								:class="{
+									'bg-accent text-accent-foreground': route.path === '/customers/create'
+								}"
+								variant="ghost"
+								as-child
+							>
+								<RouterLink to="/customers/create">Créer</RouterLink>
+							</Button>
 						</div>
 					</div>
 					<div>
@@ -83,26 +81,22 @@ const { user } = useAuthStore()
 							Roadmaps
 						</div>
 						<div class="flex flex-col space-y-2">
-							<RouterLink to="/roadmaps">
-								<Button
-									class="h-8 w-full justify-start"
-									:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
-									variant="ghost"
-									tabindex="-1"
-								>
-									Lister
-								</Button>
-							</RouterLink>
-							<RouterLink to="/roadmaps/create">
-								<Button
-									class="h-8 w-full justify-start"
-									:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
-									variant="ghost"
-									tabindex="-1"
-								>
-									Créer
-								</Button>
-							</RouterLink>
+							<Button
+								class="h-8 w-full justify-start"
+								:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
+								variant="ghost"
+								as-child
+							>
+								<RouterLink to="/roadmaps">Lister</RouterLink>
+							</Button>
+							<Button
+								class="h-8 w-full justify-start"
+								:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
+								variant="ghost"
+								as-child
+							>
+								<RouterLink to="/roadmaps/create">Créer</RouterLink>
+							</Button>
 						</div>
 					</div>
 				</div>
@@ -118,31 +112,33 @@ const { user } = useAuthStore()
 					</div>
 					<Separator class="my-4" />
 					<div class="flex flex-col space-y-2">
-						<RouterLink to="/profile">
-							<Button
-								class="h-8 w-full justify-start"
-								:class="{ 'bg-accent text-accent-foreground': route.path === '/profile' }"
-								variant="ghost"
-								tabindex="-1"
-							>
+						<Button
+							class="h-8 w-full justify-start"
+							:class="{
+								'bg-accent text-accent-foreground': route.path === '/profile'
+							}"
+							variant="ghost"
+							as-child
+						>
+							<RouterLink to="/profile">
 								<div class="flex items-center font-semibold">
 									<UserRoundCog class="h-4 w-4 mr-2" />
 									Profil
 								</div>
-							</Button>
-						</RouterLink>
-						<RouterLink to="/logout">
-							<Button
-								class="h-8 w-full justify-start"
-								variant="ghost"
-								tabindex="-1"
-							>
+							</RouterLink>
+						</Button>
+						<Button
+							class="h-8 w-full justify-start"
+							variant="ghost"
+							as-child
+						>
+							<RouterLink to="/logout">
 								<div class="flex items-center font-semibold">
 									<LogOut class="h-4 w-4 mr-2" />
 									Déconnexion
 								</div>
-							</Button>
-						</RouterLink>
+							</RouterLink>
+						</Button>
 					</div>
 				</div>
 			</div>

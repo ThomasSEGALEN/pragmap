@@ -22,16 +22,14 @@ const route = useRoute()
 				<GanttChart class="h-4 w-4 mr-2" />
 				Pragmap
 			</div>
-			<RouterLink to="/">
-				<Button
-					class="h-8 w-full justify-start sm:justify-center"
-					:class="{ 'bg-accent text-accent-foreground': route.path === '/' }"
-					variant="ghost"
-					tabindex="-1"
-				>
-					Accueil
-				</Button>
-			</RouterLink>
+			<Button
+				class="h-8 w-full justify-start sm:justify-center"
+				:class="{ 'bg-accent text-accent-foreground': route.path === '/' }"
+				variant="ghost"
+				as-child
+			>
+				<RouterLink to="/">Accueil</RouterLink>
+			</Button>
 		</div>
 		<div class="w-full flex flex-col md:hidden">
 			<div
@@ -40,26 +38,22 @@ const route = useRoute()
 				<UserRound class="h-4 w-4 mr-2" />
 				Utilisateurs
 			</div>
-			<RouterLink to="/users">
-				<Button
-					class="h-8 w-full justify-start sm:justify-center"
-					:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
-					variant="ghost"
-					tabindex="-1"
-				>
-					Lister
-				</Button>
-			</RouterLink>
-			<RouterLink to="/users/create">
-				<Button
-					class="h-8 w-full justify-start sm:justify-center"
-					:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
-					variant="ghost"
-					tabindex="-1"
-				>
-					Créer
-				</Button>
-			</RouterLink>
+			<Button
+				class="h-8 w-full justify-start sm:justify-center"
+				:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
+				variant="ghost"
+				as-child
+			>
+				<RouterLink to="/users">Lister</RouterLink>
+			</Button>
+			<Button
+				class="h-8 w-full justify-start sm:justify-center"
+				:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
+				variant="ghost"
+				as-child
+			>
+				<RouterLink to="/users/create">Créer</RouterLink>
+			</Button>
 		</div>
 		<div class="w-full flex flex-col">
 			<div
@@ -68,26 +62,22 @@ const route = useRoute()
 				<Handshake class="h-4 w-4 mr-2" />
 				Clients
 			</div>
-			<RouterLink to="/customers">
-				<Button
-					class="h-8 w-full justify-start sm:justify-center"
-					:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
-					variant="ghost"
-					tabindex="-1"
-				>
-					Lister
-				</Button>
-			</RouterLink>
-			<RouterLink to="/customers/create">
-				<Button
-					class="h-8 w-full justify-start sm:justify-center"
-					:class="{ 'bg-accent text-accent-foreground': route.path === '/customers/create' }"
-					variant="ghost"
-					tabindex="-1"
-				>
-					Créer
-				</Button>
-			</RouterLink>
+			<Button
+				class="h-8 w-full justify-start sm:justify-center"
+				:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
+				variant="ghost"
+				as-child
+			>
+				<RouterLink to="/customers">Lister</RouterLink>
+			</Button>
+			<Button
+				class="h-8 w-full justify-start sm:justify-center"
+				:class="{ 'bg-accent text-accent-foreground': route.path === '/customers/create' }"
+				variant="ghost"
+				as-child
+			>
+				<RouterLink to="/customers/create">Créer</RouterLink>
+			</Button>
 		</div>
 		<div class="w-full flex flex-col">
 			<div
@@ -96,26 +86,22 @@ const route = useRoute()
 				<FolderKanban class="h-4 w-4 mr-2" />
 				Roadmaps
 			</div>
-			<RouterLink to="/roadmaps">
-				<Button
-					class="h-8 w-full justify-start sm:justify-center"
-					:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
-					variant="ghost"
-					tabindex="-1"
-				>
-					Lister
-				</Button>
-			</RouterLink>
-			<RouterLink to="/roadmaps/create">
-				<Button
-					class="h-8 w-full justify-start sm:justify-center"
-					:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
-					variant="ghost"
-					tabindex="-1"
-				>
-					Créer
-				</Button>
-			</RouterLink>
+			<Button
+				class="h-8 w-full justify-start sm:justify-center"
+				:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
+				variant="ghost"
+				as-child
+			>
+				<RouterLink to="/roadmaps">Lister</RouterLink>
+			</Button>
+			<Button
+				class="h-8 w-full justify-start sm:justify-center"
+				:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
+				variant="ghost"
+				as-child
+			>
+				<RouterLink to="/roadmaps/create">Créer</RouterLink>
+			</Button>
 		</div>
 	</div>
 </template>
