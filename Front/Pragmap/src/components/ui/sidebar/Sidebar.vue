@@ -15,7 +15,7 @@ const { user } = useAuthStore()
 	<div :class="cn('pb-12', $attrs.class ?? '')">
 		<div class="h-full p-2">
 			<Button
-				class="h-8 w-full justify-start p-0"
+				class="w-full justify-start p-0"
 				variant="link"
 				as-child
 			>
