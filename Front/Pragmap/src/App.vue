@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { GuestLayout, Layout } from './components/layouts'
+import { GuestLayout, Layout } from '@/components/layouts'
 </script>
 
 <template>
@@ -17,7 +17,6 @@ import { GuestLayout, Layout } from './components/layouts'
 				<template #header>
 					<h1>{{ route.meta.name }}</h1>
 				</template>
-
 				<Transition
 					name="fade"
 					mode="out-in"
@@ -25,7 +24,6 @@ import { GuestLayout, Layout } from './components/layouts'
 					<component :is="Component" />
 				</Transition>
 			</Layout>
-			<!-- <template #fallback>Loading...</template> -->
 		</Suspense>
 	</RouterView>
 </template>
