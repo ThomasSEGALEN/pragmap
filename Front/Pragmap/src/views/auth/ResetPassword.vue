@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useFocus } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -15,6 +17,8 @@ import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
 const { query } = useRoute()
+const passwordInput = ref()
+useFocus(passwordInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z
 		.object({
@@ -85,9 +89,9 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormControl>
 							<Input
 								v-bind="componentField"
+								ref="passwordInput"
 								type="password"
 								autocomplete="new-password"
-								autofocus
 							/>
 						</FormControl>
 						<FormMessage />

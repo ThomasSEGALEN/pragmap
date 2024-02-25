@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { MoreHorizontal } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import {
 	DropdownMenu,
@@ -8,6 +7,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
+import { MoreHorizontal } from 'lucide-vue-next'
 
 defineProps<{
 	name: string

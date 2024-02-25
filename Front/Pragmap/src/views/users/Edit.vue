@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useFocus } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -28,6 +30,8 @@ const { id } = defineProps<{
 
 const router = useRouter()
 const { roles } = useAuthStore()
+const roleInput = ref()
+useFocus(roleInput, { initialValue: true })
 const { editUser, clearEditUser } = useUserStore()
 const formSchema = toTypedSchema(
 	z.object({
@@ -92,7 +96,7 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormLabel>Rôle</FormLabel>
 						<FormControl>
 							<Select v-bind="componentField">
-								<SelectTrigger>
+								<SelectTrigger ref="roleInput">
 									<SelectValue placeholder="Sélectionner un rôle" />
 								</SelectTrigger>
 								<SelectContent>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useFocus } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -15,6 +17,8 @@ import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
 const { login } = useAuthStore()
+const emailInput = ref()
+useFocus(emailInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z.object({
 		email: z
@@ -71,9 +75,9 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormControl>
 							<Input
 								v-bind="componentField"
+								ref="emailInput"
 								type="email"
 								autocomplete="email"
-								autofocus
 							/>
 						</FormControl>
 						<FormMessage />
@@ -104,7 +108,6 @@ const onSubmit = handleSubmit(async (values) => {
 					>
 						<RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
 					</Button>
-
 					<Button
 						v-if="!isSubmitting"
 						type="submit"

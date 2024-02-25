@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useFocus } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -15,6 +16,8 @@ import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
+const nameInput = ref()
+useFocus(nameInput, { initialValue: true })
 const selected = ref<Array<Record<'label' | 'value', string>>>([])
 const options = ref<Array<Record<'label' | 'value', string>>>([])
 
@@ -98,6 +101,7 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormControl>
 							<Input
 								v-bind="componentField"
+								ref="nameInput"
 								autocomplete="organization"
 							/>
 						</FormControl>

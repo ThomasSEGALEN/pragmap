@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -12,6 +14,8 @@ import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
+const emailInput = ref()
+useFocus(emailInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z.object({
 		email: z
@@ -68,9 +72,9 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormControl>
 							<Input
 								v-bind="componentField"
+								ref="emailInput"
 								type="email"
 								autocomplete="email"
-								autofocus
 							/>
 						</FormControl>
 						<FormMessage />
