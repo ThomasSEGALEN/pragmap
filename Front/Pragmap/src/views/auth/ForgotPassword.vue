@@ -4,7 +4,6 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { authService } from '@/services'
-import { GuestLayout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -48,63 +47,61 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<GuestLayout>
-		<Card :class="cn('w-[420px]', $attrs.class ?? '')">
-			<CardHeader>
-				<CardTitle>Pragmap</CardTitle>
-				<CardDescription>
-					Veuillez renseigner votre adresse e-mail afin de recevoir un lien de réinitialisation de
-					mot de passe
-				</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<form
-					class="space-y-6"
-					@submit="onSubmit"
+	<Card :class="cn('w-[420px]', $attrs.class ?? '')">
+		<CardHeader>
+			<CardTitle>Pragmap</CardTitle>
+			<CardDescription>
+				Veuillez renseigner votre adresse e-mail afin de recevoir un lien de réinitialisation de mot
+				de passe
+			</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<form
+				class="space-y-6"
+				@submit="onSubmit"
+			>
+				<FormField
+					v-slot="{ componentField }"
+					name="email"
 				>
-					<FormField
-						v-slot="{ componentField }"
-						name="email"
+					<FormItem>
+						<FormLabel>Adresse e-mail</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="email"
+								autocomplete="email"
+								autofocus
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<div class="flex flex-col-reverse md:flex-row justify-between">
+					<Button
+						type="button"
+						variant="link"
+						size="sm"
+						as-child
 					>
-						<FormItem>
-							<FormLabel>Adresse e-mail</FormLabel>
-							<FormControl>
-								<Input
-									v-bind="componentField"
-									type="email"
-									autocomplete="email"
-									autofocus
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<div class="flex flex-col-reverse md:flex-row justify-between">
-						<Button
-							type="button"
-							variant="link"
-							size="sm"
-							as-child
-						>
-							<RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
-						</Button>
-						<Button
-							v-if="!isSubmitting"
-							type="submit"
-						>
-							<Send class="h-4 w-4 mr-2" />
-							Envoyer
-						</Button>
-						<Button
-							v-else
-							type="disabled"
-						>
-							<Loader2 class="h-4 w-4 mr-2 animate-spin" />
-							Envoi...
-						</Button>
-					</div>
-				</form>
-			</CardContent>
-		</Card>
-	</GuestLayout>
+						<RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
+					</Button>
+					<Button
+						v-if="!isSubmitting"
+						type="submit"
+					>
+						<Send class="h-4 w-4 mr-2" />
+						Envoyer
+					</Button>
+					<Button
+						v-else
+						type="disabled"
+					>
+						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
+						Envoi...
+					</Button>
+				</div>
+			</form>
+		</CardContent>
+	</Card>
 </template>

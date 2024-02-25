@@ -6,7 +6,6 @@ import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
-import { Layout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -97,88 +96,52 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Layout>
-		<template #header>
-			<h1>Création d'un utilisateur</h1>
-		</template>
-		<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
-			<CardContent>
-				<form
-					class="space-y-6"
-					@submit="onSubmit"
+	<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
+		<CardContent>
+			<form
+				class="space-y-6"
+				@submit="onSubmit"
+			>
+				<FormField
+					v-slot="{ componentField }"
+					name="roleId"
 				>
+					<FormItem>
+						<FormLabel>Rôle</FormLabel>
+						<FormControl>
+							<Select v-bind="componentField">
+								<SelectTrigger>
+									<SelectValue placeholder="Sélectionner un rôle" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										<SelectLabel>Rôles</SelectLabel>
+										<SelectItem
+											v-for="role in roles"
+											:key="role.id"
+											:value="role.id"
+										>
+											{{ role.name }}
+										</SelectItem>
+									</SelectGroup>
+								</SelectContent>
+							</Select>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<div class="flex flex-row justify-between space-x-4">
 					<FormField
 						v-slot="{ componentField }"
-						name="roleId"
+						name="lastName"
 					>
-						<FormItem>
-							<FormLabel>Rôle</FormLabel>
-							<FormControl>
-								<Select v-bind="componentField">
-									<SelectTrigger>
-										<SelectValue placeholder="Sélectionner un rôle" />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											<SelectLabel>Rôles</SelectLabel>
-											<SelectItem
-												v-for="role in roles"
-												:key="role.id"
-												:value="role.id"
-											>
-												{{ role.name }}
-											</SelectItem>
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<div class="flex flex-row justify-between space-x-4">
-						<FormField
-							v-slot="{ componentField }"
-							name="lastName"
-						>
-							<FormItem class="w-full">
-								<FormLabel>Nom</FormLabel>
-								<FormControl>
-									<Input
-										v-bind="componentField"
-										autocomplete="family-name"
-										autofocus
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						</FormField>
-						<FormField
-							v-slot="{ componentField }"
-							name="firstName"
-						>
-							<FormItem class="w-full">
-								<FormLabel>Prénom</FormLabel>
-								<FormControl>
-									<Input
-										v-bind="componentField"
-										autocomplete="given-name"
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						</FormField>
-					</div>
-					<FormField
-						v-slot="{ componentField }"
-						name="email"
-					>
-						<FormItem>
-							<FormLabel>Adresse e-mail</FormLabel>
+						<FormItem class="w-full">
+							<FormLabel>Nom</FormLabel>
 							<FormControl>
 								<Input
 									v-bind="componentField"
-									type="email"
-									autocomplete="email"
+									autocomplete="family-name"
+									autofocus
 								/>
 							</FormControl>
 							<FormMessage />
@@ -186,61 +149,92 @@ const onSubmit = handleSubmit(async (values) => {
 					</FormField>
 					<FormField
 						v-slot="{ componentField }"
-						name="password"
+						name="firstName"
 					>
-						<FormItem>
-							<FormLabel>Mot de passe</FormLabel>
+						<FormItem class="w-full">
+							<FormLabel>Prénom</FormLabel>
 							<FormControl>
 								<Input
 									v-bind="componentField"
-									type="password"
-									autocomplete="new-password"
+									autocomplete="given-name"
 								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					</FormField>
-					<FormField
-						v-slot="{ componentField }"
-						name="passwordConfirmation"
+				</div>
+				<FormField
+					v-slot="{ componentField }"
+					name="email"
+				>
+					<FormItem>
+						<FormLabel>Adresse e-mail</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="email"
+								autocomplete="email"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-slot="{ componentField }"
+					name="password"
+				>
+					<FormItem>
+						<FormLabel>Mot de passe</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="password"
+								autocomplete="new-password"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-slot="{ componentField }"
+					name="passwordConfirmation"
+				>
+					<FormItem>
+						<FormLabel>Confirmation du mot de passe</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="password"
+								autocomplete="new-password"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<div class="flex flex-col-reverse md:flex-row justify-between">
+					<Button
+						type="button"
+						variant="link"
+						size="sm"
+						as-child
 					>
-						<FormItem>
-							<FormLabel>Confirmation du mot de passe</FormLabel>
-							<FormControl>
-								<Input
-									v-bind="componentField"
-									type="password"
-									autocomplete="new-password"
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<div class="flex flex-col-reverse md:flex-row justify-between">
-						<Button
-							type="button"
-							variant="link"
-							size="sm"
-							as-child
-						>
-							<RouterLink to="/users">&#x2190; Retour</RouterLink>
-						</Button>
-						<Button
-							v-if="!isSubmitting"
-							type="submit"
-						>
-							Créer
-						</Button>
-						<Button
-							v-else
-							type="disabled"
-						>
-							<Loader2 class="h-4 w-4 mr-2 animate-spin" />
-							Création...
-						</Button>
-					</div>
-				</form>
-			</CardContent>
-		</Card>
-	</Layout>
+						<RouterLink to="/users">&#x2190; Retour</RouterLink>
+					</Button>
+					<Button
+						v-if="!isSubmitting"
+						type="submit"
+					>
+						Créer
+					</Button>
+					<Button
+						v-else
+						type="disabled"
+					>
+						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
+						Création...
+					</Button>
+				</div>
+			</form>
+		</CardContent>
+	</Card>
 </template>

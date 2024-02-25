@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import { Layout } from '@/components/layouts'
 import { useVueFlow } from '@vue-flow/core'
 import { VueFlow, type Elements } from '@vue-flow/core'
 import TacheNode from './partials/TacheNode.vue'
@@ -54,83 +53,79 @@ const importNode = () => {
 </script>
 
 <template>
-	<Layout>
-		<template #header>
-			<h1>Roadmap</h1>
-		</template>
-		<div style="width: 100%">
-			<div class="navbar">
-				<button @click="addNode('tache')">Tache</button>
-				<button @click="addNode('jalon')">Jalon</button>
-				<button @click="addNode('livrable')">Livrable</button>
-				<button @click="saveNode()">Save</button>
-				<button @click="importNode()">Load</button>
-			</div>
-			<VueFlow
-				v-model="elements"
-				class="vue-flow-basic-example"
-				:default-zoom="1"
-				:min-zoom="0.2"
-				:max-zoom="4"
-				style="height: 80vh"
-			>
-				<Background
-					pattern-color="#aaa"
-					:gap="8"
-				/>
-				<MiniMap />
-				<template #node-tache="nodeProps">
-					<TacheNode
-						@node-clicked="selectedNodeId = $event"
-						v-bind="nodeProps"
-					/>
-				</template>
-				<template #node-jalon="nodeProps">
-					<JalonNode
-						@node-clicked="selectedNodeId = $event"
-						v-bind="nodeProps"
-					/>
-				</template>
-				<template #node-livrable="nodeProps">
-					<LivrableNode
-						@node-clicked="selectedNodeId = $event"
-						v-bind="nodeProps"
-					/>
-				</template>
-			</VueFlow>
+	<div class="w-full relative">
+		<div class="navbar">
+			<button @click="addNode('tache')">Tache</button>
+			<button @click="addNode('jalon')">Jalon</button>
+			<button @click="addNode('livrable')">Livrable</button>
+			<button @click="saveNode()">Save</button>
+			<button @click="importNode()">Load</button>
 		</div>
-	</Layout>
-	<div
-		v-if="selectedNodeId && selectedNode"
-		class="settingsWindow"
-	>
-		<h2>Node Settings</h2>
-		<div
-			v-for="(value, key) in selectedNode.data"
-			:key="key"
+		<VueFlow
+			v-model="elements"
+			class="vue-flow-basic-example"
+			:default-zoom="1"
+			:min-zoom="0.2"
+			:max-zoom="4"
+			style="height: 80vh"
 		>
-			<label>{{ key }}</label>
-			<textarea
-				v-if="typeof key === 'string' && key === 'description'"
-				v-model="selectedNode.data[key]"
-				class="description"
-			></textarea>
-			<input
-				v-else-if="typeof value === 'boolean'"
-				type="checkbox"
-				v-model="selectedNode.data[key]"
+			<Background
+				pattern-color="#aaa"
+				:gap="8"
 			/>
-			<input
-				v-else-if="value instanceof Date"
-				type="date"
-				v-model="selectedNode.data[key]"
-			/>
-			<input
-				v-else
-				v-model="selectedNode.data[key]"
-			/>
+			<MiniMap />
+			<template #node-tache="nodeProps">
+				<TacheNode
+					@node-clicked="selectedNodeId = $event"
+					v-bind="nodeProps"
+				/>
+			</template>
+			<template #node-jalon="nodeProps">
+				<JalonNode
+					@node-clicked="selectedNodeId = $event"
+					v-bind="nodeProps"
+				/>
+			</template>
+			<template #node-livrable="nodeProps">
+				<LivrableNode
+					@node-clicked="selectedNodeId = $event"
+					v-bind="nodeProps"
+				/>
+			</template>
+		</VueFlow>
+
+		<div
+			v-if="selectedNodeId && selectedNode"
+			class="settingsWindow"
+		>
+			<h2>Node Settings</h2>
+			<div
+				v-for="(value, key) in selectedNode.data"
+				:key="key"
+			>
+				<label>{{ key }}</label>
+				<textarea
+					v-if="typeof key === 'string' && key === 'description'"
+					v-model="selectedNode.data[key]"
+					class="description"
+				></textarea>
+				<input
+					v-else-if="typeof value === 'boolean'"
+					type="checkbox"
+					v-model="selectedNode.data[key]"
+				/>
+				<input
+					v-else-if="value instanceof Date"
+					type="date"
+					v-model="selectedNode.data[key]"
+				/>
+				<input
+					v-else
+					v-model="selectedNode.data[key]"
+				/>
+			</div>
+			<button @click="selectedNodeId = null">Close</button>
 		</div>
-		<button @click="selectedNodeId = null">Close</button>
 	</div>
 </template>
 
@@ -143,7 +138,7 @@ const importNode = () => {
 }
 
 .settingsWindow {
-	position: fixed;
+	position: absolute;
 	right: 0;
 	top: 0;
 	width: 300px;

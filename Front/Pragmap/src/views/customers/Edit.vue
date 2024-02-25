@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -7,7 +7,6 @@ import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { customerService, userService } from '@/services'
 import { useCustomerStore } from '@/stores'
-import { Layout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -23,29 +22,27 @@ const { id } = defineProps<{
 const selected = ref<Array<{ label: string; value: string }>>([])
 const options = ref<Array<{ label: string; value: string }>>([])
 const { editCustomer, clearEditCustomer } = useCustomerStore()
-onMounted(async () => {
-	options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
-		(user) => ({
-			label: `${user.firstName} ${user.lastName}`,
-			value: user.id
+options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
+	(user) => ({
+		label: `${user.firstName} ${user.lastName}`,
+		value: user.id
+	})
+)
+const userIds = editCustomer?.customerUsers?.map(
+	(customerUser) => customerUser.userId
+) as Array<string>
+selected.value = await Promise.all(
+	userIds?.map(async (userId) => {
+		const user = await userService.getById(userId, {
+			select: ['id', 'lastName', 'firstName']
 		})
-	)
-	const userIds = editCustomer?.customerUsers?.map(
-		(customerUser) => customerUser.userId
-	) as Array<string>
-	selected.value = await Promise.all(
-		userIds?.map(async (userId) => {
-			const user = await userService.getById(userId, {
-				select: ['id', 'lastName', 'firstName']
-			})
 
-			return {
-				label: `${user.lastName} ${user.firstName}`,
-				value: user.id
-			}
-		})
-	)
-})
+		return {
+			label: `${user.lastName} ${user.firstName}`,
+			value: user.id
+		}
+	})
+)
 const formSchema = toTypedSchema(
 	z.object({
 		id: z.string().default(id),
@@ -99,94 +96,89 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Layout>
-		<template #header>
-			<h1>Modification d'un client</h1>
-		</template>
-		<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
-			<CardContent>
-				<form
-					class="space-y-6"
-					@submit="onSubmit"
+	<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
+		<CardContent>
+			<form
+				class="space-y-6"
+				@submit="onSubmit"
+			>
+				<FormField
+					v-slot="{ componentField }"
+					name="name"
 				>
-					<FormField
-						v-slot="{ componentField }"
-						name="name"
+					<FormItem class="w-full">
+						<FormLabel>Nom</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								autocomplete="organization"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-slot="{ handleChange }"
+					name="logo"
+				>
+					<FormItem class="w-full">
+						<FormLabel>Logo</FormLabel>
+						<FormControl>
+							<Input
+								type="file"
+								accept="image/png, image/jpeg, image/jpg"
+								@change="handleChange"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-slot="{ componentField }"
+					name="userIds"
+				>
+					<FormItem class="w-full relative z-0">
+						<FormLabel>Utilisateurs</FormLabel>
+						<FormControl>
+							<MultiSelect
+								v-bind="componentField"
+								v-model="selected"
+								:options="options"
+								placeholder="Sélectionner des utilisateurs"
+								message="Aucun utilisateur trouvé"
+								:limit-text="{
+									singular: 'utilisateur sélectionné',
+									plural: 'utilisateurs sélectionnés'
+								}"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<div class="flex flex-col-reverse sm:flex-row justify-between">
+					<Button
+						type="button"
+						variant="link"
+						size="sm"
+						as-child
 					>
-						<FormItem class="w-full">
-							<FormLabel>Nom</FormLabel>
-							<FormControl>
-								<Input
-									v-bind="componentField"
-									autocomplete="organization"
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<FormField
-						v-slot="{ handleChange }"
-						name="logo"
+						<RouterLink to="/customers">&#x2190; Retour</RouterLink>
+					</Button>
+					<Button
+						v-if="!isSubmitting"
+						type="submit"
 					>
-						<FormItem class="w-full">
-							<FormLabel>Logo</FormLabel>
-							<FormControl>
-								<Input
-									type="file"
-									accept="image/png, image/jpeg, image/jpg"
-									@change="handleChange"
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<FormField
-						v-slot="{ componentField }"
-						name="userIds"
+						Modifier
+					</Button>
+					<Button
+						v-else
+						type="disabled"
 					>
-						<FormItem class="w-full relative z-0">
-							<FormLabel>Utilisateurs</FormLabel>
-							<FormControl>
-								<MultiSelect
-									v-bind="componentField"
-									v-model="selected"
-									:options="options"
-									placeholder="Sélectionner des utilisateurs"
-									message="Aucun utilisateur trouvé"
-									:limit-text="{
-										singular: 'utilisateur sélectionné',
-										plural: 'utilisateurs sélectionnés'
-									}"
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<div class="flex flex-col-reverse sm:flex-row justify-between">
-						<Button
-							type="button"
-							variant="link"
-							size="sm"
-							as-child
-						>
-							<RouterLink to="/customers">&#x2190; Retour</RouterLink>
-						</Button>
-						<Button
-							v-if="!isSubmitting"
-							type="submit"
-						>
-							Modifier
-						</Button>
-						<Button
-							v-else
-							type="disabled"
-						>
-							<Loader2 class="w-4 h-4 mr-2 animate-spin" />
-							Modification...
-						</Button>
-					</div>
-				</form>
-			</CardContent>
-		</Card>
-	</Layout>
+						<Loader2 class="w-4 h-4 mr-2 animate-spin" />
+						Modification...
+					</Button>
+				</div>
+			</form>
+		</CardContent>
+	</Card>
 </template>

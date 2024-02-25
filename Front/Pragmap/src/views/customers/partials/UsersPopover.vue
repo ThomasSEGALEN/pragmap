@@ -21,7 +21,6 @@ onMounted(async () => {
 			}
 		})
 	)
-
 	users.value.sort((a, b) => a.name.localeCompare(b.name))
 })
 </script>
