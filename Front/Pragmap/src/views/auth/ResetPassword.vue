@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import router from '@/router'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -15,6 +14,7 @@ import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
+const router = useRouter()
 const { query } = useRoute()
 const { resetPassword } = authService
 const formSchema = toTypedSchema(
