@@ -7,7 +7,9 @@ import { columns } from './partials/columns'
 
 const { getPageIndex, getPageSize, getUsersData } = usePaginationStore()
 const data = ref<Array<IGetUser>>([])
+
 data.value = await getUsersData()
+
 watch([() => getPageIndex(), () => getPageSize()], async () => (data.value = await getUsersData()))
 </script>
 

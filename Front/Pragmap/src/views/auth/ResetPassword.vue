@@ -15,7 +15,6 @@ import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
 const { query } = useRoute()
-const { resetPassword } = authService
 const formSchema = toTypedSchema(
 	z
 		.object({
@@ -51,7 +50,7 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		if (!query.token) throw new Error('Token is missing')
 
-		resetPassword(query.token.toString(), values.password)
+		authService.resetPassword(query.token.toString(), values.password)
 
 		router.push('/login')
 	} catch (error) {

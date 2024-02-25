@@ -17,12 +17,14 @@ import { toast } from '@/components/ui/toast'
 const router = useRouter()
 const selected = ref<Array<Record<'label' | 'value', string>>>([])
 const options = ref<Array<Record<'label' | 'value', string>>>([])
+
 options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
 	(user) => ({
 		label: `${user.firstName} ${user.lastName}`,
 		value: user.id
 	})
 )
+
 const formSchema = toTypedSchema(
 	z.object({
 		name: z

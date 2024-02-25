@@ -22,10 +22,11 @@ import {
 import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
-const router = useRouter()
 const { id } = defineProps<{
 	id: string
 }>()
+
+const router = useRouter()
 const { roles } = useAuthStore()
 const { editUser, clearEditUser } = useUserStore()
 const formSchema = toTypedSchema(

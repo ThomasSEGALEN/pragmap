@@ -15,22 +15,24 @@ import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 
-const router = useRouter()
 const { id } = defineProps<{
 	id: string
 }>()
+
+const router = useRouter()
 const selected = ref<Array<{ label: string; value: string }>>([])
 const options = ref<Array<{ label: string; value: string }>>([])
 const { editCustomer, clearEditCustomer } = useCustomerStore()
+const userIds = editCustomer?.customerUsers?.map(
+	(customerUser) => customerUser.userId
+) as Array<string>
+
 options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
 	(user) => ({
 		label: `${user.firstName} ${user.lastName}`,
 		value: user.id
 	})
 )
-const userIds = editCustomer?.customerUsers?.map(
-	(customerUser) => customerUser.userId
-) as Array<string>
 selected.value = await Promise.all(
 	userIds?.map(async (userId) => {
 		const user = await userService.getById(userId, {
@@ -43,6 +45,7 @@ selected.value = await Promise.all(
 		}
 	})
 )
+
 const formSchema = toTypedSchema(
 	z.object({
 		id: z.string().default(id),

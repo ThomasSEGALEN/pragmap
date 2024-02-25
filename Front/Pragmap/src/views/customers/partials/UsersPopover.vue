@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 
 const { customerUsers } = defineProps<{ customerUsers: Array<ICustomerUser> }>()
+
 const users = ref<Array<Record<'id' | 'name', string>>>([])
 
 onMounted(async () => {
