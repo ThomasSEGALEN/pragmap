@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { useColorMode } from '@vueuse/core'
 import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -25,8 +24,9 @@ import {
 	SelectValue
 } from '@/components/ui/select'
 
-const theme = useColorMode()
-const selectTheme = (value: string) => (theme.value = value as 'light' | 'dark')
+defineProps<{ theme: string }>()
+defineEmits(['selectTheme'])
+
 const isToggled = ref(false)
 const toggleSidebar = () => (isToggled.value = !isToggled.value)
 const { user } = useAuthStore()
@@ -79,18 +79,18 @@ const getInitials = () =>
 							</div>
 						</DropdownMenuLabel>
 						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<RouterLink to="/profile">
-								<DropdownMenuItem>Profil</DropdownMenuItem>
-							</RouterLink>
+						<DropdownMenuGroup class="space-y-1">
+							<DropdownMenuItem as-child>
+								<RouterLink to="/profile">Profil</RouterLink>
+							</DropdownMenuItem>
 							<DropdownMenuItem as-child>
 								<Select
 									name="theme"
 									:default-value="theme"
-									@update:model-value="selectTheme"
+									@update:model-value="$emit('selectTheme', $event)"
 								>
 									<SelectTrigger
-										class="h-fit w-full border-none outline-none focus:outline-none ring-0 focus:ring-0 ring-offset-0 focus:ring-offset-0 px-2 py-1.5"
+										class="h-fit w-full rounded-sm border-none outline-none hover:bg-accent focus:outline-none ring-0 focus:ring-0 ring-offset-0 focus:ring-offset-0 px-2 py-1.5"
 									>
 										<SelectValue
 											:placeholder="theme === 'light' ? 'Thème clair' : 'Thème sombre'"
@@ -98,7 +98,7 @@ const getInitials = () =>
 									</SelectTrigger>
 									<SelectContent>
 										<SelectGroup>
-											<SelectItem value="light">Thème clair </SelectItem>
+											<SelectItem value="light">Thème clair</SelectItem>
 											<SelectItem value="dark">Thème sombre</SelectItem>
 										</SelectGroup>
 									</SelectContent>
