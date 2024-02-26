@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Pragmap.Infrastructure.Context;
@@ -11,9 +12,11 @@ using Pragmap.Infrastructure.Context;
 namespace Pragmap.Infrastructure.Migrations
 {
     [DbContext(typeof(PragmapContext))]
-    partial class PragmapContextModelSnapshot : ModelSnapshot
+    [Migration("20240226214739_AddUpdateEmailTokenTable")]
+    partial class AddUpdateEmailTokenTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -202,9 +205,6 @@ namespace Pragmap.Infrastructure.Migrations
                         .HasColumnType("text");
 
                     b.Property<DateTime>("TokenExpiresAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateTime?>("TokenUsedAt")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("UserId", "Token");
