@@ -73,11 +73,17 @@ const getInitials = () =>
 						<DropdownMenuSeparator />
 						<DropdownMenuGroup class="space-y-1">
 							<DropdownMenuItem as-child>
-								<RouterLink to="/profile">Profil</RouterLink>
+								<Button
+									class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
+									variant="ghost"
+									as-child
+								>
+									<RouterLink to="/profile">Profil</RouterLink>
+								</Button>
 							</DropdownMenuItem>
 							<DropdownMenuItem as-child>
 								<Button
-									class="h-8 w-full justify-start font-normal"
+									class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
 									variant="ghost"
 									@click="$emit('toggleTheme')"
 								>
@@ -87,7 +93,13 @@ const getInitials = () =>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
 						<DropdownMenuItem as-child>
-							<RouterLink to="/logout">Déconnexion</RouterLink>
+							<Button
+								class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
+								variant="ghost"
+								as-child
+							>
+								<RouterLink to="/logout">Déconnexion</RouterLink>
+							</Button>
 						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
