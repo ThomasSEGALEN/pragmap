@@ -10,7 +10,8 @@ defineEmits(['toggleTheme'])
 <template>
 	<Button
 		class="h-fit fixed top-0 right-0 p-2.5 m-6"
-		variant="ghost"
+		variant="secondary"
+		size="icon"
 		@click="$emit('toggleTheme')"
 	>
 		<Sun
