@@ -21,7 +21,7 @@ const { id } = defineProps<{
 }>()
 
 const router = useRouter()
-const nameInput = ref()
+const nameInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
 const refValue = computed(() => nameInput.value?.refValue)
 useFocus(refValue, { initialValue: true })
 const selected = ref<Array<{ label: string; value: string }>>([])

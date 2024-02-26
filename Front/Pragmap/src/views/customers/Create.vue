@@ -16,7 +16,7 @@ import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
-const nameInput = ref()
+const nameInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
 const refValue = computed(() => nameInput.value?.refValue)
 useFocus(refValue, { initialValue: true })
 const selected = ref<Array<Record<'label' | 'value', string>>>([])

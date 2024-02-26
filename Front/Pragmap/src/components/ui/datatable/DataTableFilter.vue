@@ -16,7 +16,7 @@ defineProps<{
 	table: Table<TData>
 }>()
 
-const searchInput = ref()
+const searchInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
 const refValue = computed(() => searchInput.value?.refValue)
 useFocus(refValue, { initialValue: true })
 </script>

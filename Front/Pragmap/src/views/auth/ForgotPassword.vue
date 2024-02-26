@@ -14,7 +14,7 @@ import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
-const emailInput = ref()
+const emailInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
 const refValue = computed(() => emailInput.value?.refValue)
 useFocus(refValue, { initialValue: true })
 const formSchema = toTypedSchema(

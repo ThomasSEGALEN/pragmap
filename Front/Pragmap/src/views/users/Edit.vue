@@ -30,7 +30,7 @@ const { id } = defineProps<{
 
 const router = useRouter()
 const { roles } = useAuthStore()
-const roleInput = ref()
+const roleInput = ref<HTMLInputElement | null>(null)
 useFocus(roleInput, { initialValue: true })
 const { editUser, clearEditUser } = useUserStore()
 const formSchema = toTypedSchema(

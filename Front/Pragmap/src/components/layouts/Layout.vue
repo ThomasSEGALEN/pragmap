@@ -27,7 +27,7 @@ import {
 defineProps<{ theme: string }>()
 defineEmits(['selectTheme'])
 
-const isToggled = ref(false)
+const isToggled = ref<boolean>(false)
 const toggleSidebar = () => (isToggled.value = !isToggled.value)
 const { user } = useAuthStore()
 const getInitials = () =>

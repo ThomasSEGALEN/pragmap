@@ -21,9 +21,9 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 	defaultValue: props.defaultValue
 })
 
-const showPassword = ref(false)
+const showPassword = ref<boolean>(false)
 
-const refValue = ref()
+const refValue = ref<HTMLInputElement | null>(null)
 
 defineExpose({
 	refValue

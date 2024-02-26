@@ -26,7 +26,7 @@ import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
 const { roles } = useAuthStore()
-const roleInput = ref()
+const roleInput = ref<HTMLInputElement | null>(null)
 useFocus(roleInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z

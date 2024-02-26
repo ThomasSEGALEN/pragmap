@@ -17,7 +17,7 @@ import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
 const { query } = useRoute()
-const passwordInput = ref()
+const passwordInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
 const refValue = computed(() => passwordInput.value?.refValue)
 useFocus(refValue, { initialValue: true })
 const formSchema = toTypedSchema(

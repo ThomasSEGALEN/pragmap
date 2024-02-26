@@ -3,9 +3,9 @@ import { useRoute } from 'vue-router'
 import { Button } from '@/components/ui/button'
 import { FolderKanban, GanttChart, Handshake, UserRound } from 'lucide-vue-next'
 
-defineProps({
-	isToggled: Boolean
-})
+defineProps<{
+	isToggled: boolean
+}>()
 
 const route = useRoute()
 </script>
