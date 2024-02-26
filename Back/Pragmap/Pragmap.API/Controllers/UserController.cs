@@ -41,6 +41,18 @@ namespace Pragmap.API.Controllers
             return BadRequest(result.Error);
         }
 
+        [HttpPost("[controller]/ask-email-update")]
+        public async Task<IActionResult> AskMailUpdate([FromBody] AskEmailUpdateCommand askMailUpdateCommand)
+        {
+            var result = await _mediatR.Send(askMailUpdateCommand);
+            _unitOfWork.Complete();
+            if (result.IsSuccess)
+            {
+                return Ok();
+            }
+            return BadRequest(result.Error);
+        }
+
         public async Task<IActionResult> Put(Guid key, [FromBody] UpdateUserCommand updateUserCommand)
         {
             var result = await _mediatR.Send(updateUserCommand);
@@ -49,7 +61,32 @@ namespace Pragmap.API.Controllers
                 return Ok(result.Data);
             }
             return BadRequest(result.Error);
-        }   
+        }
+
+        [HttpPut("[controller]/{key}/update-password")]
+        public async Task<IActionResult> UpdatePassword(Guid key, [FromBody] UpdatePasswordCommand changePasswordCommand)
+        {
+            var result = await _mediatR.Send(changePasswordCommand);
+            await _unitOfWork.Complete();
+            if (result.IsSuccess)
+            {
+                return Ok();
+            }
+            return BadRequest(result.Error);
+        }
+
+        [HttpPost("[controller]/update-email")]
+        public async Task<IActionResult> UpdateEmail([FromQuery] Guid token)
+        {
+            var updateEmailCommand = new UpdateEmailCommand { Token = token };
+            var result = await _mediatR.Send(updateEmailCommand);
+            await _unitOfWork.Complete();
+            if (result.IsSuccess)
+            {
+                return Ok();
+            }
+            return BadRequest(result.Error);
+        }
 
         public async Task<IActionResult> Delete([FromRoute] Guid key)
         {
