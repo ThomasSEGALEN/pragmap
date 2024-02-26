@@ -36,7 +36,8 @@ const formSchema = toTypedSchema(
 				required_error: 'Le champ est obligatoire',
 				invalid_type_error: 'Le champ est invalide'
 			})
-			.min(1, { message: 'Le champ est obligatoire' }),
+			.min(1, { message: 'Le champ est obligatoire' })
+			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
 		logo: z
 			.instanceof(File)
 			.default(new File([], ''))

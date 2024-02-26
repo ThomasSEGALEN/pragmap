@@ -59,6 +59,7 @@ const formSchema = toTypedSchema(
 				invalid_type_error: 'Le champ est invalide'
 			})
 			.min(1, { message: 'Le champ est obligatoire' })
+			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
 			.default(editCustomer?.name ?? ''),
 		logo: z.instanceof(File).default(new File([], '')),
 		userIds: z

@@ -24,8 +24,9 @@ const formSchema = toTypedSchema(
 				required_error: 'Le champ est obligatoire',
 				invalid_type_error: 'Le champ est invalide'
 			})
-			.email({ message: 'Le champ doit être une adresse e-mail valide' })
 			.min(1, { message: 'Le champ est obligatoire' })
+			.email({ message: 'Le champ doit être une adresse e-mail valide' })
+			.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' })
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({

@@ -27,15 +27,21 @@ const formSchema = toTypedSchema(
 				required_error: 'Le champ est obligatoire',
 				invalid_type_error: 'Le champ est invalide'
 			})
+			.min(1, { message: 'Le champ est obligatoire' })
 			.email({ message: 'Le champ doit être une adresse e-mail valide' })
-			.min(1, { message: 'Le champ est obligatoire' }),
+			.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' }),
 		password: z
 			.string({
 				required_error: 'Le champ est obligatoire',
 				invalid_type_error: 'Le champ est invalide'
 			})
 			.min(1, { message: 'Le champ est obligatoire' })
-			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
+			.regex(/.*[a-z]/, { message: 'Le champ doit contenir au moins une minuscule' })
+			.regex(/.*[A-Z]/, { message: 'Le champ doit contenir au moins une majuscule' })
+			.regex(/.*\d/, { message: 'Le champ doit contenir au moins un chiffre' })
+			.regex(/.*[@$!%*?&]/, { message: 'Le champ doit contenir au moins un caractère spécial' })
+			.min(8, { message: 'Le champ doit contenir au minimum 8 caractères' })
+			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
