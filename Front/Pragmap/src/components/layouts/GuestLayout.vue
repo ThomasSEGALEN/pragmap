@@ -4,14 +4,14 @@ import { Moon, Sun } from 'lucide-vue-next'
 import { Toaster } from '@/components/ui/toast'
 
 defineProps<{ theme: string }>()
-defineEmits(['selectTheme'])
+defineEmits(['toggleTheme'])
 </script>
 
 <template>
 	<Button
 		class="h-fit fixed top-0 right-0 p-2.5 m-6"
 		variant="ghost"
-		@click="$emit('selectTheme', theme === 'light' ? 'dark' : 'light')"
+		@click="$emit('toggleTheme')"
 	>
 		<Sun
 			v-if="theme === 'light'"

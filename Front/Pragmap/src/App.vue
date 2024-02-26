@@ -3,7 +3,7 @@ import { useColorMode } from '@vueuse/core'
 import { GuestLayout, Layout } from '@/components/layouts'
 
 const theme = useColorMode()
-const selectTheme = (value: string) => (theme.value = value as 'light' | 'dark')
+const toggleTheme = () => (theme.value = theme.value === 'light' ? 'dark' : 'light')
 </script>
 
 <template>
@@ -12,7 +12,7 @@ const selectTheme = (value: string) => (theme.value = value as 'light' | 'dark')
 			<GuestLayout
 				v-if="!route.meta.requiresAuth"
 				:theme="theme"
-				@select-theme="selectTheme"
+				@toggle-theme="toggleTheme"
 			>
 				<Transition
 					name="fade"
@@ -24,7 +24,7 @@ const selectTheme = (value: string) => (theme.value = value as 'light' | 'dark')
 			<Layout
 				v-else
 				:theme="theme"
-				@select-theme="selectTheme"
+				@toggle-theme="toggleTheme"
 			>
 				<template #header>
 					<h1>{{ route.meta.name }}</h1>

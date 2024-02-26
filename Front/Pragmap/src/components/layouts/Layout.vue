@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores'
 import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -13,19 +15,9 @@ import {
 import { Menu, X } from 'lucide-vue-next'
 import { ResponsiveSidebar, Sidebar } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/toast'
-import { useAuthStore } from '@/stores'
-import { ref } from 'vue'
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select'
 
 defineProps<{ theme: string }>()
-defineEmits(['selectTheme'])
+defineEmits(['toggleTheme'])
 
 const isToggled = ref<boolean>(false)
 const toggleSidebar = () => (isToggled.value = !isToggled.value)
@@ -84,31 +76,19 @@ const getInitials = () =>
 								<RouterLink to="/profile">Profil</RouterLink>
 							</DropdownMenuItem>
 							<DropdownMenuItem as-child>
-								<Select
-									name="theme"
-									:default-value="theme"
-									@update:model-value="$emit('selectTheme', $event)"
+								<Button
+									class="h-8 w-full justify-start font-normal"
+									variant="ghost"
+									@click="$emit('toggleTheme')"
 								>
-									<SelectTrigger
-										class="h-fit w-full rounded-sm border-none outline-none hover:bg-accent focus:outline-none ring-0 focus:ring-0 ring-offset-0 focus:ring-offset-0 px-2 py-1.5"
-									>
-										<SelectValue
-											:placeholder="theme === 'light' ? 'Thème clair' : 'Thème sombre'"
-										/>
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											<SelectItem value="light">Thème clair</SelectItem>
-											<SelectItem value="dark">Thème sombre</SelectItem>
-										</SelectGroup>
-									</SelectContent>
-								</Select>
+									{{ theme === 'light' ? 'Mode sombre' : 'Mode clair' }}
+								</Button>
 							</DropdownMenuItem>
 						</DropdownMenuGroup>
 						<DropdownMenuSeparator />
-						<RouterLink to="/logout">
-							<DropdownMenuItem>Déconnexion</DropdownMenuItem>
-						</RouterLink>
+						<DropdownMenuItem as-child>
+							<RouterLink to="/logout">Déconnexion</RouterLink>
+						</DropdownMenuItem>
 					</DropdownMenuContent>
 				</DropdownMenu>
 			</header>
