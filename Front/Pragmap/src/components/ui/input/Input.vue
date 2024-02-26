@@ -22,6 +22,12 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 })
 
 const showPassword = ref(false)
+
+const refValue = ref()
+
+defineExpose({
+	refValue
+})
 </script>
 
 <script lang="ts">
@@ -34,9 +40,11 @@ export default {
 	<div class="relative">
 		<input
 			v-model="modelValue"
+			ref="refValue"
 			:id="useAttrs().id as string"
 			:name="useAttrs().name as string"
 			:type="showPassword ? 'text' : type"
+			:placeholder="useAttrs().placeholder as string"
 			:autocomplete="useAttrs().autocomplete as string"
 			:class="
 				cn(

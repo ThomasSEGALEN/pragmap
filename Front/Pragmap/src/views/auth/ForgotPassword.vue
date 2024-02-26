@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
@@ -15,7 +15,8 @@ import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
 const emailInput = ref()
-useFocus(emailInput, { initialValue: true })
+const refValue = computed(() => emailInput.value?.refValue)
+useFocus(refValue, { initialValue: true })
 const formSchema = toTypedSchema(
 	z.object({
 		email: z

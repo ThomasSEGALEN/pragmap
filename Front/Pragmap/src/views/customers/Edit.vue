@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useFocus } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
@@ -22,7 +22,8 @@ const { id } = defineProps<{
 
 const router = useRouter()
 const nameInput = ref()
-useFocus(nameInput, { initialValue: true })
+const refValue = computed(() => nameInput.value?.refValue)
+useFocus(refValue, { initialValue: true })
 const selected = ref<Array<{ label: string; value: string }>>([])
 const options = ref<Array<{ label: string; value: string }>>([])
 const { editCustomer, clearEditCustomer } = useCustomerStore()

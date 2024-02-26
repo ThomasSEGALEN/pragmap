@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useFocus } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
@@ -17,7 +17,8 @@ import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
 const nameInput = ref()
-useFocus(nameInput, { initialValue: true })
+const refValue = computed(() => nameInput.value?.refValue)
+useFocus(refValue, { initialValue: true })
 const selected = ref<Array<Record<'label' | 'value', string>>>([])
 const options = ref<Array<Record<'label' | 'value', string>>>([])
 

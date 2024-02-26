@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useFocus } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
@@ -18,7 +18,8 @@ import { toast } from '@/components/ui/toast'
 const router = useRouter()
 const { query } = useRoute()
 const passwordInput = ref()
-useFocus(passwordInput, { initialValue: true })
+const refValue = computed(() => passwordInput.value?.refValue)
+useFocus(refValue, { initialValue: true })
 const formSchema = toTypedSchema(
 	z
 		.object({
