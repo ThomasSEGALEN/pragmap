@@ -60,6 +60,7 @@ export default {
 				class="absolute top-0 right-0 flex justify-center items-center"
 				type="button"
 				variant="link"
+				size="icon"
 				@click="showPassword = !showPassword"
 			>
 				<Eye
