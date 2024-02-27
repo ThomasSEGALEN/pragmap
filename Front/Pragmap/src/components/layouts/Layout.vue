@@ -32,7 +32,7 @@ const getInitials = () =>
 		<div class="w-full flex flex-col md:ml-60">
 			<header
 				v-if="$slots.header"
-				class="fixed w-full flex flex-col justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b bg-background z-50"
+				class="fixed md:sticky top-0 w-full flex flex-col justify-between items-center text-xl font-semibold leading-none tracking-tighter border-b bg-background p-4 z-50"
 			>
 				<div class="relative w-full flex flex-row justify-between items-center">
 					<Button
@@ -110,7 +110,7 @@ const getInitials = () =>
 					:is-toggled="isToggled"
 				/>
 			</header>
-			<main class="h-fit w-full flex justify-center p-6 md:p-12 mt-16">
+			<main class="h-fit w-full flex justify-center p-6 md:p-12 mt-16 md:mt-0">
 				<slot />
 			</main>
 		</div>
