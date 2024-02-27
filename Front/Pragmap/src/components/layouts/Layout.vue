@@ -32,83 +32,85 @@ const getInitials = () =>
 		<div class="w-full flex flex-col md:ml-60">
 			<header
 				v-if="$slots.header"
-				class="w-full flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b bg-background z-50"
+				class="fixed w-full flex flex-col justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b bg-background z-50"
 			>
-				<Button
-					class="md:hidden h-8 w-8"
-					variant="ghost"
-					size="icon"
-					@click="toggleSidebar"
-				>
-					<Menu v-if="!isToggled" />
-					<X v-else />
-				</Button>
-				<slot name="header" />
-				<DropdownMenu>
-					<DropdownMenuTrigger as-child>
-						<Button
-							class="relative h-8 w-8 rounded-full"
-							variant="ghost"
-						>
-							<Avatar class="h-8 w-8">
-								{{ getInitials() }}
-							</Avatar>
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent
-						class="w-56"
-						align="end"
+				<div class="relative w-full flex flex-row justify-between items-center">
+					<Button
+						class="md:hidden h-8 w-8"
+						variant="ghost"
+						size="icon"
+						@click="toggleSidebar"
 					>
-						<DropdownMenuLabel>
-							<div class="flex flex-col space-y-1">
-								<p class="text-sm font-medium leading-none break-words">
-									{{ user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1) }}
-									{{ user.lastName.charAt(0).toUpperCase() + user.lastName.substring(1) }}
-								</p>
-								<p class="text-xs leading-none text-muted-foreground break-words">
-									{{ user.email }}
-								</p>
-							</div>
-						</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuGroup class="space-y-1">
+						<Menu v-if="!isToggled" />
+						<X v-else />
+					</Button>
+					<slot name="header" />
+					<DropdownMenu>
+						<DropdownMenuTrigger as-child>
+							<Button
+								class="relative h-8 w-8 rounded-full"
+								variant="ghost"
+							>
+								<Avatar class="h-8 w-8">
+									{{ getInitials() }}
+								</Avatar>
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent
+							class="w-56"
+							align="end"
+						>
+							<DropdownMenuLabel>
+								<div class="flex flex-col space-y-1">
+									<p class="text-sm font-medium leading-none break-words">
+										{{ user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1) }}
+										{{ user.lastName.charAt(0).toUpperCase() + user.lastName.substring(1) }}
+									</p>
+									<p class="text-xs leading-none text-muted-foreground break-words">
+										{{ user.email }}
+									</p>
+								</div>
+							</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuGroup class="space-y-1">
+								<DropdownMenuItem as-child>
+									<Button
+										class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
+										variant="ghost"
+										as-child
+									>
+										<RouterLink to="/profile">Profil</RouterLink>
+									</Button>
+								</DropdownMenuItem>
+								<DropdownMenuItem as-child>
+									<Button
+										class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
+										variant="ghost"
+										@click="$emit('toggleTheme')"
+									>
+										{{ theme === 'light' ? 'Mode sombre' : 'Mode clair' }}
+									</Button>
+								</DropdownMenuItem>
+							</DropdownMenuGroup>
+							<DropdownMenuSeparator />
 							<DropdownMenuItem as-child>
 								<Button
 									class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
 									variant="ghost"
 									as-child
 								>
-									<RouterLink to="/profile">Profil</RouterLink>
+									<RouterLink to="/logout">Déconnexion</RouterLink>
 								</Button>
 							</DropdownMenuItem>
-							<DropdownMenuItem as-child>
-								<Button
-									class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
-									variant="ghost"
-									@click="$emit('toggleTheme')"
-								>
-									{{ theme === 'light' ? 'Mode sombre' : 'Mode clair' }}
-								</Button>
-							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem as-child>
-							<Button
-								class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
-								variant="ghost"
-								as-child
-							>
-								<RouterLink to="/logout">Déconnexion</RouterLink>
-							</Button>
-						</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
+				<ResponsiveSidebar
+					class="absolute z-50"
+					:is-toggled="isToggled"
+				/>
 			</header>
-			<ResponsiveSidebar
-				class="z-50"
-				:is-toggled="isToggled"
-			/>
-			<main class="h-fit w-full flex justify-center p-6 md:p-12">
+			<main class="h-fit w-full flex justify-center p-6 md:p-12 mt-16">
 				<slot />
 			</main>
 		</div>
