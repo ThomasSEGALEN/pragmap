@@ -56,8 +56,7 @@ const onSubmit = handleSubmit(async (values) => {
 		<CardHeader>
 			<CardTitle>Pragmap</CardTitle>
 			<CardDescription>
-				Veuillez renseigner votre adresse e-mail afin de recevoir un lien de réinitialisation de mot
-				de passe
+				Renseignez votre adresse e-mail afin de recevoir un lien de réinitialisation de mot de passe
 			</CardDescription>
 		</CardHeader>
 		<CardContent>

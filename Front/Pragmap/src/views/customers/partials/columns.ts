@@ -46,7 +46,7 @@ export const columns: Array<ColumnDef<IGetCustomer>> = [
 						} catch (error) {
 							toast({
 								title: 'Erreur',
-								description: `Nous ne sommes pas parvenus à supprimer ce client.`,
+								description: 'Nous ne sommes pas parvenus à supprimer ce client.',
 								duration: 5000
 							})
 						}

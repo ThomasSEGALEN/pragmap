@@ -38,18 +38,15 @@ const formSchema = toTypedSchema(
 			})
 			.min(1, { message: 'Le champ est obligatoire' })
 			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
-		logo: z
-			.instanceof(File)
-			.default(new File([], ''))
-			.superRefine((value, context) => {
-				if (!value.name) {
-					return context.addIssue({
-						code: z.ZodIssueCode.custom,
-						message: 'Le champ est obligatoire',
-						path: ['logo']
-					})
-				}
-			}),
+		logo: z.custom<File>().superRefine((value, context) => {
+			if (!value?.name) {
+				return context.addIssue({
+					code: z.ZodIssueCode.custom,
+					message: 'Le champ est obligatoire',
+					path: ['logo']
+				})
+			}
+		}),
 		userIds: z
 			.array(
 				z.object({
@@ -80,7 +77,7 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à créer un client.`,
+			description: 'Nous ne sommes pas parvenus à créer un client.',
 			duration: 5000
 		})
 	}

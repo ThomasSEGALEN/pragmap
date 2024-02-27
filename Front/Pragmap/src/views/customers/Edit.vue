@@ -96,7 +96,7 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à modifier ce client.`,
+			description: 'Nous ne sommes pas parvenus à modifier ce client.',
 			duration: 5000
 		})
 	}

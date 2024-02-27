@@ -28,7 +28,7 @@ onMounted(async () => {
 
 <template>
 	<Popover>
-		<PopoverTrigger>
+		<PopoverTrigger as-child>
 			<Button
 				class="px-0"
 				variant="link"

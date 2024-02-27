@@ -55,7 +55,7 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à vous connecter avec ces identifiants.`,
+			description: 'Nous ne sommes pas parvenus à vous connecter avec ces identifiants.',
 			duration: 5000
 		})
 	}

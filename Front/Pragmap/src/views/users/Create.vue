@@ -100,7 +100,7 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à créer un utilisateur.`,
+			description: 'Nous ne sommes pas parvenus à créer un utilisateur.',
 			duration: 5000
 		})
 	}
