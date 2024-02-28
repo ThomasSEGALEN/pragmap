@@ -1,10 +1,11 @@
 <script setup lang="ts">
-import { useAuthStore } from '@/stores'
-
-const authStore = useAuthStore()
-console.log(authStore.user)
+import UpdateEmail from './partials/UpdateEmail.vue'
+import UpdatePassword from './partials/UpdatePassword.vue'
 </script>
 
 <template>
-	<div>Profile page</div>
+	<div class="space-y-6">
+		<UpdateEmail />
+		<UpdatePassword />
+	</div>
 </template>
