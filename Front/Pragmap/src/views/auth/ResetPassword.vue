@@ -62,7 +62,12 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		if (!query.token) throw new Error('Token is missing')
 
-		authService.resetPassword(query.token.toString(), values.password)
+		const data = {
+			token: query.token.toString(),
+			password: values.password
+		}
+
+		authService.resetPassword(data)
 
 		router.push('/login')
 	} catch (error) {

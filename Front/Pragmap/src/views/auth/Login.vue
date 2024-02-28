@@ -49,7 +49,7 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await login(values.email, values.password)
+		await login(values)
 
 		router.push('/')
 	} catch (error) {

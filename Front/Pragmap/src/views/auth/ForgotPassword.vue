@@ -34,7 +34,7 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await authService.forgotPassword(values.email)
+		await authService.forgotPassword(values)
 
 		toast({
 			title: 'Succès',
