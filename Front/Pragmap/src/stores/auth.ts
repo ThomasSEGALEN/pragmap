@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { jwtDecode } from 'jwt-decode'
 import { authService, roleService, userService } from '@/services'
-import type { IAuth, IGetUser, IRole } from '@/types'
+import type { IAuth, IGetUser, ILogin, IRole } from '@/types'
 
 interface State {
 	user: IGetUser
@@ -23,8 +23,8 @@ export const useAuthStore = defineStore('auth', {
 		isAuthenticated: (state) => !!state.accessToken
 	},
 	actions: {
-		async login(email: string, password: string): Promise<void> {
-			const { accessToken, refreshToken } = await authService.login(email, password)
+		async login(data: ILogin): Promise<void> {
+			const { accessToken, refreshToken } = await authService.login(data)
 
 			await this.getUser(accessToken)
 			await this.getRoles()
