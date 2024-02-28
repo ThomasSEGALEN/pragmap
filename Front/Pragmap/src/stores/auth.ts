@@ -15,7 +15,7 @@ export const useAuthStore = defineStore('auth', {
 		useLocalStorage<State>('authStore', {
 			user: {} as IGetUser,
 			roles: [],
-			accessToken: '',
+			accessToken: ''
 		}),
 	getters: {
 		isAuthenticated: (state) => !!state.accessToken

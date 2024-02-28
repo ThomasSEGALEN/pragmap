@@ -56,7 +56,9 @@ export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V
 
 	public async getAll(options?: IApiOptions<T> & { count?: boolean }): Promise<Array<T> | number> {
 		try {
-			const response = await api.get(`/${this.apiPath}${options?.count ? '/$count' : ''}${options ? applyOptions(options) : ''}`)
+			const response = await api.get(
+				`/${this.apiPath}${options?.count ? '/$count' : ''}${options ? applyOptions(options) : ''}`
+			)
 
 			if (options?.count) return response.data as number
 

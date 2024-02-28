@@ -82,7 +82,7 @@ const router = createRouter({
 			name: 'Profile',
 			component: () => import('@/views/profile/Edit.vue'),
 			beforeEnter: authMiddleware,
-			meta: { name: 'Profil', requiresAuth: true },
+			meta: { name: 'Profil', requiresAuth: true }
 		},
 		{
 			path: '/update-email',
@@ -99,7 +99,7 @@ const router = createRouter({
 
 				return '/login'
 			},
-			meta: { name: 'UpdateEmail', requiresAuth: true },
+			meta: { name: 'UpdateEmail', requiresAuth: true }
 		},
 		{
 			path: '/',
