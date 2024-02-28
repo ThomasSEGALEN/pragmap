@@ -67,11 +67,13 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await customerService.create({
-			...values,
+		const data = {
+			name: values.name,
 			logo: `${values.logo.lastModified}_${values.logo.name}`,
 			userIds: values.userIds?.map((userId) => userId.value)
-		})
+		}
+
+		await customerService.create(data)
 
 		router.push('/customers')
 	} catch (error) {
@@ -85,7 +87,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
+	<Card :class="cn('h-fit w-[420px] pt-6', $attrs.class ?? '')">
 		<CardContent>
 			<form
 				class="space-y-6"

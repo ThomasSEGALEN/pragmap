@@ -82,13 +82,15 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await customerService.update(id, {
+		const data = {
 			...values,
 			logo: values.logo.name
 				? `${values.logo.lastModified}_${values.logo.name}`
 				: editCustomer!.logo,
 			userIds: selected.value.map((userId) => userId.value)
-		})
+		}
+
+		await customerService.update(id, data)
 
 		clearEditCustomer()
 
@@ -104,7 +106,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
+	<Card :class="cn('h-fit w-[420px] pt-6', $attrs.class ?? '')">
 		<CardContent>
 			<form
 				class="space-y-6"
