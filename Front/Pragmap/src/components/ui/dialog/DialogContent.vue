@@ -37,7 +37,6 @@ const emitsAsProps = useEmitAsProps(emits)
 				class="absolute top-3 right-3 p-0.5 transition-colors rounded-md hover:bg-secondary"
 			>
 				<X class="h-4 w-4" />
-				<span class="sr-only">Close</span>
 			</DialogClose>
 		</DialogContent>
 	</DialogPortal>

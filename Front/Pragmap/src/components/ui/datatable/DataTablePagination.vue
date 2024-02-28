@@ -37,7 +37,6 @@ const {
 				:disabled="!getCanPreviousPage()"
 				@click="setPageIndex(0)"
 			>
-				<span class="sr-only">Aller à la première page</span>
 				<ChevronsLeft class="h-4 w-4" />
 			</Button>
 			<Button
@@ -46,7 +45,6 @@ const {
 				:disabled="!getCanPreviousPage()"
 				@click="previousPage()"
 			>
-				<span class="sr-only">Aller à la page précédente</span>
 				<ChevronLeft class="h-4 w-4" />
 			</Button>
 			<Button
@@ -55,7 +53,6 @@ const {
 				:disabled="!getCanNextPage()"
 				@click="nextPage()"
 			>
-				<span class="sr-only">Aller à la page suivante</span>
 				<ChevronRight class="h-4 w-4" />
 			</Button>
 			<Button
@@ -64,7 +61,6 @@ const {
 				:disabled="!getCanNextPage()"
 				@click="setPageIndex(getPageCount() - 1)"
 			>
-				<span class="sr-only">Aller à la dernière page</span>
 				<ChevronsRight class="h-4 w-4" />
 			</Button>
 		</div>

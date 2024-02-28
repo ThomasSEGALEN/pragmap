@@ -30,14 +30,14 @@ onMounted(async () => {
 	<Popover>
 		<PopoverTrigger as-child>
 			<Button
-				class="px-0"
+				class="px-0 focus-visible:bg-background"
 				variant="link"
 			>
 				Consulter
 			</Button>
 		</PopoverTrigger>
 		<PopoverContent>
-			<h4 class="font-medium leading-none">Utilisateurs :</h4>
+			<h4 class="font-medium leading-none text-md">Utilisateurs :</h4>
 			<ul class="mt-2">
 				<li
 					v-for="user in users"
