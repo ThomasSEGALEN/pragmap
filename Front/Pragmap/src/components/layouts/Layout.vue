@@ -29,12 +29,12 @@ const getInitials = () =>
 <template>
 	<div class="flex">
 		<Sidebar
-			class="fixed h-full min-w-60 hidden md:block border-r z-50 overflow-y-auto bg-gradient-to-br from-background to-primary-foreground"
+			class="fixed h-full min-w-60 hidden md:block border-r z-50 overflow-y-auto bg-background"
 		/>
 		<div class="h-screen w-full flex flex-col md:ml-60">
 			<header
 				v-if="$slots.header"
-				class="fixed md:sticky top-0 w-full flex flex-col justify-between items-center text-xl font-semibold leading-none tracking-tighter border-b p-4 z-50 bg-gradient-to-br from-background to-primary-foreground"
+				class="fixed md:sticky top-0 w-full flex flex-col justify-between items-center text-xl font-semibold leading-none tracking-tighter border-b p-4 z-50 bg-background"
 			>
 				<div class="relative w-full flex flex-row justify-between items-center">
 					<Button
@@ -96,12 +96,12 @@ const getInitials = () =>
 					</DropdownMenu>
 				</div>
 				<ResponsiveSidebar
-					class="absolute z-50"
+					class="absolute z-50 bg-background"
 					:is-toggled="isToggled"
 				/>
 			</header>
 			<main
-				class="h-full w-full flex flex-1 justify-center p-6 md:p-12 mt-16 md:mt-0 bg-gradient-to-br from-background to-primary-foreground"
+				class="h-full w-full flex flex-1 justify-center p-6 md:p-12 mt-16 md:mt-0 bg-background"
 			>
 				<slot />
 			</main>
