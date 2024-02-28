@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { authMiddleware } from '@/middlewares'
 import { useAuthStore, useCustomerStore, useUserStore } from '@/stores'
+import { userService } from '@/services'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -31,7 +32,7 @@ const router = createRouter({
 				try {
 					await getEditUserById(to.params.id.toString())
 				} catch (error) {
-					return { name: 'Home' }
+					return '/'
 				}
 			},
 			meta: { name: "Modification d'un utilisateur", requiresAuth: true },
@@ -63,7 +64,7 @@ const router = createRouter({
 				try {
 					await getEditCustomerById(to.params.id.toString())
 				} catch (error) {
-					return { name: 'Home' }
+					return '/'
 				}
 			},
 			meta: { name: "Modification d'un client", requiresAuth: true },
@@ -71,7 +72,7 @@ const router = createRouter({
 		},
 		{
 			path: '/roadmap',
-			name: 'roadmap',
+			name: 'Roadmap',
 			component: () => import('@/views/roadmaps/Roadmap.vue'),
 			beforeEnter: authMiddleware,
 			meta: { name: 'Roadmap', requiresAuth: true }
@@ -81,7 +82,24 @@ const router = createRouter({
 			name: 'Profile',
 			component: () => import('@/views/profile/Edit.vue'),
 			beforeEnter: authMiddleware,
-			meta: { name: 'Profil', requiresAuth: true }
+			meta: { name: 'Profil', requiresAuth: true },
+		},
+		{
+			path: '/update-email',
+			name: 'UpdateEmail',
+			component: () => import('@/views/profile/Edit.vue'),
+			beforeEnter: async (to) => {
+				if (!to.query.token) throw new Error('Token is missing')
+
+				await userService.updateEmail(to.query.token.toString())
+
+				const { logout } = useAuthStore()
+
+				logout()
+
+				return '/login'
+			},
+			meta: { name: 'UpdateEmail', requiresAuth: true },
 		},
 		{
 			path: '/',
@@ -98,7 +116,7 @@ const router = createRouter({
 
 				logout()
 
-				return { name: 'Login' }
+				return '/login'
 			},
 			beforeEnter: authMiddleware,
 			meta: { requiresAuth: true }
