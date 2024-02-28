@@ -8,6 +8,7 @@ import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { customerService, userService } from '@/services'
 import { useCustomerStore } from '@/stores'
+import type { IUser } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -31,12 +32,12 @@ const userIds = editCustomer?.customerUsers?.map(
 	(customerUser) => customerUser.userId
 ) as Array<string>
 
-options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
-	(user) => ({
-		label: `${user.firstName} ${user.lastName}`,
-		value: user.id
-	})
-)
+options.value = (
+	(await userService.getAll({ select: ['id', 'lastName', 'firstName'] })) as Array<IUser>
+).map((user) => ({
+	label: `${user.firstName} ${user.lastName}`,
+	value: user.id
+}))
 selected.value = await Promise.all(
 	userIds?.map(async (userId) => {
 		const user = await userService.getById(userId, {

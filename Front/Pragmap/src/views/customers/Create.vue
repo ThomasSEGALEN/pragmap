@@ -7,6 +7,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { customerService, userService } from '@/services'
+import type { IUser } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -22,12 +23,12 @@ useFocus(refValue, { initialValue: true })
 const selected = ref<Array<Record<'label' | 'value', string>>>([])
 const options = ref<Array<Record<'label' | 'value', string>>>([])
 
-options.value = (await userService.getAll({ select: ['id', 'lastName', 'firstName'] })).map(
-	(user) => ({
-		label: `${user.firstName} ${user.lastName}`,
-		value: user.id
-	})
-)
+options.value = (
+	(await userService.getAll({ select: ['id', 'lastName', 'firstName'] })) as Array<IUser>
+).map((user) => ({
+	label: `${user.firstName} ${user.lastName}`,
+	value: user.id
+}))
 
 const formSchema = toTypedSchema(
 	z.object({
