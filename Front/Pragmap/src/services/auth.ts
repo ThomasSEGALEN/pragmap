@@ -1,11 +1,11 @@
 import { api } from '@/main'
-import type { IAuth, IForgotPassword, ILogin, IResetPassword } from '@/types'
+import type { IAuth, IForgotPassword, ILogin, IRefreshToken, IResetPassword } from '@/types'
 
 interface IAuthService {
 	login(data: ILogin): Promise<IAuth>
 	forgotPassword(data: IForgotPassword): Promise<void>
 	resetPassword(data: IResetPassword): Promise<void>
-	refreshToken(refreshToken: string): Promise<IAuth>
+	refreshToken(data: IRefreshToken): Promise<string>
 }
 
 class AuthService implements IAuthService {
@@ -35,11 +35,11 @@ class AuthService implements IAuthService {
 		}
 	}
 
-	public async refreshToken(refreshToken: string): Promise<IAuth> {
+	public async refreshToken(data: IRefreshToken): Promise<string> {
 		try {
-			const response = await api.get(`/auth/refreshToken/${refreshToken}`)
+			const response = await api.post('/auth/refresh-token', data)
 
-			return response.data as IAuth
+			return response.data as string
 		} catch (error) {
 			throw new Error('RefreshToken Error')
 		}

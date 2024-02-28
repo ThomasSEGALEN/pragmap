@@ -16,3 +16,7 @@ export interface IResetPassword {
 	token: string
 	password: string
 }
+
+export interface IRefreshToken {
+	refreshToken: string
+}
