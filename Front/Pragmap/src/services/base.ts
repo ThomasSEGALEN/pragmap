@@ -49,7 +49,7 @@ interface IBaseService<T, S, U, V> {
 }
 
 export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V> {
-	private apiPath: string
+	protected apiPath: string
 
 	constructor(apiPath: string) {
 		this.apiPath = apiPath
@@ -105,7 +105,7 @@ export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	public async delete(id: string): Promise<void> {
 		try {
 			await api.delete(`/${this.apiPath}/${id}`)
 		} catch (error) {
