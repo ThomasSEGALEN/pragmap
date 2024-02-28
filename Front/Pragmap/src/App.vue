@@ -27,7 +27,7 @@ const toggleTheme = () => (theme.value = theme.value === 'light' ? 'dark' : 'lig
 				@toggle-theme="toggleTheme"
 			>
 				<template #header>
-					<h1>{{ route.meta.name }}</h1>
+					<h1 class="font-semibold leading-none text-xl">{{ route.meta.name }}</h1>
 				</template>
 				<Transition
 					name="fade"
