@@ -108,7 +108,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
+	<Card :class="cn('h-fit w-[420px] pt-6', $attrs.class ?? '')">
 		<CardContent>
 			<form
 				class="space-y-6"
