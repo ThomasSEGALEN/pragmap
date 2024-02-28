@@ -28,15 +28,17 @@ const getInitials = () =>
 
 <template>
 	<div class="flex">
-		<Sidebar class="fixed h-full min-w-60 hidden md:block border-r z-50 overflow-y-auto" />
-		<div class="w-full flex flex-col md:ml-60">
+		<Sidebar
+			class="fixed h-full min-w-60 hidden md:block border-r z-50 overflow-y-auto bg-gradient-to-br from-background to-primary-foreground"
+		/>
+		<div class="h-screen w-full flex flex-col md:ml-60">
 			<header
 				v-if="$slots.header"
-				class="fixed md:sticky top-0 w-full flex flex-col justify-between items-center text-xl font-semibold leading-none tracking-tighter border-b bg-background p-4 z-50"
+				class="fixed md:sticky top-0 w-full flex flex-col justify-between items-center text-xl font-semibold leading-none tracking-tighter border-b p-4 z-50 bg-gradient-to-br from-background to-primary-foreground"
 			>
 				<div class="relative w-full flex flex-row justify-between items-center">
 					<Button
-						class="md:hidden h-8 w-8"
+						class="md:hidden h-8 w-8 focus-visible:bg-background"
 						variant="ghost"
 						size="icon"
 						@click="toggleSidebar"
@@ -74,17 +76,11 @@ const getInitials = () =>
 							<DropdownMenuSeparator />
 							<DropdownMenuGroup class="space-y-1">
 								<DropdownMenuItem as-child>
-									<Button
-										class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
-										variant="ghost"
-										as-child
-									>
-										<RouterLink to="/profile">Profil</RouterLink>
-									</Button>
+									<RouterLink to="/profile">Profil</RouterLink>
 								</DropdownMenuItem>
 								<DropdownMenuItem as-child>
 									<Button
-										class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
+										class="h-8 w-full justify-start font-normal hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:bg-accent"
 										variant="ghost"
 										@click="$emit('toggleTheme')"
 									>
@@ -94,13 +90,7 @@ const getInitials = () =>
 							</DropdownMenuGroup>
 							<DropdownMenuSeparator />
 							<DropdownMenuItem as-child>
-								<Button
-									class="h-8 w-full justify-start font-normal focus-visible:bg-transparent"
-									variant="ghost"
-									as-child
-								>
-									<RouterLink to="/logout">Déconnexion</RouterLink>
-								</Button>
+								<RouterLink to="/logout">Déconnexion</RouterLink>
 							</DropdownMenuItem>
 						</DropdownMenuContent>
 					</DropdownMenu>
@@ -110,7 +100,9 @@ const getInitials = () =>
 					:is-toggled="isToggled"
 				/>
 			</header>
-			<main class="h-fit w-full flex justify-center p-6 md:p-12 mt-16 md:mt-0">
+			<main
+				class="h-full w-full flex flex-1 justify-center p-6 md:p-12 mt-16 md:mt-0 bg-gradient-to-br from-background to-primary-foreground"
+			>
 				<slot />
 			</main>
 		</div>
