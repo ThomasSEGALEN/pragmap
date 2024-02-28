@@ -42,6 +42,14 @@ api.interceptors.response.use(
 			throw new Error('400 Bad Request')
 		}
 		if (error.response.status === 401) {
+			router.push('/')
+
+			throw new Error('401 Unauthorized')
+		}
+		if (error.response.status === 404) {
+			throw new Error('404 Not Found')
+		}
+		if (error.response.status === 498) {
 			const refreshToken = await getToken('refreshToken')
 
 			if (!refreshToken) {
@@ -49,16 +57,10 @@ api.interceptors.response.use(
 
 				router.push('/login')
 
-				throw new Error('401 Unauthorized')
+				throw new Error('498 Invalid Token')
 			}
 
 			await resetToken(refreshToken)
-		}
-		if (error.response.status === 404) {
-			throw new Error('404 Not Found')
-		}
-		if (error.response.status === 498) {
-			throw new Error('498 Invalid Token')
 		}
 		if (error.response.status === 500) {
 			throw new Error('500 Internal Server Error')
