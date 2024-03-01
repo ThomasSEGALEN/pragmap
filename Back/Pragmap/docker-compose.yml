@@ -1,0 +1,15 @@
+version: '3.8'
+services:
+  pragmap-api:
+    container_name: pragmap-api
+    build: .
+    ports:
+      - '8080:80'
+      - '8081:443'
+    environment:
+      ASPNETCORE_URLS: 'https://+;http://+'
+      ASPNETCORE_HTTPS_PORT: '8081'
+      ASPNETCORE_ENVIRONMENT: 'Development'
+      ASPNETCORE_Kestrel__Certificates__Default__Password: 'Pragmap123!'
+    volumes:
+      - ${USERPROFILE}/.aspnet/https:/root/.aspnet/https

@@ -1,5 +1,13 @@
 {
   "profiles": {
+    "PragmapAPI": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "launchUrl": "swagger",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+    },    
     "http": {
       "commandName": "Project",
       "launchBrowser": true,
@@ -8,7 +16,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "http://localhost:5173"
     },
     "https": {
       "commandName": "Project",
@@ -18,7 +25,6 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       },
       "dotnetRunMessages": true,
-      "applicationUrl": "https://localhost:7133;http://localhost:5173"
     },
     "IIS Express": {
       "commandName": "IISExpress",
@@ -34,7 +40,6 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:59433/",
       "sslPort": 44323
     }
   }
