@@ -24,5 +24,8 @@ RUN dotnet publish "./Pragmap.API.csproj" -c $BUILD_CONFIGURATION -o /app/publis
 
 FROM base AS final
 WORKDIR /app
+
+COPY ["pragmap.pfx", "."]
+
 COPY --from=publish /app/publish .
 ENTRYPOINT ["dotnet", "Pragmap.API.dll"]
