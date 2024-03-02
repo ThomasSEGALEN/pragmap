@@ -1,15 +1,33 @@
 version: '3.8'
 services:
   pragmap-api:
+    image: thomassegalen/pragmap-api:latest
     container_name: pragmap-api
     build: .
     ports:
       - '8080:80'
       - '8081:443'
     environment:
-      ASPNETCORE_URLS: 'https://+;http://+'
-      ASPNETCORE_HTTPS_PORT: '8081'
-      ASPNETCORE_ENVIRONMENT: 'Development'
-      ASPNETCORE_Kestrel__Certificates__Default__Password: 'Pragmap123!'
+      - ASPNETCORE_URLS=https://+;http://+
+      - ASPNETCORE_HTTPS_PORT=8081
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=Pragmap123!
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=${HOME}/.aspnet/https/aspnetapp.pfx
     volumes:
-      - ${USERPROFILE}/.aspnet/https:/root/.aspnet/https
+      - ${HOME}\.aspnet\https:/root/.aspnet/https
+    depends_on:
+      - pragmap-database
+  pragmap-database:
+    image: postgres:latest
+    container_name: pragmap-db
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -d pragmap -U Pragmap']
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_DB=pragmap
+      - POSTGRES_USER=Pragmap
+      - POSTGRES_PASSWORD=Pragmap123!
+    volumes:
+      - ${HOME}/postgres-data:/var/lib/postgresql/data
