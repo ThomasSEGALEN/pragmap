@@ -1,19 +1,17 @@
 import { api } from '@/main'
-import type { IAuth } from '@/types'
+import type { IAuth, IForgotPassword, ILogin, IRefreshToken, IResetPassword } from '@/types'
 
 interface IAuthService {
-	login(email: string, password: string): Promise<IAuth>
-	forgotPassword(email: string): Promise<void>
-	resetPassword(token: string, password: string): Promise<void>
-	refreshToken(refreshToken: string): Promise<IAuth>
+	login(data: ILogin): Promise<IAuth>
+	forgotPassword(data: IForgotPassword): Promise<void>
+	resetPassword(data: IResetPassword): Promise<void>
+	refreshToken(data: IRefreshToken): Promise<string>
 }
+
 class AuthService implements IAuthService {
-	public async login(email: string, password: string): Promise<IAuth> {
+	public async login(data: ILogin): Promise<IAuth> {
 		try {
-			const response = await api.post('/auth/login', {
-				email: email,
-				password: password
-			})
+			const response = await api.post('/auth/login', data)
 
 			return response.data as IAuth
 		} catch (error) {
@@ -21,32 +19,27 @@ class AuthService implements IAuthService {
 		}
 	}
 
-	public async forgotPassword(email: string): Promise<void> {
+	public async forgotPassword(data: IForgotPassword): Promise<void> {
 		try {
-			await api.post('/auth/forgot-password', {
-				email: email
-			})
+			await api.post('/auth/forgot-password', data)
 		} catch (error) {
 			throw new Error('ForgotPassword Error')
 		}
 	}
 
-	public async resetPassword(token: string, password: string): Promise<void> {
+	public async resetPassword(data: IResetPassword): Promise<void> {
 		try {
-			await api.post('/auth/reset-password', {
-				token: token,
-				password: password
-			})
+			await api.post('/auth/reset-password', data)
 		} catch (error) {
 			throw new Error('ResetPassword Error')
 		}
 	}
 
-	public async refreshToken(refreshToken: string): Promise<IAuth> {
+	public async refreshToken(data: IRefreshToken): Promise<string> {
 		try {
-			const response = await api.get(`/auth/refreshToken/${refreshToken}`)
+			const response = await api.post('/auth/refresh-token', data)
 
-			return response.data as IAuth
+			return response.data as string
 		} catch (error) {
 			throw new Error('RefreshToken Error')
 		}

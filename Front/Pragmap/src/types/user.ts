@@ -16,8 +16,9 @@ export interface IGetUser {
 	lastName: string
 	firstName: string
 	email: string
-	roleId: string
 	createdAt: string
+	refreshToken: string
+	roleId: string
 }
 
 export interface IPostUser {

@@ -1,7 +1,9 @@
 <script setup lang="ts" generic="TData">
+import { computed, ref } from 'vue'
+import { useFocus } from '@vueuse/core'
 import type { Table } from '@tanstack/vue-table'
-import { ChevronDown } from 'lucide-vue-next'
 import { Button } from '@/components/ui//button'
+import { ChevronDown } from 'lucide-vue-next'
 import {
 	DropdownMenu,
 	DropdownMenuCheckboxItem,
@@ -13,15 +15,19 @@ import { Input } from '@/components/ui/input'
 defineProps<{
 	table: Table<TData>
 }>()
+
+const searchInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
+const refValue = computed(() => searchInput.value?.refValue)
+useFocus(refValue, { initialValue: true })
 </script>
 
 <template>
 	<div class="flex flex-col justify-between space-y-2 md:flex-row md:space-y-0">
 		<Input
-			class="md:max-w-[250px]"
+			class="md:w-56"
+			ref="searchInput"
 			name="search"
-			placeholder="Rechercher par adresse e-mail"
-			autofocus
+			:placeholder="`Rechercher par ${table.getAllColumns()[0].id.toLowerCase()}`"
 			:model-value="table.getColumn(table.getAllColumns()[0].id)?.getFilterValue() as string"
 			@update:model-value="table.getColumn(table.getAllColumns()[0].id)?.setFilterValue($event)"
 		/>

@@ -32,39 +32,35 @@ const {
 				Page {{ getPageIndex() + 1 }} sur {{ getPageCount() === 0 ? 1 : getPageCount() }}
 			</div>
 			<Button
-				variant="outline"
 				class="h-8 w-8 p-0"
+				variant="outline"
 				:disabled="!getCanPreviousPage()"
 				@click="setPageIndex(0)"
 			>
-				<span class="sr-only">Aller à la première page</span>
 				<ChevronsLeft class="h-4 w-4" />
 			</Button>
 			<Button
-				variant="outline"
 				class="h-8 w-8 p-0"
+				variant="outline"
 				:disabled="!getCanPreviousPage()"
 				@click="previousPage()"
 			>
-				<span class="sr-only">Aller à la page précédente</span>
 				<ChevronLeft class="h-4 w-4" />
 			</Button>
 			<Button
-				variant="outline"
 				class="h-8 w-8 p-0"
+				variant="outline"
 				:disabled="!getCanNextPage()"
 				@click="nextPage()"
 			>
-				<span class="sr-only">Aller à la page suivante</span>
 				<ChevronRight class="h-4 w-4" />
 			</Button>
 			<Button
-				variant="outline"
 				class="h-8 w-8 p-0"
+				variant="outline"
 				:disabled="!getCanNextPage()"
 				@click="setPageIndex(getPageCount() - 1)"
 			>
-				<span class="sr-only">Aller à la dernière page</span>
 				<ChevronsRight class="h-4 w-4" />
 			</Button>
 		</div>

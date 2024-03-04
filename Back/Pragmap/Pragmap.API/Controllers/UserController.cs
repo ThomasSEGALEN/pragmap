@@ -45,7 +45,7 @@ namespace Pragmap.API.Controllers
         public async Task<IActionResult> AskMailUpdate([FromBody] AskEmailUpdateCommand askMailUpdateCommand)
         {
             var result = await _mediatR.Send(askMailUpdateCommand);
-            _unitOfWork.Complete();
+            await _unitOfWork.Complete();
             if (result.IsSuccess)
             {
                 return Ok();

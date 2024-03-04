@@ -18,15 +18,16 @@ export const api = axios.create({
 	baseURL: import.meta.env.VITE_API_URL,
 	withCredentials: true,
 	headers: {
-		'Content-Type': 'application/json'
+		'Content-Type': 'application/json',
+		Accept: 'application/json'
 	}
 })
 
 const { isAuthenticated, logout, getToken, resetToken } = useAuthStore()
 
-api.interceptors.request.use((request) => {
+api.interceptors.request.use(async (request) => {
 	if (isAuthenticated) {
-		request.headers.Authorization = `Bearer ${getToken('accessToken')}`
+		request.headers.Authorization = `Bearer ${await getToken('accessToken')}`
 	}
 
 	return request
@@ -36,24 +37,30 @@ api.interceptors.response.use(
 	(response) => {
 		return response
 	},
-	(error) => {
+	async (error) => {
 		if (error.response.status === 400) {
 			throw new Error('400 Bad Request')
 		}
 		if (error.response.status === 401) {
-			const refreshToken = getToken('refreshToken')
+			router.push('/')
 
-			if (!refreshToken) {
-				logout()
-				router.push('/login')
-
-				throw new Error('401 Unauthorized')
-			}
-
-			resetToken(refreshToken)
+			throw new Error('401 Unauthorized')
 		}
 		if (error.response.status === 404) {
 			throw new Error('404 Not Found')
+		}
+		if (error.response.status === 498) {
+			const refreshToken = await getToken('refreshToken')
+
+			if (!refreshToken) {
+				logout()
+
+				router.push('/login')
+
+				throw new Error('498 Invalid Token')
+			}
+
+			await resetToken(refreshToken)
 		}
 		if (error.response.status === 500) {
 			throw new Error('500 Internal Server Error')

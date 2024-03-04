@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
@@ -33,9 +34,9 @@ export default {
 		<DropdownMenu>
 			<DropdownMenuTrigger as-child>
 				<Button
+					class="-ml-3 h-8 data-[state=open]:bg-accent focus-visible:bg-background"
 					variant="ghost"
 					size="sm"
-					class="-ml-3 h-8 data-[state=open]:bg-accent"
 				>
 					<span class="whitespace-nowrap">{{ title }}</span>
 					<ArrowDown
@@ -53,19 +54,21 @@ export default {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="start">
-				<DropdownMenuItem @click="column.toggleSorting(false)">
-					<ArrowUp class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-					Ascendant
-				</DropdownMenuItem>
-				<DropdownMenuItem @click="column.toggleSorting(true)">
-					<ArrowDown class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-					Descendant
-				</DropdownMenuItem>
-				<DropdownMenuSeparator />
-				<DropdownMenuItem @click="column.toggleVisibility(false)">
-					<EyeOff class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-					Cacher
-				</DropdownMenuItem>
+				<DropdownMenuGroup class="space-y-1">
+					<DropdownMenuItem @click="column.toggleSorting(false)">
+						<ArrowUp class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+						Ascendant
+					</DropdownMenuItem>
+					<DropdownMenuItem @click="column.toggleSorting(true)">
+						<ArrowDown class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+						Descendant
+					</DropdownMenuItem>
+					<DropdownMenuSeparator />
+					<DropdownMenuItem @click="column.toggleVisibility(false)">
+						<EyeOff class="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+						Cacher
+					</DropdownMenuItem>
+				</DropdownMenuGroup>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	</div>

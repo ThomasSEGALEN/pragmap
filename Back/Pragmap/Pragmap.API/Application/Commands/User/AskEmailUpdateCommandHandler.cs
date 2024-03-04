@@ -71,7 +71,12 @@ namespace Pragmap.API.Application.Commands
                 EmailToId = user.Email,
                 EmailToName = $"{user.FirstName} {user.LastName}"
             };
-            _mailService.SendMail(mailData);
+
+            var mailSended = _mailService.SendMail(mailData);
+            if(!mailSended)
+            {
+                return Task.FromResult(CommandResult.Failed("Une erreur s'est produite lors de l'envoi du mail"));
+            }
 
             return Task.FromResult(CommandResult.Success());
         }

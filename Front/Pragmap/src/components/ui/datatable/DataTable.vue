@@ -6,7 +6,6 @@ import type {
 	SortingState,
 	VisibilityState
 } from '@tanstack/vue-table'
-import { valueUpdater } from '@/lib/utils'
 import {
 	FlexRender,
 	getCoreRowModel,
@@ -14,6 +13,7 @@ import {
 	getSortedRowModel,
 	useVueTable
 } from '@tanstack/vue-table'
+import { valueUpdater } from '@/lib/utils'
 import { DataTableFilter, DataTablePagination } from '@/components/ui/datatable'
 import {
 	Table,

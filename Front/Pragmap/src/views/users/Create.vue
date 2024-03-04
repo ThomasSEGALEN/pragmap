@@ -1,12 +1,13 @@
 <script setup lang="ts">
-import router from '@/router'
+import { ref } from 'vue'
+import { useFocus } from '@vueuse/core'
+import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
-import { Layout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -23,7 +24,10 @@ import {
 import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
+const router = useRouter()
 const { roles } = useAuthStore()
+const roleInput = ref<HTMLInputElement | null>(null)
+useFocus(roleInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z
 		.object({
@@ -32,34 +36,42 @@ const formSchema = toTypedSchema(
 					required_error: 'Le champ est obligatoire',
 					invalid_type_error: 'Le champ est invalide'
 				})
-				.min(1, { message: 'Le champ est obligatoire' }),
+				.min(1, { message: 'Le champ est obligatoire' })
+				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
 			lastName: z
 				.string({
 					required_error: 'Le champ est obligatoire',
 					invalid_type_error: 'Le champ est invalide'
 				})
-				.min(1, { message: 'Le champ est obligatoire' }),
+				.min(1, { message: 'Le champ est obligatoire' })
+				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
 			email: z
 				.string({
 					required_error: 'Le champ est obligatoire',
 					invalid_type_error: 'Le champ est invalide'
 				})
+				.min(1, { message: 'Le champ est obligatoire' })
 				.email({ message: 'Le champ doit être une adresse e-mail valide' })
-				.min(1, { message: 'Le champ est obligatoire' }),
+				.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' }),
 			password: z
 				.string({
 					required_error: 'Le champ est obligatoire',
 					invalid_type_error: 'Le champ est invalide'
 				})
 				.min(1, { message: 'Le champ est obligatoire' })
-				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
+				.regex(/.*[a-z]/, { message: 'Le champ doit contenir au moins une minuscule' })
+				.regex(/.*[A-Z]/, { message: 'Le champ doit contenir au moins une majuscule' })
+				.regex(/.*\d/, { message: 'Le champ doit contenir au moins un chiffre' })
+				.regex(/.*[@$!%*?&]/, { message: 'Le champ doit contenir au moins un caractère spécial' })
+				.min(8, { message: 'Le champ doit contenir au minimum 8 caractères' })
+				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
 			passwordConfirmation: z
 				.string({
 					required_error: 'Le champ est obligatoire',
 					invalid_type_error: 'Le champ est invalide'
 				})
 				.min(1, { message: 'Le champ est obligatoire' })
-				.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' }),
+				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
 			roleId: z
 				.string({
 					required_error: 'Le champ est obligatoire',
@@ -88,7 +100,7 @@ const onSubmit = handleSubmit(async (values) => {
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à créer un utilisateur.`,
+			description: 'Nous ne sommes pas parvenus à créer un utilisateur.',
 			duration: 5000
 		})
 	}
@@ -96,88 +108,51 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Layout>
-		<template #header>
-			<h1>Création d'un utilisateur</h1>
-		</template>
-		<Card :class="cn('w-[420px] pt-6', $attrs.class ?? '')">
-			<CardContent>
-				<form
-					class="space-y-6"
-					@submit="onSubmit"
+	<Card :class="cn('h-fit w-[420px] pt-6', $attrs.class ?? '')">
+		<CardContent>
+			<form
+				class="space-y-6"
+				@submit="onSubmit"
+			>
+				<FormField
+					v-slot="{ componentField }"
+					name="roleId"
 				>
+					<FormItem>
+						<FormLabel>Rôle</FormLabel>
+						<FormControl>
+							<Select v-bind="componentField">
+								<SelectTrigger ref="roleInput">
+									<SelectValue placeholder="Sélectionner un rôle" />
+								</SelectTrigger>
+								<SelectContent>
+									<SelectGroup>
+										<SelectLabel>Rôles</SelectLabel>
+										<SelectItem
+											v-for="role in roles"
+											:key="role.id"
+											:value="role.id"
+										>
+											{{ role.name }}
+										</SelectItem>
+									</SelectGroup>
+								</SelectContent>
+							</Select>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<div class="flex flex-row justify-between space-x-4">
 					<FormField
 						v-slot="{ componentField }"
-						name="roleId"
+						name="lastName"
 					>
-						<FormItem>
-							<FormLabel>Rôle</FormLabel>
-							<FormControl>
-								<Select v-bind="componentField">
-									<SelectTrigger>
-										<SelectValue placeholder="Sélectionner un rôle" />
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											<SelectLabel>Rôles</SelectLabel>
-											<SelectItem
-												v-for="role in roles"
-												:key="role.id"
-												:value="role.id"
-											>
-												{{ role.name }}
-											</SelectItem>
-										</SelectGroup>
-									</SelectContent>
-								</Select>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<div class="flex flex-row justify-between space-x-4">
-						<FormField
-							v-slot="{ componentField }"
-							name="lastName"
-						>
-							<FormItem class="w-full">
-								<FormLabel>Nom</FormLabel>
-								<FormControl>
-									<Input
-										v-bind="componentField"
-										autocomplete="family-name"
-										autofocus
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						</FormField>
-						<FormField
-							v-slot="{ componentField }"
-							name="firstName"
-						>
-							<FormItem class="w-full">
-								<FormLabel>Prénom</FormLabel>
-								<FormControl>
-									<Input
-										v-bind="componentField"
-										autocomplete="given-name"
-									/>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						</FormField>
-					</div>
-					<FormField
-						v-slot="{ componentField }"
-						name="email"
-					>
-						<FormItem>
-							<FormLabel>Adresse e-mail</FormLabel>
+						<FormItem class="w-full">
+							<FormLabel>Nom</FormLabel>
 							<FormControl>
 								<Input
 									v-bind="componentField"
-									type="email"
-									autocomplete="email"
+									autocomplete="family-name"
 								/>
 							</FormControl>
 							<FormMessage />
@@ -185,61 +160,92 @@ const onSubmit = handleSubmit(async (values) => {
 					</FormField>
 					<FormField
 						v-slot="{ componentField }"
-						name="password"
+						name="firstName"
 					>
-						<FormItem>
-							<FormLabel>Mot de passe</FormLabel>
+						<FormItem class="w-full">
+							<FormLabel>Prénom</FormLabel>
 							<FormControl>
 								<Input
 									v-bind="componentField"
-									type="password"
-									autocomplete="new-password"
+									autocomplete="given-name"
 								/>
 							</FormControl>
 							<FormMessage />
 						</FormItem>
 					</FormField>
-					<FormField
-						v-slot="{ componentField }"
-						name="passwordConfirmation"
+				</div>
+				<FormField
+					v-slot="{ componentField }"
+					name="email"
+				>
+					<FormItem>
+						<FormLabel>Adresse e-mail</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="email"
+								autocomplete="email"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-slot="{ componentField }"
+					name="password"
+				>
+					<FormItem>
+						<FormLabel>Mot de passe</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="password"
+								autocomplete="new-password"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-slot="{ componentField }"
+					name="passwordConfirmation"
+				>
+					<FormItem>
+						<FormLabel>Confirmation du mot de passe</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="password"
+								autocomplete="new-password"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<div class="flex flex-col-reverse md:flex-row justify-between">
+					<Button
+						type="button"
+						variant="link"
+						size="sm"
+						as-child
 					>
-						<FormItem>
-							<FormLabel>Confirmation du mot de passe</FormLabel>
-							<FormControl>
-								<Input
-									v-bind="componentField"
-									type="password"
-									autocomplete="new-password"
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<div class="flex flex-col-reverse md:flex-row justify-between">
-						<Button
-							type="button"
-							variant="link"
-							size="sm"
-							as-child
-						>
-							<RouterLink to="/users">&#x2190; Retour</RouterLink>
-						</Button>
-						<Button
-							v-if="!isSubmitting"
-							type="submit"
-						>
-							Créer
-						</Button>
-						<Button
-							v-else
-							type="disabled"
-						>
-							<Loader2 class="h-4 w-4 mr-2 animate-spin" />
-							Création...
-						</Button>
-					</div>
-				</form>
-			</CardContent>
-		</Card>
-	</Layout>
+						<RouterLink to="/users">&#x2190; Retour</RouterLink>
+					</Button>
+					<Button
+						v-if="!isSubmitting"
+						type="submit"
+					>
+						Créer
+					</Button>
+					<Button
+						v-else
+						type="disabled"
+					>
+						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
+						Création...
+					</Button>
+				</div>
+			</form>
+		</CardContent>
+	</Card>
 </template>

@@ -59,7 +59,7 @@ export const columns: Array<ColumnDef<IGetUser>> = [
 						} catch (error) {
 							toast({
 								title: 'Erreur',
-								description: `Nous ne sommes pas parvenus à supprimer cet utilisateur.`,
+								description: 'Nous ne sommes pas parvenus à supprimer cet utilisateur.',
 								duration: 5000
 							})
 						}
