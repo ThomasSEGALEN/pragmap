@@ -18,6 +18,7 @@ namespace Pragmap.Controllers.Entities
 
         [Required]
         [JsonIgnore]
+        [IgnoreDataMember]
         public string PasswordHash { get; set; }
 
         [Required]
@@ -44,6 +45,7 @@ namespace Pragmap.Controllers.Entities
 
         public virtual ICollection<CustomerUser>? UserCustomers { get; set; }
         public virtual ICollection<ResetPasswordToken>? ResetPasswordTokens { get; set; }
+        public virtual ICollection<UpdateEmailToken>? UpdateEmailTokens { get; set; }
 
         public static string HashPassword(string password)
         {

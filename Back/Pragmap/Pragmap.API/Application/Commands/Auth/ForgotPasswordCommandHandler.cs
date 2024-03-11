@@ -9,12 +9,12 @@ using Pragmap.Infrastructure.UnitOfWork;
 
 namespace Pragmap.API.Application.Commands.Auth
 {
-    public class ForgotPasswordHandler : IRequestHandler<ForgotPasswordCommand, CommandResult>
+    public class ForgotPasswordCommandHandler : IRequestHandler<ForgotPasswordCommand, CommandResult>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMailService _mailService;
 
-        public ForgotPasswordHandler(IUnitOfWork unitOfWork, IMailService mailService)
+        public ForgotPasswordCommandHandler(IUnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork;
             _mailService = mailService;

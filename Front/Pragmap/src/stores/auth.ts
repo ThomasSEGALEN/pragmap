@@ -2,13 +2,12 @@ import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { jwtDecode } from 'jwt-decode'
 import { authService, roleService, userService } from '@/services'
-import type { IAuth, IGetUser, IRole } from '@/types'
+import type { IAuth, IGetUser, ILogin, IRole } from '@/types'
 
 interface State {
 	user: IGetUser
 	roles: Array<IRole>
 	accessToken: string
-	refreshToken: string
 }
 
 export const useAuthStore = defineStore('auth', {
@@ -16,26 +15,24 @@ export const useAuthStore = defineStore('auth', {
 		useLocalStorage<State>('authStore', {
 			user: {} as IGetUser,
 			roles: [],
-			accessToken: '',
-			refreshToken: ''
+			accessToken: ''
 		}),
 	getters: {
 		isAuthenticated: (state) => !!state.accessToken
 	},
 	actions: {
-		async login(email: string, password: string): Promise<void> {
-			const { accessToken, refreshToken } = await authService.login(email, password)
+		async login(data: ILogin): Promise<void> {
+			const { accessToken } = await authService.login(data)
+
+			this.setToken(accessToken)
 
 			await this.getUser(accessToken)
 			await this.getRoles()
-
-			this.setToken(accessToken, refreshToken)
 		},
 		logout(): void {
 			this.$state.user = {} as IGetUser
 			this.$state.roles = []
 			this.$state.accessToken = ''
-			this.$state.refreshToken = ''
 		},
 		async getUser(accessToken: string): Promise<void> {
 			const userId = jwtDecode<{ nameid: string }>(accessToken).nameid
@@ -47,19 +44,27 @@ export const useAuthStore = defineStore('auth', {
 		async getRoles(): Promise<void> {
 			this.$state.roles = await roleService.getAll()
 		},
-		getToken(token: keyof IAuth): string {
-			return this.$state[token]
+		async getToken(token: keyof IAuth): Promise<string> {
+			if (token === 'accessToken') return this.$state[token]
+
+			const user = await userService.getById(this.$state.user.id, {
+				select: [token]
+			})
+
+			return user.refreshToken
 		},
-		setToken(accessToken: string, refreshToken: string): void {
-			this.$state.accessToken = accessToken
-			this.$state.refreshToken = refreshToken
+		setToken(token: string): void {
+			this.$state.accessToken = token
 		},
 		async resetToken(token: string): Promise<void> {
-			const { accessToken, refreshToken } = await authService.refreshToken(token)
+			const data = {
+				refreshToken: token
+			}
+			const accessToken = await authService.refreshToken(data)
+
+			this.setToken(accessToken)
 
 			await this.getUser(accessToken)
-
-			this.setToken(accessToken, refreshToken)
 		}
 	}
 })

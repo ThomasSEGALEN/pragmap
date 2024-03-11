@@ -60,6 +60,12 @@ namespace Pragmap.Infrastructure.Context
                 entity.HasKey(e => new { e.UserId, e.Token });
                 entity.HasOne(e => e.User).WithMany(u => u.ResetPasswordTokens).HasForeignKey(e => e.UserId);
             });
+
+            modelBuilder.Entity<UpdateEmailToken>(entity =>
+            {
+                entity.HasKey(e => new { e.UserId, e.Token });
+                entity.HasOne(e => e.User).WithMany(u => u.UpdateEmailTokens).HasForeignKey(e => e.UserId);
+            });
              
         }
     }

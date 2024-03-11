@@ -1,8 +1,12 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.OData;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 using Pragmap;
+using Pragmap.API.Hubs;
 using Pragmap.API.OperationFilters;
 using Pragmap.Controllers.Entities;
 using Pragmap.Domain.Entities;
@@ -14,6 +18,7 @@ using Pragmap.Infrastructure.Repositories.Interfaces;
 using Pragmap.Infrastructure.UnitOfWork;
 using System.Reflection;
 using System.Text.Json.Serialization;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +34,7 @@ static IEdmModel GetEdmModel()
 
 // Add services to the container.
 
+builder.Services.AddSignalR();
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(Assembly.GetExecutingAssembly()));
 builder.Services.AddControllers()
     .AddOData(options =>
@@ -64,10 +70,46 @@ builder.Services.AddCors(options =>
 	options.AddPolicy("AllowSpecificOrigin",
 		builder => builder
         .WithOrigins("http://localhost:4173", "http://localhost:5173")
-		.AllowAnyHeader()
+        .AllowAnyHeader()
 		.AllowAnyMethod()
-        .AllowCredentials());
+        .AllowCredentials()
+    );
 });
+
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+    }).AddJwtBearer(options => // Adding Jwt Bearer  
+        {
+            options.SaveToken = true;
+            options.RequireHttpsMetadata = false;
+            options.TokenValidationParameters = new TokenValidationParameters()
+            {
+                ValidateIssuer = true,
+                ValidateAudience = true,
+                ValidAudience = builder.Configuration["JWTKey:ValidAudience"],
+                ValidIssuer = builder.Configuration["JWTKey:ValidIssuer"],
+                ClockSkew = TimeSpan.Zero,
+                IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWTKey:Secret"]))
+            };
+ 
+            options.Events = new JwtBearerEvents
+            {
+                OnChallenge = async context =>
+                {
+                    if (context.AuthenticateFailure != null)
+                    {
+                        if (context.AuthenticateFailure is SecurityTokenExpiredException)
+                        {
+                            context.Response.StatusCode = 498;
+                            await context.Response.CompleteAsync();
+                        }
+                    }
+                }
+            };
+        });
 
 var app = builder.Build();
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
@@ -77,14 +119,18 @@ if (app.Environment.IsDevelopment())
 {
 
 }
+
 app.UseSwagger();
 app.UseSwaggerUI();
+
 app.UseHttpsRedirection();
 
-app.UseAuthorization();
-app.UseAuthentication();
-app.MapControllers();
-
 app.UseCors("AllowSpecificOrigin");
+
+app.UseAuthentication();
+app.UseAuthorization();
+
+app.MapControllers();
+app.MapHub<RoadMapHub>("/roadmaphub");
 
 app.Run();

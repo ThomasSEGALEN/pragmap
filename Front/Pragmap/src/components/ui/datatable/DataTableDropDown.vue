@@ -1,45 +1,42 @@
 <script setup lang="ts">
-import { MoreHorizontal } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import {
 	DropdownMenu,
 	DropdownMenuContent,
+	DropdownMenuGroup,
 	DropdownMenuItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
-import { userService } from '@/services'
+import { MoreHorizontal } from 'lucide-vue-next'
 
 defineProps<{
 	name: string
 	id: string
-	email: string
+	deleteEntity: (id: string) => void
 }>()
-
-const copyEmail = (email: string) => navigator.clipboard.writeText(email)
-const deleteUser = async (id: string) => await userService.delete(id)
 </script>
 
 <template>
 	<DropdownMenu>
 		<DropdownMenuTrigger as-child>
 			<Button
+				class="h-8 w-8 relative p-0 focus-visible:bg-background"
 				variant="ghost"
-				class="h-8 w-8 relative p-0"
 			>
-				<span class="sr-only">Ouvrir le menu</span>
 				<MoreHorizontal class="h-4 w-4" />
 			</Button>
 		</DropdownMenuTrigger>
 		<DropdownMenuContent align="end">
 			<DropdownMenuLabel>Actions</DropdownMenuLabel>
-			<DropdownMenuItem @click="copyEmail(email)">Copier l'adresse e-mail</DropdownMenuItem>
 			<DropdownMenuSeparator />
-			<RouterLink :to="{ name: name, params: { id: id } }">
-				<DropdownMenuItem>Modifier</DropdownMenuItem>
-			</RouterLink>
-			<DropdownMenuItem @click="deleteUser(id)">Supprimer</DropdownMenuItem>
+			<DropdownMenuGroup class="space-y-1">
+				<DropdownMenuItem as-child>
+					<RouterLink :to="{ name: name, params: { id: id } }">Modifier</RouterLink>
+				</DropdownMenuItem>
+				<DropdownMenuItem @click="deleteEntity(id)"> Supprimer </DropdownMenuItem>
+			</DropdownMenuGroup>
 		</DropdownMenuContent>
 	</DropdownMenu>
 </template>

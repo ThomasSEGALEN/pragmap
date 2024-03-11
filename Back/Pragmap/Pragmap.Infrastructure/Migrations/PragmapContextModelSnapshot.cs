@@ -185,6 +185,33 @@ namespace Pragmap.Infrastructure.Migrations
                     b.ToTable("Roles");
                 });
 
+            modelBuilder.Entity("Pragmap.Domain.Entities.UpdateEmailToken", b =>
+                {
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("Token")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("NewEmail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OldEmail")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<DateTime>("TokenExpiresAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateTime?>("TokenUsedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("UserId", "Token");
+
+                    b.ToTable("UpdateEmailToken");
+                });
+
             modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
                 {
                     b.HasOne("Pragmap.Domain.Entities.Role", "Role")
@@ -226,9 +253,22 @@ namespace Pragmap.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("Pragmap.Domain.Entities.UpdateEmailToken", b =>
+                {
+                    b.HasOne("Pragmap.Controllers.Entities.User", "User")
+                        .WithMany("UpdateEmailTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
                 {
                     b.Navigation("ResetPasswordTokens");
+
+                    b.Navigation("UpdateEmailTokens");
 
                     b.Navigation("UserCustomers");
                 });

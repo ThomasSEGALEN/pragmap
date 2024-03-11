@@ -1,11 +1,12 @@
 <script setup lang="ts">
-import router from '@/router'
+import { computed, ref } from 'vue'
+import { useFocus } from '@vueuse/core'
+import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { useAuthStore } from '@/stores'
-import { GuestLayout } from '@/components/layouts'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -14,15 +15,33 @@ import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
+const router = useRouter()
 const { login } = useAuthStore()
+const emailInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
+const refValue = computed(() => emailInput.value?.refValue)
+useFocus(refValue, { initialValue: true })
 const formSchema = toTypedSchema(
 	z.object({
 		email: z
-			.string({ required_error: 'Le champ est obligatoire' })
-			.email({ message: 'Le champ doit être une adresse e-mail valide' }),
+			.string({
+				required_error: 'Le champ est obligatoire',
+				invalid_type_error: 'Le champ est invalide'
+			})
+			.min(1, { message: 'Le champ est obligatoire' })
+			.email({ message: 'Le champ doit être une adresse e-mail valide' })
+			.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' }),
 		password: z
-			.string({ required_error: 'Le champ est obligatoire' })
-			.min(6, { message: 'Le champ doit contenir au minimum 6 caractères' })
+			.string({
+				required_error: 'Le champ est obligatoire',
+				invalid_type_error: 'Le champ est invalide'
+			})
+			.min(1, { message: 'Le champ est obligatoire' })
+			.regex(/.*[a-z]/, { message: 'Le champ doit contenir au moins une minuscule' })
+			.regex(/.*[A-Z]/, { message: 'Le champ doit contenir au moins une majuscule' })
+			.regex(/.*\d/, { message: 'Le champ doit contenir au moins un chiffre' })
+			.regex(/.*[@$!%*?&]/, { message: 'Le champ doit contenir au moins un caractère spécial' })
+			.min(8, { message: 'Le champ doit contenir au minimum 8 caractères' })
+			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -30,13 +49,13 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await login(values.email, values.password)
+		await login(values)
 
 		router.push('/')
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à vous connecter avec ces identifiants.`,
+			description: 'Nous ne sommes pas parvenus à vous connecter avec ces identifiants.',
 			duration: 5000
 		})
 	}
@@ -44,74 +63,74 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<GuestLayout>
-		<Card :class="cn('w-[420px]', $attrs.class ?? '')">
-			<CardHeader>
-				<CardTitle>Pragmap</CardTitle>
-				<CardDescription>Connectez-vous pour accéder à l'application</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<form
-					class="space-y-6"
-					@submit="onSubmit"
+	<Card :class="cn('w-[420px]', $attrs.class ?? '')">
+		<CardHeader>
+			<CardTitle>Pragmap</CardTitle>
+			<CardDescription>Connectez-vous pour accéder à l'application</CardDescription>
+		</CardHeader>
+		<CardContent>
+			<form
+				class="space-y-6"
+				@submit="onSubmit"
+			>
+				<FormField
+					v-slot="{ componentField }"
+					name="email"
 				>
-					<FormField
-						v-slot="{ componentField }"
-						name="email"
+					<FormItem>
+						<FormLabel>Adresse e-mail</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								ref="emailInput"
+								type="email"
+								autocomplete="email"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-slot="{ componentField }"
+					name="password"
+				>
+					<FormItem>
+						<FormLabel>Mot de passe</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="password"
+								autocomplete="current-password"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<div class="flex flex-col-reverse md:flex-row justify-between">
+					<Button
+						type="button"
+						variant="link"
+						size="sm"
+						as-child
 					>
-						<FormItem>
-							<FormLabel>Adresse e-mail</FormLabel>
-							<FormControl>
-								<Input
-									type="email"
-									v-bind="componentField"
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<FormField
-						v-slot="{ componentField }"
-						name="password"
+						<RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
+					</Button>
+					<Button
+						v-if="!isSubmitting"
+						type="submit"
 					>
-						<FormItem>
-							<FormLabel>Mot de passe</FormLabel>
-							<FormControl>
-								<Input
-									type="password"
-									v-bind="componentField"
-								/>
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					</FormField>
-					<div class="flex flex-col-reverse md:flex-row justify-between">
-						<Button
-							type="button"
-							variant="link"
-							size="sm"
-							as-child
-						>
-							<RouterLink to="/forgot-password">Mot de passe oublié ?</RouterLink>
-						</Button>
-
-						<Button
-							v-if="!isSubmitting"
-							type="submit"
-						>
-							<Send class="h-4 w-4 mr-2" />
-							Se connecter
-						</Button>
-						<Button
-							v-else
-							type="disabled"
-						>
-							<Loader2 class="h-4 w-4 mr-2 animate-spin" />
-							Connexion...
-						</Button>
-					</div>
-				</form>
-			</CardContent>
-		</Card>
-	</GuestLayout>
+						<Send class="h-4 w-4 mr-2" />
+						Se connecter
+					</Button>
+					<Button
+						v-else
+						type="disabled"
+					>
+						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
+						Connexion...
+					</Button>
+				</div>
+			</form>
+		</CardContent>
+	</Card>
 </template>

@@ -40,36 +40,27 @@ export const applyOptions = <T>(options?: IApiOptions<T>): string => {
 }
 
 interface IBaseService<T, S, U, V> {
-	getCount(options?: IApiOptions<T>): Promise<number>
-	getAll(options: IApiOptions<T>): Promise<Array<T>>
-	getById(id: string): Promise<S>
+	getAll(options?: IApiOptions<T> & { count?: boolean }): Promise<Array<T> | number>
+	getById(id: string, options?: IApiOptions<S>): Promise<S>
 	create(data: U): Promise<void>
 	update(id: string, data: V): Promise<void>
 	delete(id: string): Promise<void>
 }
 
 export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V> {
-	private apiPath: string
+	protected apiPath: string
 
 	constructor(apiPath: string) {
 		this.apiPath = apiPath
 	}
 
-	public async getCount(options?: IApiOptions<T>): Promise<number> {
+	public async getAll(options?: IApiOptions<T> & { count?: boolean }): Promise<Array<T> | number> {
 		try {
 			const response = await api.get(
-				`/${this.apiPath}/$count${options ? applyOptions(options) : ''}`
+				`/${this.apiPath}${options?.count ? '/$count' : ''}${options ? applyOptions(options) : ''}`
 			)
 
-			return response.data as number
-		} catch (error) {
-			throw new Error('Count Error')
-		}
-	}
-
-	public async getAll(options?: IApiOptions<T>): Promise<Array<T>> {
-		try {
-			const response = await api.get(`/${this.apiPath}${options ? applyOptions(options) : ''}`)
+			if (options?.count) return response.data as number
 
 			return response.data.value as Array<T>
 		} catch (error) {
@@ -91,7 +82,6 @@ export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V
 
 	public async create(data: U): Promise<void> {
 		try {
-			console.log(data)
 			await api.post(`/${this.apiPath}`, data)
 		} catch (error) {
 			throw new Error('Create Error')
@@ -106,7 +96,7 @@ export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V
 		}
 	}
 
-	async delete(id: string): Promise<void> {
+	public async delete(id: string): Promise<void> {
 		try {
 			await api.delete(`/${this.apiPath}/${id}`)
 		} catch (error) {

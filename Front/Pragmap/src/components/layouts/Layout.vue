@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { useColorMode } from '@vueuse/core'
+import { ref } from 'vue'
+import { useAuthStore } from '@/stores'
 import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import {
@@ -14,103 +15,94 @@ import {
 import { Menu, X } from 'lucide-vue-next'
 import { ResponsiveSidebar, Sidebar } from '@/components/ui/sidebar'
 import { Toaster } from '@/components/ui/toast'
-import { useAuthStore } from '@/stores'
-import { ref } from 'vue'
-import {
-	Select,
-	SelectContent,
-	SelectGroup,
-	SelectItem,
-	SelectTrigger,
-	SelectValue
-} from '@/components/ui/select'
 
-const theme = useColorMode()
-const selectTheme = (value: string) => (theme.value = value as 'light' | 'dark')
-const isToggled = ref(false)
+defineProps<{ theme: string }>()
+defineEmits(['toggleTheme'])
+
+const isToggled = ref<boolean>(false)
 const toggleSidebar = () => (isToggled.value = !isToggled.value)
 const { user } = useAuthStore()
-const getInitials = () => `${user.firstName.charAt(0)}${user.lastName.charAt(0)}`.toUpperCase()
+const getInitials = () =>
+	`${user.firstName.charAt(0).toUpperCase()}${user.lastName.charAt(0).toUpperCase()}`.toUpperCase()
 </script>
 
 <template>
 	<div class="flex">
-		<Sidebar class="min-h-screen min-w-60 hidden md:block border-r" />
-		<div class="w-full flex flex-col">
+		<Sidebar
+			class="fixed h-full min-w-60 hidden md:block border-r z-50 overflow-y-auto bg-background"
+		/>
+		<div class="h-screen w-full flex flex-col md:ml-60">
 			<header
 				v-if="$slots.header"
-				class="flex justify-between items-center text-xl font-semibold leading-none tracking-tighter p-4 border-b"
+				class="fixed md:sticky top-0 w-full flex flex-col justify-between items-center text-xl font-semibold leading-none tracking-tighter border-b p-4 z-50 bg-background"
 			>
-				<Button
-					class="md:hidden h-8 w-8"
-					variant="ghost"
-					size="icon"
-					@click="toggleSidebar"
-				>
-					<Menu v-if="!isToggled" />
-					<X v-else />
-				</Button>
-				<slot name="header" />
-				<DropdownMenu>
-					<DropdownMenuTrigger as-child>
-						<Button
-							variant="ghost"
-							class="relative h-8 w-8 rounded-full"
-						>
-							<Avatar class="h-8 w-8">
-								{{ getInitials() }}
-							</Avatar>
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent
-						class="w-56"
-						align="end"
+				<div class="relative w-full flex flex-row justify-between items-center">
+					<Button
+						class="md:hidden h-8 w-8 focus-visible:bg-background"
+						variant="ghost"
+						size="icon"
+						@click="toggleSidebar"
 					>
-						<DropdownMenuLabel class="font-normal flex">
-							<div class="flex flex-col space-y-1">
-								<p class="text-sm font-medium leading-none break-words">
-									{{ user.firstName }} {{ user.lastName }}
-								</p>
-								<p class="text-xs leading-none text-muted-foreground break-words">
-									{{ user.email }}
-								</p>
-							</div>
-						</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuGroup>
-							<RouterLink to="/profile">
-								<DropdownMenuItem>Profil</DropdownMenuItem>
-							</RouterLink>
-							<DropdownMenuItem as-child>
-								<Select
-									:default-value="theme"
-									@update:model-value="selectTheme"
-								>
-									<SelectTrigger
-										class="h-fit w-full border-none outline-none focus:outline-none ring-0 focus:ring-0 ring-offset-0 focus:ring-offset-0 px-2 py-1.5"
+						<Menu v-if="!isToggled" />
+						<X v-else />
+					</Button>
+					<slot name="header" />
+					<DropdownMenu>
+						<DropdownMenuTrigger as-child>
+							<Button
+								class="relative h-8 w-8 rounded-full"
+								variant="ghost"
+							>
+								<Avatar class="h-8 w-8">
+									{{ getInitials() }}
+								</Avatar>
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent
+							class="w-56"
+							align="end"
+						>
+							<DropdownMenuLabel>
+								<div class="flex flex-col space-y-1">
+									<p class="text-sm font-medium leading-none break-words">
+										{{ user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1) }}
+										{{ user.lastName.charAt(0).toUpperCase() + user.lastName.substring(1) }}
+									</p>
+									<p class="text-xs leading-none text-muted-foreground break-words">
+										{{ user.email }}
+									</p>
+								</div>
+							</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuGroup class="space-y-1">
+								<DropdownMenuItem as-child>
+									<RouterLink to="/profile">Profil</RouterLink>
+								</DropdownMenuItem>
+								<DropdownMenuItem as-child>
+									<Button
+										class="h-8 w-full justify-start font-normal hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:bg-accent"
+										variant="ghost"
+										@click="$emit('toggleTheme')"
 									>
-										<SelectValue
-											:placeholder="theme === 'light' ? 'Thème clair' : 'Thème sombre'"
-										/>
-									</SelectTrigger>
-									<SelectContent>
-										<SelectGroup>
-											<SelectItem value="light">Thème clair </SelectItem>
-											<SelectItem value="dark">Thème sombre</SelectItem>
-										</SelectGroup>
-									</SelectContent>
-								</Select>
+										{{ theme === 'light' ? 'Mode sombre' : 'Mode clair' }}
+									</Button>
+								</DropdownMenuItem>
+							</DropdownMenuGroup>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem as-child>
+								<RouterLink to="/logout">Déconnexion</RouterLink>
 							</DropdownMenuItem>
-						</DropdownMenuGroup>
-						<DropdownMenuSeparator />
-						<RouterLink to="/logout">
-							<DropdownMenuItem>Déconnexion</DropdownMenuItem>
-						</RouterLink>
-					</DropdownMenuContent>
-				</DropdownMenu>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
+				<ResponsiveSidebar
+					class="absolute z-50 bg-background"
+					:is-toggled="isToggled"
+				/>
 			</header>
-			<ResponsiveSidebar :is-toggled="isToggled" />
-			<main class="h-fit w-full flex justify-center p-6 md:p-12">
+			<main
+				class="h-full w-full flex flex-1 justify-center p-6 md:p-12 mt-16 md:mt-0 bg-background"
+			>
 				<slot />
 			</main>
 		</div>
