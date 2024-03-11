@@ -25,11 +25,3 @@ export interface IPutRoadMap {
 	data?: string
 	customerId: string
 }
-export interface IDisplayRoadMap {
-	id: string
-	name: string
-	data: string
-	customerId: string
-	createdAt: string
-	updatedAt: string
-}
