@@ -17,6 +17,7 @@ const toggleTheme = () => (theme.value = theme.value === 'light' ? 'dark' : 'lig
 				<Transition
 					name="fade"
 					mode="out-in"
+					:duration="200"
 				>
 					<component :is="Component" />
 				</Transition>
@@ -32,6 +33,7 @@ const toggleTheme = () => (theme.value = theme.value === 'light' ? 'dark' : 'lig
 				<Transition
 					name="fade"
 					mode="out-in"
+					:duration="200"
 				>
 					<component :is="Component" />
 				</Transition>
