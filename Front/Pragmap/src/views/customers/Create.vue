@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useFocus } from '@vueuse/core'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -17,9 +17,8 @@ import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
-const nameInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
-const refValue = computed(() => nameInput.value?.refValue)
-useFocus(refValue, { initialValue: true })
+const nameInput = ref<HTMLInputElement | null>(null)
+useFocus(nameInput, { initialValue: true })
 const selected = ref<Array<Record<'label' | 'value', string>>>([])
 const options = ref<Array<Record<'label' | 'value', string>>>([])
 
@@ -60,7 +59,6 @@ const formSchema = toTypedSchema(
 				}
 			)
 			.default([])
-			.optional()
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -71,7 +69,7 @@ const onSubmit = handleSubmit(async (values) => {
 		const data = {
 			name: values.name,
 			logo: `${values.logo.lastModified}_${values.logo.name}`,
-			userIds: values.userIds?.map((userId) => userId.value)
+			userIds: values.userIds.map((userId) => userId.value)
 		}
 
 		await customerService.create(data)
@@ -137,7 +135,8 @@ const onSubmit = handleSubmit(async (values) => {
 								v-bind="componentField"
 								v-model="selected"
 								:options="options"
-								placeholder="Sélectionner des utilisateurs"
+								:multiple="true"
+								placeholder="Sélectionnez des utilisateurs"
 								message="Aucun utilisateur trouvé"
 								:limit-text="{
 									singular: 'utilisateur sélectionné',
@@ -150,6 +149,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</FormField>
 				<div class="flex flex-col-reverse sm:flex-row justify-between">
 					<Button
+						class="focus-visible:bg-background"
 						type="button"
 						variant="link"
 						size="sm"
