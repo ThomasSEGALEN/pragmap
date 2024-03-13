@@ -1,7 +1,10 @@
 <script setup lang="ts">
+import { ref } from 'vue'
+import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
+import { cn } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -12,6 +15,8 @@ import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
 const authStore = useAuthStore()
+const emailInput = ref<HTMLInputElement | null>(null)
+useFocus(emailInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z.object({
 		email: z
@@ -53,10 +58,10 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Card>
+	<Card :class="cn('h-fit w-[420px]', $attrs.class ?? '')">
 		<CardHeader>
 			<CardTitle>Modification de l'adresse e-mail</CardTitle>
-			<CardDescription> Renseignez votre nouvelle adresse e-mail </CardDescription>
+			<CardDescription>Renseignez votre nouvelle adresse e-mail</CardDescription>
 		</CardHeader>
 		<CardContent>
 			<form

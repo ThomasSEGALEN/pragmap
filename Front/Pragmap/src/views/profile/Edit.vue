@@ -4,7 +4,7 @@ import UpdatePassword from './partials/UpdatePassword.vue'
 </script>
 
 <template>
-	<div class="space-y-6">
+	<div class="flex flex-col space-y-6 lg:flex-row lg:space-y-0 lg:space-x-6">
 		<UpdateEmail />
 		<UpdatePassword />
 	</div>
