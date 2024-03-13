@@ -191,11 +191,21 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach((to, from) => {
-	const { clearEdit } = useFormStore()
+	const fromRouteName = from.name?.toString()
 
-	if (!from.name) return
-	if (['UsersEdit', 'CustomersEdit', 'RoadmapsEdit'].includes(from.name.toString()))
-		return clearEdit()
+	if (!fromRouteName) return
+
+	const entities: { [key: string]: 'editUser' | 'editCustomer' | 'editRoadmap' } = {
+		UsersEdit: 'editUser',
+		CustomersEdit: 'editCustomer',
+		RoadmapsEdit: 'editRoadmap'
+	}
+
+	if (!Object.keys(entities).includes(fromRouteName)) return
+
+	const { clearEntity } = useFormStore()
+
+	clearEntity(entities[fromRouteName])
 })
 
 export default router

@@ -17,10 +17,8 @@ export const useFormStore = defineStore('form', {
 			editUser: null
 		}),
 	actions: {
-		clearEdit(): void {
-			this.$state.editUser = null
-			this.$state.editCustomer = null
-			this.$state.editRoadmap = null
+		clearEntity(entity: keyof State): void {
+			this.$state[entity] = null
 		},
 		async getEditUserById(id: string): Promise<void> {
 			const user = await userService.getById(id, {
