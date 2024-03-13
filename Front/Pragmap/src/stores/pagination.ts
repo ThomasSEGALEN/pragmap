@@ -1,12 +1,22 @@
 import { defineStore } from 'pinia'
-import { customerService, userService } from '@/services'
-import type { ICustomer, IGetCustomer, IGetUser, IUser } from '@/types'
+import { customerService, roadmapService, userService } from '@/services'
+import type { ICustomer, IRoadmap, IUser } from '@/types'
 
 interface State {
 	pageSize: number
 	pageCount: number
 	pageIndex: number
 }
+
+export type UsersData = Pick<
+	IUser,
+	'id' | 'lastName' | 'firstName' | 'email' | 'roleId' | 'createdAt'
+>
+export type CustomersData = Pick<ICustomer, 'id' | 'name' | 'createdAt'>
+export type RoadmapsData = Pick<
+	IRoadmap,
+	'id' | 'name' | 'customerId' | 'customerName' | 'createdAt'
+>
 
 export const usePaginationStore = defineStore('pagination', {
 	state: (): State => ({
@@ -45,20 +55,20 @@ export const usePaginationStore = defineStore('pagination', {
 		getCanNextPage(): boolean {
 			return this.pageIndex < this.pageCount - 1
 		},
-		async getUsersData(): Promise<Array<IGetUser>> {
+		async getUsersData(): Promise<Array<UsersData>> {
 			const count = (await userService.getAll({ count: true })) as number
 			const users = (await userService.getAll({
 				select: ['id', 'lastName', 'firstName', 'email', 'roleId', 'createdAt'],
 				top: this.pageSize,
 				skip: this.pageSize * this.pageIndex,
 				orderBy: { column: 'createdAt', order: 'asc' }
-			})) as Array<IUser>
+			})) as Array<UsersData>
 
 			this.setPageCount(Math.ceil(count / this.pageSize))
 
 			return users
 		},
-		async getCustomersData(): Promise<Array<IGetCustomer>> {
+		async getCustomersData(): Promise<Array<CustomersData>> {
 			const count = (await customerService.getAll({ count: true })) as number
 			const customers = (await customerService.getAll({
 				select: ['id', 'name', 'createdAt'],
@@ -66,11 +76,37 @@ export const usePaginationStore = defineStore('pagination', {
 				top: this.pageSize,
 				skip: this.pageSize * this.pageIndex,
 				orderBy: { column: 'createdAt', order: 'asc' }
-			})) as Array<ICustomer>
+			})) as Array<CustomersData>
 
 			this.setPageCount(Math.ceil(count / this.pageSize))
 
 			return customers
+		},
+		async getRoadmapsData(): Promise<Array<RoadmapsData>> {
+			const count = (await roadmapService.getAll({ count: true })) as number
+			const roadmaps = (await roadmapService.getAll({
+				select: ['id', 'name', 'customerId', 'createdAt'],
+				top: this.pageSize,
+				skip: this.pageSize * this.pageIndex,
+				orderBy: { column: 'createdAt', order: 'asc' }
+			})) as Array<RoadmapsData>
+
+			const customerNameRoadmaps = await Promise.all(
+				roadmaps.map(async (roadmap) => {
+					const customer = (await customerService.getById(roadmap.customerId, {
+						select: ['name']
+					})) as Pick<ICustomer, 'name'>
+
+					return {
+						...roadmap,
+						customerName: customer.name
+					}
+				})
+			)
+
+			this.setPageCount(Math.ceil(count / this.pageSize))
+
+			return customerNameRoadmaps
 		}
 	}
 })
