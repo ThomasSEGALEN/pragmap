@@ -1,4 +1,15 @@
 <script setup lang="ts">
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogHeader,
+	AlertDialogTitle,
+	AlertDialogTrigger
+} from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
 import {
 	DropdownMenu,
@@ -35,7 +46,34 @@ defineProps<{
 				<DropdownMenuItem as-child>
 					<RouterLink :to="{ name: name, params: { id: id } }">Modifier</RouterLink>
 				</DropdownMenuItem>
-				<DropdownMenuItem @click="deleteEntity(id)"> Supprimer </DropdownMenuItem>
+				<AlertDialog>
+					<DropdownMenuItem
+						@select="(e) => e.preventDefault()"
+						as-child
+					>
+						<AlertDialogTrigger as-child>
+							<Button
+								class="h-8 w-full justify-start font-normal hover:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:bg-accent"
+								variant="ghost"
+							>
+								Supprimer
+							</Button>
+						</AlertDialogTrigger>
+						<AlertDialogContent>
+							<AlertDialogHeader>
+								<AlertDialogTitle>Êtes-vous sûr ?</AlertDialogTitle>
+								<AlertDialogDescription>
+									Cette action ne peut être annulée, elle supprimera définitivement les données
+									concernées.
+								</AlertDialogDescription>
+							</AlertDialogHeader>
+							<AlertDialogFooter>
+								<AlertDialogCancel>Annuler</AlertDialogCancel>
+								<AlertDialogAction @click="deleteEntity(id)">Continuer</AlertDialogAction>
+							</AlertDialogFooter>
+						</AlertDialogContent>
+					</DropdownMenuItem>
+				</AlertDialog>
 			</DropdownMenuGroup>
 		</DropdownMenuContent>
 	</DropdownMenu>
