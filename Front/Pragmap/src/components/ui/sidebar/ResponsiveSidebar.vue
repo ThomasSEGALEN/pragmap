@@ -6,6 +6,7 @@ import { FolderKanban, GanttChart, Handshake, UserRound } from 'lucide-vue-next'
 defineProps<{
 	isToggled: boolean
 }>()
+defineEmits(['toggleSidebar'])
 
 const route = useRoute()
 </script>
@@ -27,6 +28,7 @@ const route = useRoute()
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/' }"
 				variant="ghost"
 				as-child
+				@click="$emit('toggleSidebar')"
 			>
 				<RouterLink to="/">Accueil</RouterLink>
 			</Button>
@@ -43,6 +45,7 @@ const route = useRoute()
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
 				variant="ghost"
 				as-child
+				@click="$emit('toggleSidebar')"
 			>
 				<RouterLink to="/users">Lister</RouterLink>
 			</Button>
@@ -51,6 +54,7 @@ const route = useRoute()
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
 				variant="ghost"
 				as-child
+				@click="$emit('toggleSidebar')"
 			>
 				<RouterLink to="/users/create">Créer</RouterLink>
 			</Button>
@@ -67,6 +71,7 @@ const route = useRoute()
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
 				variant="ghost"
 				as-child
+				@click="$emit('toggleSidebar')"
 			>
 				<RouterLink to="/customers">Lister</RouterLink>
 			</Button>
@@ -75,6 +80,7 @@ const route = useRoute()
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/customers/create' }"
 				variant="ghost"
 				as-child
+				@click="$emit('toggleSidebar')"
 			>
 				<RouterLink to="/customers/create">Créer</RouterLink>
 			</Button>
@@ -91,6 +97,7 @@ const route = useRoute()
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
 				variant="ghost"
 				as-child
+				@click="$emit('toggleSidebar')"
 			>
 				<RouterLink to="/roadmaps">Lister</RouterLink>
 			</Button>
@@ -99,6 +106,7 @@ const route = useRoute()
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
 				variant="ghost"
 				as-child
+				@click="$emit('toggleSidebar')"
 			>
 				<RouterLink to="/roadmaps/create">Créer</RouterLink>
 			</Button>
