@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
-import { useFocus } from '@vueuse/core'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -17,9 +17,8 @@ import { toast } from '@/components/ui/toast'
 
 const router = useRouter()
 const { login } = useAuthStore()
-const emailInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
-const refValue = computed(() => emailInput.value?.refValue)
-useFocus(refValue, { initialValue: true })
+const emailInput = ref<HTMLInputElement | null>(null)
+useFocus(emailInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z.object({
 		email: z
@@ -108,6 +107,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</FormField>
 				<div class="flex flex-col-reverse md:flex-row justify-between">
 					<Button
+						class="focus-visible:bg-background"
 						type="button"
 						variant="link"
 						size="sm"

@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useFocus } from '@vueuse/core'
 import { useRoute, useRouter } from 'vue-router'
+import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -128,6 +128,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</FormField>
 				<div class="flex flex-col-reverse md:flex-row justify-between">
 					<Button
+						class="focus-visible:bg-background"
 						type="button"
 						variant="link"
 						size="sm"
