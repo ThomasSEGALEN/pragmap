@@ -1,6 +1,6 @@
 import { BaseService } from '@/services'
-import type { IRoadmap, IGetRoadMap, IPostRoadMap, IPutRoadMap  } from '@/types'
+import type { IRoadmap, IGetRoadmap, IPostRoadmap, IPutRoadmap } from '@/types'
 
-class RoadMapService extends BaseService<IRoadmap, IGetRoadMap, IPostRoadMap, IPutRoadMap> {}
+class RoadmapService extends BaseService<IRoadmap, IGetRoadmap, IPostRoadmap, IPutRoadmap> {}
 
-export const roadmapService = new RoadMapService('roadmap')
+export const roadmapService = new RoadmapService('roadmap')
