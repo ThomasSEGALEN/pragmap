@@ -1,4 +1,3 @@
 export * from '@/stores/auth'
-export * from '@/stores/customer'
+export * from '@/stores/form'
 export * from '@/stores/pagination'
-export * from '@/stores/user'
