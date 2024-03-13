@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { authMiddleware } from '@/middlewares'
-import { useAuthStore, useCustomerStore, useUserStore } from '@/stores'
 import { userService } from '@/services'
+import { useAuthStore, useFormStore } from '@/stores'
 
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
@@ -27,7 +27,7 @@ const router = createRouter({
 			beforeEnter: async (to) => {
 				authMiddleware
 
-				const { getEditUserById } = useUserStore()
+				const { getEditUserById } = useFormStore()
 
 				try {
 					await getEditUserById(to.params.id.toString())
@@ -59,7 +59,7 @@ const router = createRouter({
 			beforeEnter: async (to) => {
 				authMiddleware
 
-				const { getEditCustomerById } = useCustomerStore()
+				const { getEditCustomerById } = useFormStore()
 
 				try {
 					await getEditCustomerById(to.params.id.toString())
@@ -71,11 +71,43 @@ const router = createRouter({
 			props: true
 		},
 		{
-			path: '/roadmap',
-			name: 'Roadmap',
-			component: () => import('@/views/roadmaps/Roadmap.vue'),
+			path: '/roadmaps',
+			name: 'RoadmapsIndex',
+			component: () => import('@/views/roadmaps/Index.vue'),
 			beforeEnter: authMiddleware,
-			meta: { name: 'Roadmap', requiresAuth: true }
+			meta: { name: 'Liste des roadmaps', requiresAuth: true }
+		},
+		{
+			path: '/roadmaps/create',
+			name: 'RoadmapsCreate',
+			component: () => import('@/views/roadmaps/Create.vue'),
+			beforeEnter: authMiddleware,
+			meta: { name: "Création d'une roadmap", requiresAuth: true }
+		},
+		{
+			path: '/roadmaps/:id/edit',
+			name: 'RoadmapsEdit',
+			component: () => import('@/views/roadmaps/Edit.vue'),
+			beforeEnter: async (to) => {
+				authMiddleware
+
+				const { getEditRoadmapById } = useFormStore()
+
+				try {
+					await getEditRoadmapById(to.params.id.toString())
+				} catch (error) {
+					return '/'
+				}
+			},
+			meta: { name: "Modification d'une roadmap", requiresAuth: true },
+			props: true
+		},
+		{
+			path: '/roadmaps/:id/designer',
+			name: 'RoadmapsDesigner',
+			component: () => import('@/views/roadmaps/Designer.vue'),
+			beforeEnter: authMiddleware,
+			meta: { name: 'Designer de roadmap', requiresAuth: true }
 		},
 		{
 			path: '/profile',
@@ -156,6 +188,14 @@ router.beforeEach((to, from, next) => {
 	if (isAuthenticated && !requiresAuth) return next({ name: 'Home' })
 
 	return next()
+})
+
+router.afterEach((to, from) => {
+	const { clearEdit } = useFormStore()
+
+	if (!from.name) return
+	if (['UsersEdit', 'CustomersEdit', 'RoadmapsEdit'].includes(from.name.toString()))
+		return clearEdit()
 })
 
 export default router
