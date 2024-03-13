@@ -3,14 +3,16 @@ import { Handle, Position, useNode } from '@vue-flow/core'
 import { FileText } from 'lucide-vue-next'
 
 defineEmits(['nodeClicked'])
+
 const { node } = useNode()
 </script>
+
 <template>
 	<div
 		class="livrableNode"
-		v-on:click="$emit('nodeClicked', node.id)"
+		@click="$emit('nodeClicked', node.id)"
 	>
-		<p>{{ node.data.nom }}</p>
+		<p>{{ node.data.name }}</p>
 		<Handle
 			type="source"
 			:position="Position.Top"

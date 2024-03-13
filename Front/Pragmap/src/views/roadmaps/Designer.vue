@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { MiniMap, Background } from '@vue-flow/additional-components'
-import { useVueFlow } from '@vue-flow/core'
-import { VueFlow, type Elements } from '@vue-flow/core'
-import TacheNode from './partials/TacheNode.vue'
-import JalonNode from './partials/JalonNode.vue'
-import LivrableNode from './partials/LivrableNode.vue'
 import { ref, computed } from 'vue'
-const { onConnect, addEdges } = useVueFlow()
+import { type Elements, useVueFlow, VueFlow } from '@vue-flow/core'
+import { MiniMap, Background } from '@vue-flow/additional-components'
+import DeliverableNode from './partials/DeliverableNode.vue'
+import MilestoneNode from './partials/MilestoneNode.vue'
+import TaskNode from './partials/TaskNode.vue'
+
 const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
-
+const { onConnect, addEdges } = useVueFlow()
 onConnect((params) => {
 	addEdges([params])
 })
@@ -26,10 +25,10 @@ const addNode = (type: string) => {
 	elements.value.push({
 		type: type,
 		data: {
-			nom: `Nouveau ` + type,
+			name: `Nouveau ` + type,
 			description: `Description de ` + type,
-			durrée: 0,
-			commencer: false
+			duration: 0,
+			start: false
 		},
 		position: {
 			x: newX,
@@ -40,7 +39,6 @@ const addNode = (type: string) => {
 		label: type
 	})
 }
-
 const saveNode = () => {
 	json = JSON.stringify(elements.value)
 	console.log(json)
@@ -75,25 +73,24 @@ const importNode = () => {
 			/>
 			<MiniMap />
 			<template #node-tache="nodeProps">
-				<TacheNode
-					@node-clicked="selectedNodeId = $event"
+				<TaskNode
 					v-bind="nodeProps"
+					@node-clicked="selectedNodeId = $event"
 				/>
 			</template>
 			<template #node-jalon="nodeProps">
-				<JalonNode
-					@node-clicked="selectedNodeId = $event"
+				<MilestoneNode
 					v-bind="nodeProps"
+					@node-clicked="selectedNodeId = $event"
 				/>
 			</template>
 			<template #node-livrable="nodeProps">
-				<LivrableNode
-					@node-clicked="selectedNodeId = $event"
+				<DeliverableNode
 					v-bind="nodeProps"
+					@node-clicked="selectedNodeId = $event"
 				/>
 			</template>
 		</VueFlow>
-
 		<div
 			v-if="selectedNodeId && selectedNode"
 			class="settingsWindow"
@@ -136,7 +133,6 @@ const importNode = () => {
 	padding: 10px;
 	background-color: #f8f8f8;
 }
-
 .settingsWindow {
 	position: absolute;
 	right: 0;
@@ -150,12 +146,10 @@ const importNode = () => {
 	flex-direction: column;
 	align-items: flex-end;
 }
-
 .settingsWindow h2 {
 	color: #333;
 	margin-bottom: 1rem;
 }
-
 .settingsWindow div {
 	width: 100%;
 	padding: 0.5rem;
@@ -164,20 +158,17 @@ const importNode = () => {
 	border-radius: 4px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
-
 .settingsWindow label {
 	display: block;
 	margin-bottom: 0.5rem;
 	color: #666;
 }
-
 .settingsWindow input {
 	width: 100%;
 	padding: 0.5rem;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
-
 .settingsWindow button {
 	margin-top: 1rem;
 	padding: 0.5rem 1rem;
