@@ -51,7 +51,7 @@ export const useAuthStore = defineStore('auth', {
 				select: [token]
 			})
 
-			return user.refreshToken
+			return user.refreshToken ?? ''
 		},
 		setToken(token: string): void {
 			this.$state.accessToken = token

@@ -19,8 +19,8 @@ import { Toaster } from '@/components/ui/toast'
 defineProps<{ theme: string }>()
 defineEmits(['toggleTheme'])
 
-const isToggled = ref<boolean>(false)
-const toggleSidebar = () => (isToggled.value = !isToggled.value)
+const sidebarToggled = ref<boolean>(false)
+const toggleSidebar = () => (sidebarToggled.value = !sidebarToggled.value)
 const { user } = useAuthStore()
 const getInitials = () =>
 	`${user.firstName.charAt(0).toUpperCase()}${user.lastName.charAt(0).toUpperCase()}`.toUpperCase()
@@ -43,14 +43,14 @@ const getInitials = () =>
 						size="icon"
 						@click="toggleSidebar"
 					>
-						<Menu v-if="!isToggled" />
+						<Menu v-if="!sidebarToggled" />
 						<X v-else />
 					</Button>
 					<slot name="header" />
 					<DropdownMenu>
 						<DropdownMenuTrigger as-child>
 							<Button
-								class="relative h-8 w-8 rounded-full"
+								class="relative h-8 w-8 rounded-full focus-visible:bg-background"
 								variant="ghost"
 							>
 								<Avatar class="h-8 w-8">
@@ -97,7 +97,8 @@ const getInitials = () =>
 				</div>
 				<ResponsiveSidebar
 					class="absolute z-50 bg-background"
-					:is-toggled="isToggled"
+					:is-toggled="sidebarToggled"
+					@toggle-sidebar="toggleSidebar"
 				/>
 			</header>
 			<main

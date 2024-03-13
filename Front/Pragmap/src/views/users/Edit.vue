@@ -1,13 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useFocus } from '@vueuse/core'
 import { useRouter } from 'vue-router'
+import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { userService } from '@/services'
-import { useAuthStore, useUserStore } from '@/stores'
+import { useAuthStore, useFormStore } from '@/stores'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -32,7 +32,7 @@ const router = useRouter()
 const { roles } = useAuthStore()
 const roleInput = ref<HTMLInputElement | null>(null)
 useFocus(roleInput, { initialValue: true })
-const { editUser, clearEditUser } = useUserStore()
+const { editUser } = useFormStore()
 const formSchema = toTypedSchema(
 	z.object({
 		id: z.string().default(id),
@@ -71,8 +71,6 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		await userService.update(id, values)
 
-		clearEditUser()
-
 		router.push('/users')
 	} catch (error) {
 		toast({
@@ -100,7 +98,7 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormControl>
 							<Select v-bind="componentField">
 								<SelectTrigger ref="roleInput">
-									<SelectValue placeholder="Sélectionner un rôle" />
+									<SelectValue placeholder="Sélectionnez un rôle" />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectGroup>
@@ -169,6 +167,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</FormField>
 				<div class="flex flex-col-reverse md:flex-row justify-between">
 					<Button
+						class="focus-visible:bg-background"
 						type="button"
 						variant="link"
 						size="sm"

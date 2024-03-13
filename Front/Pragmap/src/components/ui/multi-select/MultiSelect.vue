@@ -1,24 +1,21 @@
-<script setup lang="ts">
+<script setup lang="ts" generic="TValue">
 import { useVModel } from '@vueuse/core'
 import { cn } from '@/lib/utils'
 import Multiselect from 'vue-multiselect'
 
 const props = defineProps<{
-	defaultValue?: Array<Record<'label' | 'value', string>> | null
-	modelValue: Array<Record<'label' | 'value', string>> | null
+	modelValue: TValue
 	options: Array<Record<'label' | 'value', string>>
+	multiple: boolean
 	placeholder?: string
 	message?: string
 	limitText?: Record<'singular' | 'plural', string>
 	class?: string
 }>()
 const emits = defineEmits<{
-	(e: 'update:modelValue', payload: string | number): void
+	(e: 'update:modelValue', payload: TValue): void
 }>()
-const modelValue = useVModel(props, 'modelValue', emits, {
-	passive: true,
-	defaultValue: props.defaultValue
-})
+const modelValue = useVModel(props, 'modelValue', emits)
 </script>
 
 <template>
@@ -26,8 +23,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 		:class="cn('flex h-10 w-full', props.class ?? '')"
 		v-model="modelValue"
 		:options="options"
-		:value="String"
-		:multiple="true"
+		:multiple="multiple"
 		:close-on-select="false"
 		:clear-on-select="false"
 		:preserve-search="true"
@@ -38,7 +34,7 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 		select-label=""
 		deselect-label=""
 		selected-label=""
-		:limit="0"
+		:limit="multiple ? 0 : 1"
 		:limit-text="
 			(count: number) =>
 				`${count} ${count === 1 ? limitText?.singular ?? 'option sélectionnée' : limitText?.plural ?? 'options sélectionnées'}`
@@ -54,7 +50,8 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 <style>
 .multiselect--active {
 	.multiselect__tags-wrap,
-	.multiselect__strong {
+	.multiselect__strong,
+	.multiselect__single {
 		@apply hidden;
 	}
 	.multiselect__select {
@@ -68,22 +65,22 @@ const modelValue = useVModel(props, 'modelValue', emits, {
 	@apply space-x-1;
 }
 .multiselect__strong {
-	@apply p-0 m-0 text-sm font-medium text-primary;
+	@apply w-fit p-0 m-0 text-sm font-medium text-primary;
+}
+.multiselect__single {
+	@apply w-fit p-0 m-0 text-sm font-normal text-primary;
 }
 .multiselect__tags {
-	@apply py-0 px-2 flex justify-start items-center space-x-2 rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
+	@apply py-0 px-1 flex justify-start items-center space-x-2 rounded-md border border-input bg-background text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50;
 }
-.multiselect__tags input {
-	@apply p-0 m-0 bg-inherit;
-}
-.multiselect__tags input::placeholder,
-input:focus {
-	@apply text-sm text-primary;
+.multiselect__input,
+.multiselect__input::placeholder {
+	@apply p-0 m-0 bg-inherit text-sm text-primary;
 }
 .multiselect__placeholder {
-	@apply p-0 m-0 text-primary;
+	@apply p-0 m-0 text-sm text-primary;
 }
-/* .multiselect__tag {
+.multiselect__tag {
 	@apply m-0 inline-flex justify-center items-center rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90;
 }
 .multiselect__tag-icon {
@@ -91,9 +88,6 @@ input:focus {
 }
 .multiselect__tag-icon::after {
 	@apply text-secondary;
-} */
-.multiselect__single {
-	@apply hidden;
 }
 .multiselect__content-wrapper {
 	@apply text-sm font-medium border border-input ring-offset-background transition-colors focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary-foreground text-primary;

@@ -1,31 +1,39 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
-import { authService } from '@/services'
+import { roadmapService } from '@/services'
+import { useFormStore } from '@/stores'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Loader2, Send } from 'lucide-vue-next'
-import { RouterLink } from 'vue-router'
+import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
-const emailInput = ref<HTMLInputElement | null>(null)
-useFocus(emailInput, { initialValue: true })
+const { id } = defineProps<{
+	id: string
+}>()
+
+const router = useRouter()
+const nameInput = ref<HTMLInputElement | null>(null)
+useFocus(nameInput, { initialValue: true })
+const { editRoadmap } = useFormStore()
 const formSchema = toTypedSchema(
 	z.object({
-		email: z
+		id: z.string().default(id),
+		name: z
 			.string({
 				required_error: 'Le champ est obligatoire',
 				invalid_type_error: 'Le champ est invalide'
 			})
 			.min(1, { message: 'Le champ est obligatoire' })
-			.email({ message: 'Le champ doit être une adresse e-mail valide' })
-			.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' })
+			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
+			.default(editRoadmap?.name ?? '')
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -33,17 +41,13 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await authService.forgotPassword(values)
+		await roadmapService.update(id, values)
 
-		toast({
-			title: 'Succès',
-			description: `Un mail a été envoyé à l'adresse e-mail ${values.email}.`,
-			duration: 5000
-		})
+		router.push('/roadmaps')
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à envoyer un mail à l'adresse e-mail ${values.email}.`,
+			description: `Nous ne sommes pas parvenus à modifier la roadmap.`,
 			duration: 5000
 		})
 	}
@@ -51,13 +55,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Card :class="cn('w-[420px]', $attrs.class ?? '')">
-		<CardHeader>
-			<CardTitle>Pragmap</CardTitle>
-			<CardDescription>
-				Renseignez votre adresse e-mail afin de recevoir un lien de réinitialisation de mot de passe
-			</CardDescription>
-		</CardHeader>
+	<Card :class="cn('h-fit w-[420px] pt-6', $attrs.class ?? '')">
 		<CardContent>
 			<form
 				class="space-y-6"
@@ -65,16 +63,15 @@ const onSubmit = handleSubmit(async (values) => {
 			>
 				<FormField
 					v-slot="{ componentField }"
-					name="email"
+					name="name"
 				>
-					<FormItem>
-						<FormLabel>Adresse e-mail</FormLabel>
+					<FormItem class="w-full">
+						<FormLabel>Nom</FormLabel>
 						<FormControl>
 							<Input
 								v-bind="componentField"
-								ref="emailInput"
-								type="email"
-								autocomplete="email"
+								ref="nameInput"
+								autocomplete="organization"
 							/>
 						</FormControl>
 						<FormMessage />
@@ -88,21 +85,20 @@ const onSubmit = handleSubmit(async (values) => {
 						size="sm"
 						as-child
 					>
-						<RouterLink to="/login">&#x2190; Retour à la connexion</RouterLink>
+						<RouterLink to="/roadmaps">&#x2190; Retour</RouterLink>
 					</Button>
 					<Button
 						v-if="!isSubmitting"
 						type="submit"
 					>
-						<Send class="h-4 w-4 mr-2" />
-						Envoyer
+						Modifier
 					</Button>
 					<Button
 						v-else
 						type="disabled"
 					>
 						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
-						Envoi...
+						Modification...
 					</Button>
 				</div>
 			</form>

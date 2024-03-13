@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { Handle, Position, useNode } from '@vue-flow/core'
-import { Trophy } from 'lucide-vue-next'
+import { LayoutList } from 'lucide-vue-next'
 
 defineEmits(['nodeClicked'])
 const { node } = useNode()
@@ -8,34 +8,49 @@ const { node } = useNode()
 
 <template>
 	<div
-		class="jalonNode"
+		class="tacheNode"
 		v-on:click="$emit('nodeClicked', node.id)"
 	>
-		<p>{{ node.data.nom }}</p>
+		<p>{{ node.data.name }}</p>
 		<Handle
+			class="handle"
 			type="source"
 			:position="Position.Left"
 		/>
 		<Handle
+			class="handle"
 			type="target"
 			:position="Position.Right"
 		/>
-		<Trophy />
+		<Handle
+			class="handle"
+			type="source"
+			:position="Position.Bottom"
+		/>
+		<LayoutList />
 	</div>
 </template>
 
 <style scoped>
-.jalonNode {
-	height: 100%;
-	width: 100%;
+.tacheNode {
 	padding: 1rem;
 	display: flex;
-	flex-direction: column;
-	gap: 10px;
+	flex-direction: column-reverse;
 	background: white;
-	border: 1px solid yellow;
 	border-radius: 4px;
+	border: 1px solid black;
 	justify-content: center;
 	align-items: center;
+}
+.handle:before {
+	visibility: hidden;
+}
+
+.handle:hover {
+	visibility: visible;
+}
+#text {
+	border: none;
+	text-align: center;
 }
 </style>

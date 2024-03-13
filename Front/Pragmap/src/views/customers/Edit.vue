@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useFocus } from '@vueuse/core'
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
@@ -7,7 +7,7 @@ import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { customerService, userService } from '@/services'
-import { useCustomerStore } from '@/stores'
+import { useFormStore } from '@/stores'
 import type { IUser } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
@@ -22,12 +22,11 @@ const { id } = defineProps<{
 }>()
 
 const router = useRouter()
-const nameInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
-const refValue = computed(() => nameInput.value?.refValue)
-useFocus(refValue, { initialValue: true })
+const nameInput = ref<HTMLInputElement | null>(null)
+useFocus(nameInput, { initialValue: true })
 const selected = ref<Array<{ label: string; value: string }>>([])
 const options = ref<Array<{ label: string; value: string }>>([])
-const { editCustomer, clearEditCustomer } = useCustomerStore()
+const { editCustomer } = useFormStore()
 const userIds = editCustomer?.customerUsers?.map(
 	(customerUser) => customerUser.userId
 ) as Array<string>
@@ -75,7 +74,6 @@ const formSchema = toTypedSchema(
 				}
 			)
 			.default(selected.value)
-			.optional()
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -92,8 +90,6 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await customerService.update(id, data)
-
-		clearEditCustomer()
 
 		router.push('/customers')
 	} catch (error) {
@@ -156,7 +152,8 @@ const onSubmit = handleSubmit(async (values) => {
 								v-bind="componentField"
 								v-model="selected"
 								:options="options"
-								placeholder="Sélectionner des utilisateurs"
+								:multiple="true"
+								placeholder="Sélectionnez des utilisateurs"
 								message="Aucun utilisateur trouvé"
 								:limit-text="{
 									singular: 'utilisateur sélectionné',
@@ -169,6 +166,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</FormField>
 				<div class="flex flex-col-reverse sm:flex-row justify-between">
 					<Button
+						class="focus-visible:bg-background"
 						type="button"
 						variant="link"
 						size="sm"

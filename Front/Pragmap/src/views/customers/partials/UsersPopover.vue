@@ -8,7 +8,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 const { customerUsers } = defineProps<{ customerUsers: Array<ICustomerUser> }>()
 
 const users = ref<Array<Record<'id' | 'name', string>>>([])
-
 onMounted(async () => {
 	users.value = await Promise.all(
 		customerUsers.map(async (customerUser) => {
@@ -38,7 +37,10 @@ onMounted(async () => {
 		</PopoverTrigger>
 		<PopoverContent>
 			<h4 class="font-medium leading-none text-md">Utilisateurs :</h4>
-			<ul class="mt-2">
+			<ul
+				v-if="users.length"
+				class="mt-2"
+			>
 				<li
 					v-for="user in users"
 					:key="user.id"
@@ -47,6 +49,12 @@ onMounted(async () => {
 					{{ user.name }}
 				</li>
 			</ul>
+			<div
+				v-else
+				class="mt-2 text-muted-foreground"
+			>
+				Aucun utilisateur
+			</div>
 		</PopoverContent>
 	</Popover>
 </template>

@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { usePaginationStore, type CustomersData } from '@/stores'
+import { usePaginationStore, type RoadmapsData } from '@/stores'
 import { DataTable } from '@/components/ui/datatable'
 import { columns } from './partials/columns'
 
-const { getPageIndex, getPageSize, getCustomersData } = usePaginationStore()
-const data = ref<Array<CustomersData>>([])
+const { getPageIndex, getPageSize, getRoadmapsData } = usePaginationStore()
+const data = ref<Array<RoadmapsData>>([])
 
-data.value = await getCustomersData()
+data.value = await getRoadmapsData()
 
 watch(
 	[() => getPageIndex(), () => getPageSize()],
-	async () => (data.value = await getCustomersData())
+	async () => (data.value = await getRoadmapsData())
 )
 </script>
 

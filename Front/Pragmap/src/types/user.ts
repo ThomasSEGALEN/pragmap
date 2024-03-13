@@ -6,8 +6,8 @@ export interface IUser {
 	password: string
 	createdAt: string
 	updatedAt: string
-	refreshToken: string
-	refreshTokenExpiresAt: string
+	refreshToken: string | null
+	refreshTokenExpiresAt: string | null
 	roleId: string
 }
 
@@ -17,7 +17,7 @@ export interface IGetUser {
 	firstName: string
 	email: string
 	createdAt: string
-	refreshToken: string
+	refreshToken: string | null
 	roleId: string
 }
 

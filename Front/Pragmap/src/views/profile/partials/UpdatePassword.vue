@@ -1,8 +1,9 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
-import { z } from 'zod'
 import { toTypedSchema } from '@vee-validate/zod'
+import { z } from 'zod'
+import { cn } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -85,7 +86,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Card>
+	<Card :class="cn('h-fit w-[420px]', $attrs.class ?? '')">
 		<CardHeader>
 			<CardTitle>Modification du mot de passe</CardTitle>
 			<CardDescription>Renseignez votre nouveau mot de passe</CardDescription>
@@ -104,7 +105,6 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormControl>
 							<Input
 								v-bind="componentField"
-								ref="passwordInput"
 								type="password"
 								autocomplete="current-password"
 							/>

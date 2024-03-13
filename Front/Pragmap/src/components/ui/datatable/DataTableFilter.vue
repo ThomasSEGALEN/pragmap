@@ -1,5 +1,5 @@
 <script setup lang="ts" generic="TData">
-import { computed, ref } from 'vue'
+import { ref } from 'vue'
 import { useFocus } from '@vueuse/core'
 import type { Table } from '@tanstack/vue-table'
 import { Button } from '@/components/ui//button'
@@ -16,9 +16,8 @@ defineProps<{
 	table: Table<TData>
 }>()
 
-const searchInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
-const refValue = computed(() => searchInput.value?.refValue)
-useFocus(refValue, { initialValue: true })
+const searchInput = ref<HTMLInputElement | null>(null)
+useFocus(searchInput, { initialValue: true })
 </script>
 
 <template>
@@ -27,7 +26,7 @@ useFocus(refValue, { initialValue: true })
 			class="md:w-56"
 			ref="searchInput"
 			name="search"
-			:placeholder="`Rechercher par ${table.getAllColumns()[0].id.toLowerCase()}`"
+			:placeholder="`Recherchez par ${table.getAllColumns()[0].id.toLowerCase()}`"
 			:model-value="table.getColumn(table.getAllColumns()[0].id)?.getFilterValue() as string"
 			@update:model-value="table.getColumn(table.getAllColumns()[0].id)?.setFilterValue($event)"
 		/>

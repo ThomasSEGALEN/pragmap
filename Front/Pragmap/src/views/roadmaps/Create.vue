@@ -1,13 +1,13 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { cn } from '@/lib/utils'
-import { customerService, userService } from '@/services'
-import type { IUser } from '@/types'
+import { customerService, roadmapService } from '@/services'
+import type { ICustomer } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -19,16 +19,20 @@ import { toast } from '@/components/ui/toast'
 const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
-const selected = ref<Array<Record<'label' | 'value', string>>>([])
+const selected = ref<Record<'label' | 'value', string>>()
 const options = ref<Array<Record<'label' | 'value', string>>>([])
 
 options.value = (
-	(await userService.getAll({ select: ['id', 'lastName', 'firstName'] })) as Array<IUser>
-).map((user) => ({
-	label: `${user.firstName} ${user.lastName}`,
-	value: user.id
+	(await customerService.getAll({ select: ['id', 'name'] })) as Array<ICustomer>
+).map((customer) => ({
+	label: customer.name,
+	value: customer.id
 }))
 
+const customers = ref<Array<ICustomer>>([])
+onMounted(async () => {
+	customers.value = (await customerService.getAll()) as Array<ICustomer>
+})
 const formSchema = toTypedSchema(
 	z.object({
 		name: z
@@ -38,27 +42,26 @@ const formSchema = toTypedSchema(
 			})
 			.min(1, { message: 'Le champ est obligatoire' })
 			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
-		logo: z.custom<File>().superRefine((value, context) => {
-			if (!value?.name) {
-				return context.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: 'Le champ est obligatoire',
-					path: ['logo']
-				})
-			}
-		}),
-		userIds: z
-			.array(
-				z.object({
+		customerId: z
+			.object(
+				{
 					label: z.string(),
 					value: z.string()
-				}),
+				},
 				{
 					required_error: 'Le champ est obligatoire',
 					invalid_type_error: 'Le champ est invalide'
 				}
 			)
-			.default([])
+			.superRefine((value, context) => {
+				if (!value?.value) {
+					return context.addIssue({
+						code: z.ZodIssueCode.custom,
+						message: 'Le champ est obligatoire',
+						path: ['customerId']
+					})
+				}
+			})
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -68,17 +71,16 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		const data = {
 			name: values.name,
-			logo: `${values.logo.lastModified}_${values.logo.name}`,
-			userIds: values.userIds.map((userId) => userId.value)
+			customerId: values.customerId.value
 		}
 
-		await customerService.create(data)
+		await roadmapService.create(data)
 
-		router.push('/customers')
+		router.push('/roadmaps')
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: 'Nous ne sommes pas parvenus à créer un client.',
+			description: `Nous ne sommes pas parvenus à créer la roadmap.`,
 			duration: 5000
 		})
 	}
@@ -109,45 +111,25 @@ const onSubmit = handleSubmit(async (values) => {
 					</FormItem>
 				</FormField>
 				<FormField
-					v-slot="{ handleChange }"
-					name="logo"
-				>
-					<FormItem class="w-full">
-						<FormLabel>Logo</FormLabel>
-						<FormControl>
-							<Input
-								type="file"
-								accept="image/png, image/jpeg, image/jpg"
-								@change="handleChange"
-							/>
-						</FormControl>
-						<FormMessage />
-					</FormItem>
-				</FormField>
-				<FormField
 					v-slot="{ componentField }"
-					name="userIds"
+					name="customerId"
 				>
-					<FormItem class="w-full relative z-0">
-						<FormLabel>Utilisateurs</FormLabel>
+					<FormItem>
+						<FormLabel>Client</FormLabel>
 						<FormControl>
 							<MultiSelect
 								v-bind="componentField"
 								v-model="selected"
 								:options="options"
-								:multiple="true"
-								placeholder="Sélectionnez des utilisateurs"
-								message="Aucun utilisateur trouvé"
-								:limit-text="{
-									singular: 'utilisateur sélectionné',
-									plural: 'utilisateurs sélectionnés'
-								}"
+								:multiple="false"
+								placeholder="Sélectionnez un client"
+								message="Aucun client trouvé"
 							/>
 						</FormControl>
 						<FormMessage />
 					</FormItem>
 				</FormField>
-				<div class="flex flex-col-reverse sm:flex-row justify-between">
+				<div class="flex flex-col-reverse md:flex-row justify-between">
 					<Button
 						class="focus-visible:bg-background"
 						type="button"
@@ -155,9 +137,8 @@ const onSubmit = handleSubmit(async (values) => {
 						size="sm"
 						as-child
 					>
-						<RouterLink to="/customers">&#x2190; Retour</RouterLink>
+						<RouterLink to="/roadmaps">&#x2190; Retour</RouterLink>
 					</Button>
-
 					<Button
 						v-if="!isSubmitting"
 						type="submit"

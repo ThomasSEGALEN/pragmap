@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useFocus } from '@vueuse/core'
 import { useRouter } from 'vue-router'
+import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -123,7 +123,7 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormControl>
 							<Select v-bind="componentField">
 								<SelectTrigger ref="roleInput">
-									<SelectValue placeholder="Sélectionner un rôle" />
+									<SelectValue placeholder="Sélectionnez un rôle" />
 								</SelectTrigger>
 								<SelectContent>
 									<SelectGroup>
@@ -224,6 +224,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</FormField>
 				<div class="flex flex-col-reverse md:flex-row justify-between">
 					<Button
+						class="focus-visible:bg-background"
 						type="button"
 						variant="link"
 						size="sm"
