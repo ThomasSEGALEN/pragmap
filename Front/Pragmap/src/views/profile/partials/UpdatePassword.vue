@@ -2,8 +2,7 @@
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { z } from 'zod'
-import { cn } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -18,32 +17,18 @@ const authStore = useAuthStore()
 const formSchema = toTypedSchema(
 	z
 		.object({
-			currentPassword: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
-				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
+			currentPassword: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
 			password: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
+				.string()
+				.trim()
+				.min(1, { message: 'Obligatoire' })
 				.regex(/.*[a-z]/, { message: 'Le champ doit contenir au moins une minuscule' })
 				.regex(/.*[A-Z]/, { message: 'Le champ doit contenir au moins une majuscule' })
 				.regex(/.*\d/, { message: 'Le champ doit contenir au moins un chiffre' })
 				.regex(/.*[@$!%*?&]/, { message: 'Le champ doit contenir au moins un caractère spécial' })
-				.min(8, { message: 'Le champ doit contenir au minimum 8 caractères' })
-				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
-			passwordConfirmation: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
-				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
+				.min(8)
+				.max(255),
+			passwordConfirmation: z.string().trim().min(1, { message: 'Obligatoire' }).max(255)
 		})
 		.superRefine((value, context) => {
 			if (value.password !== value.passwordConfirmation) {

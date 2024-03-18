@@ -2,6 +2,8 @@
 using Pragmap.API.Application.Helpers;
 using Pragmap.API.Application.Models;
 using Pragmap.Controllers.Entities;
+using Pragmap.Infrastructure.Mail;
+using Pragmap.Infrastructure.Mail.Service;
 using Pragmap.Infrastructure.UnitOfWork;
 
 namespace Pragmap.API.Application.Commands
@@ -9,10 +11,12 @@ namespace Pragmap.API.Application.Commands
     public class UpdatePasswordCommandHandler : IRequestHandler<UpdatePasswordCommand, CommandResult>
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMailService _mailService;
 
-        public UpdatePasswordCommandHandler(IUnitOfWork unitOfWork)
+        public UpdatePasswordCommandHandler(IUnitOfWork unitOfWork, IMailService mailService)
         {
             _unitOfWork = unitOfWork;
+            _mailService = mailService;
         }
         public Task<CommandResult> Handle(UpdatePasswordCommand request, CancellationToken cancellationToken)
         {
@@ -51,6 +55,15 @@ namespace Pragmap.API.Application.Commands
 
             user.PasswordHash = User.HashPassword(request.NewPassword);
             userRepo.Update(user);
+
+            MailData mailData = new MailData
+            {
+                EmailToId = user.Email,
+                EmailToName = $"{user.FirstName} {user.LastName}",
+                EmailSubject = "Changement de mot de passe",
+                EmailBody = User.PasswordUpdatedMailBody
+            };
+            _mailService.SendMail(mailData);
 
             return Task.FromResult(CommandResult.Success());
         }

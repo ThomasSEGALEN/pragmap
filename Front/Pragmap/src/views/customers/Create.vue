@@ -4,8 +4,7 @@ import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import { cn } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { customerService, userService } from '@/services'
 import type { IUser } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -32,18 +31,12 @@ options.value = (
 
 const formSchema = toTypedSchema(
 	z.object({
-		name: z
-			.string({
-				required_error: 'Le champ est obligatoire',
-				invalid_type_error: 'Le champ est invalide'
-			})
-			.min(1, { message: 'Le champ est obligatoire' })
-			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
+		name: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
 		logo: z.custom<File>().superRefine((value, context) => {
 			if (!value?.name) {
 				return context.addIssue({
 					code: z.ZodIssueCode.custom,
-					message: 'Le champ est obligatoire',
+					message: 'Obligatoire',
 					path: ['logo']
 				})
 			}
@@ -53,11 +46,7 @@ const formSchema = toTypedSchema(
 				z.object({
 					label: z.string(),
 					value: z.string()
-				}),
-				{
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				}
+				})
 			)
 			.default([])
 	})

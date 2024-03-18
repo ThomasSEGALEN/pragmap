@@ -4,8 +4,7 @@ import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import { cn } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -31,53 +30,21 @@ useFocus(roleInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z
 		.object({
-			firstName: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
-				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
-			lastName: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
-				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
-			email: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
-				.email({ message: 'Le champ doit être une adresse e-mail valide' })
-				.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' }),
+			firstName: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
+			lastName: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
+			email: z.string().min(1, { message: 'Obligatoire' }).max(254).email(),
 			password: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
+				.string()
+				.trim()
+				.min(1, { message: 'Obligatoire' })
 				.regex(/.*[a-z]/, { message: 'Le champ doit contenir au moins une minuscule' })
 				.regex(/.*[A-Z]/, { message: 'Le champ doit contenir au moins une majuscule' })
 				.regex(/.*\d/, { message: 'Le champ doit contenir au moins un chiffre' })
 				.regex(/.*[@$!%*?&]/, { message: 'Le champ doit contenir au moins un caractère spécial' })
-				.min(8, { message: 'Le champ doit contenir au minimum 8 caractères' })
-				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
-			passwordConfirmation: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
-				.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' }),
-			roleId: z
-				.string({
-					required_error: 'Le champ est obligatoire',
-					invalid_type_error: 'Le champ est invalide'
-				})
-				.min(1, { message: 'Le champ est obligatoire' })
+				.min(8)
+				.max(255),
+			passwordConfirmation: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
+			roleId: z.string()
 		})
 		.superRefine((value, context) => {
 			if (value.password !== value.passwordConfirmation) {
