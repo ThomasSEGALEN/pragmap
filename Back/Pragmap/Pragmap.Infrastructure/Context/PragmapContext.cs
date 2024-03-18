@@ -66,6 +66,11 @@ namespace Pragmap.Infrastructure.Context
                 entity.HasKey(e => new { e.UserId, e.Token });
                 entity.HasOne(e => e.User).WithMany(u => u.UpdateEmailTokens).HasForeignKey(e => e.UserId);
             });
+
+            modelBuilder.Entity<Customer>()
+                .HasMany(c => c.RoadMaps)
+                .WithOne(r => r.Customer)
+                .OnDelete(DeleteBehavior.Cascade);
              
         }
     }
