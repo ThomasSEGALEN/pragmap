@@ -53,5 +53,10 @@ namespace Pragmap.Controllers.Entities
             var hashedBytes = sha256.ComputeHash(Encoding.UTF8.GetBytes(password));
             return BitConverter.ToString(hashedBytes).Replace("-", "").ToLower();
         }
+
+        public static string PasswordUpdatedMailBody
+        {
+             get => $"Bonjour,\n\nVotre mot de passe a été modifié avec succès.\nSi vous n'êtes pas à l'origine de cette modification, veuillez contacter l'administrateur.\n\nCordialement,\nL'équipe Pragmap";
+        }
     }
 }
