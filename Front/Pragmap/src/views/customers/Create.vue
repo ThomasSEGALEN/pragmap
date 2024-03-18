@@ -15,7 +15,8 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
-
+import { Buffer } from 'buffer'
+ 
 const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
@@ -66,11 +67,12 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
+		const logo = await getLogo(values.logo)
 		const data = {
 			name: values.name,
-			logo: `${values.logo.lastModified}_${values.logo.name}`,
-			userIds: values.userIds.map((userId) => userId.value)
-		}
+			logo: logo,
+			userIds: values.userIds.map((userId) => userId.value),
+		};
 
 		await customerService.create(data)
 
@@ -83,6 +85,34 @@ const onSubmit = handleSubmit(async (values) => {
 		})
 	}
 })
+
+const getLogo = (file: File) => {
+  return new Promise<string>((resolve, reject) => {
+	console.log("bite")
+    let reader = new FileReader();
+
+    reader.onload = () => {
+		console.log("bite2")
+      if (reader.result instanceof ArrayBuffer) {
+        let arrayBuffer = reader.result;
+        let buffer = Buffer.from(arrayBuffer);	
+		console.log("bite3")
+
+        // Convertir l'image en base64
+        let base64Image = buffer.toString('base64');
+		console.log(base64Image)
+
+
+        // Résoudre la promesse avec l'image en base64
+        resolve(base64Image);
+      }
+    };
+
+    reader.onerror = reject;
+
+    reader.readAsArrayBuffer(file);
+  });
+};
 </script>
 
 <template>
