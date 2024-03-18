@@ -23,7 +23,6 @@
     "@vue-flow/minimap": "^1.4.0",
     "@vueuse/core": "^10.8.0",
     "axios": "^1.6.5",
-    "buffer": "^6.0.3",
     "Buffer": "^0.0.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",

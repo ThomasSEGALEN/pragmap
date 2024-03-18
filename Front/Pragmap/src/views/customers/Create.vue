@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
-import { Buffer } from 'buffer'
  
 const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
@@ -77,22 +76,14 @@ const onSubmit = handleSubmit(async (values) => {
 
 const getLogo = (file: File) => {
   return new Promise<string>((resolve, reject) => {
-	console.log("bite")
     let reader = new FileReader();
 
     reader.onload = () => {
-		console.log("bite2")
       if (reader.result instanceof ArrayBuffer) {
         let arrayBuffer = reader.result;
-        let buffer = Buffer.from(arrayBuffer);	
-		console.log("bite3")
-
-        // Convertir l'image en base64
-        let base64Image = buffer.toString('base64');
-		console.log(base64Image)
-
-
-        // Résoudre la promesse avec l'image en base64
+		let uint8Array = new Uint8Array(arrayBuffer);
+		// Convertir l'image en base64
+ 		let base64Image = btoa(String.fromCharCode.apply(null, Array.from(uint8Array)));
         resolve(base64Image);
       }
     };
