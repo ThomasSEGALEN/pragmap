@@ -4,8 +4,7 @@ import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import { cn } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { roadmapService } from '@/services'
 import { useFormStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -27,12 +26,10 @@ const formSchema = toTypedSchema(
 	z.object({
 		id: z.string().default(id),
 		name: z
-			.string({
-				required_error: 'Le champ est obligatoire',
-				invalid_type_error: 'Le champ est invalide'
-			})
-			.min(1, { message: 'Le champ est obligatoire' })
-			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
+			.string()
+			.trim()
+			.min(1, { message: 'Obligatoire' })
+			.max(255)
 			.default(editRoadmap?.name ?? '')
 	})
 )
