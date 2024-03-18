@@ -3,8 +3,7 @@ import { ref } from 'vue'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import { cn } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -19,14 +18,7 @@ const emailInput = ref<HTMLInputElement | null>(null)
 useFocus(emailInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z.object({
-		email: z
-			.string({
-				required_error: 'Le champ est obligatoire',
-				invalid_type_error: 'Le champ est invalide'
-			})
-			.min(1, { message: 'Le champ est obligatoire' })
-			.email({ message: 'Le champ doit être une adresse e-mail valide' })
-			.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' })
+		email: z.string().min(1, { message: 'Obligatoire' }).max(254).email()
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({

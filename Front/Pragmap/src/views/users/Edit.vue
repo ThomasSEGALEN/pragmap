@@ -4,8 +4,7 @@ import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import { cn } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore, useFormStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -37,31 +36,24 @@ const formSchema = toTypedSchema(
 	z.object({
 		id: z.string().default(id),
 		firstName: z
-			.string({
-				required_error: 'Le champ est obligatoire',
-				invalid_type_error: 'Le champ est invalide'
-			})
-			.min(1, { message: 'Le champ est obligatoire' })
-			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
+			.string()
+			.trim()
+			.min(1, { message: 'Obligatoire' })
+			.max(255)
 			.default(editUser?.firstName ?? ''),
 		lastName: z
-			.string({
-				required_error: 'Le champ est obligatoire',
-				invalid_type_error: 'Le champ est invalide'
-			})
-			.min(1, { message: 'Le champ est obligatoire' })
-			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
+			.string()
+			.trim()
+			.min(1, { message: 'Obligatoire' })
+			.max(255)
 			.default(editUser?.lastName ?? ''),
 		email: z
-			.string({
-				required_error: 'Le champ est obligatoire',
-				invalid_type_error: 'Le champ est invalide'
-			})
-			.min(1, { message: 'Le champ est obligatoire' })
-			.email({ message: 'Le champ doit être une adresse e-mail valide' })
-			.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' })
+			.string()
+			.min(1, { message: 'Obligatoire' })
+			.max(254)
+			.email()
 			.default(editUser?.email ?? ''),
-		roleId: z.string({ required_error: 'Le champ est obligatoire' }).default(editUser?.roleId ?? '')
+		roleId: z.string().default(editUser?.roleId ?? '')
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({

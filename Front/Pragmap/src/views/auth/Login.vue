@@ -4,8 +4,7 @@ import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import * as z from 'zod'
-import { cn } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -21,26 +20,8 @@ const emailInput = ref<HTMLInputElement | null>(null)
 useFocus(emailInput, { initialValue: true })
 const formSchema = toTypedSchema(
 	z.object({
-		email: z
-			.string({
-				required_error: 'Le champ est obligatoire',
-				invalid_type_error: 'Le champ est invalide'
-			})
-			.min(1, { message: 'Le champ est obligatoire' })
-			.email({ message: 'Le champ doit être une adresse e-mail valide' })
-			.max(254, { message: 'Le champ doit contenir au maximum 254 caractères' }),
-		password: z
-			.string({
-				required_error: 'Le champ est obligatoire',
-				invalid_type_error: 'Le champ est invalide'
-			})
-			.min(1, { message: 'Le champ est obligatoire' })
-			.regex(/.*[a-z]/, { message: 'Le champ doit contenir au moins une minuscule' })
-			.regex(/.*[A-Z]/, { message: 'Le champ doit contenir au moins une majuscule' })
-			.regex(/.*\d/, { message: 'Le champ doit contenir au moins un chiffre' })
-			.regex(/.*[@$!%*?&]/, { message: 'Le champ doit contenir au moins un caractère spécial' })
-			.min(8, { message: 'Le champ doit contenir au minimum 8 caractères' })
-			.max(255, { message: 'Le champ doit contenir au maximum 255 caractères' })
+		email: z.string().min(1, { message: 'Obligatoire' }).max(254).email(),
+		password: z.string().trim().min(1, { message: 'Obligatoire' }).max(255)
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
