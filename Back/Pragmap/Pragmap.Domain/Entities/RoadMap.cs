@@ -4,7 +4,7 @@ using Pragmap.Domain.Common.Interfaces;
 
 namespace Pragmap.Domain.Entities
 {
-    public class RoadMap : IDatedEntity
+    public class Roadmap : IDatedEntity
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]

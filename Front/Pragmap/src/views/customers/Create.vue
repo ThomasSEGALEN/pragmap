@@ -14,6 +14,7 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
+import { convertLogoToBase64 } from './partials/convertLogo'
 
 const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
@@ -57,7 +58,7 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		const data = {
 			name: values.name,
-			logo: `${values.logo.lastModified}_${values.logo.name}`,
+			logo: await convertLogoToBase64(values.logo),
 			userIds: values.userIds.map((userId) => userId.value)
 		}
 

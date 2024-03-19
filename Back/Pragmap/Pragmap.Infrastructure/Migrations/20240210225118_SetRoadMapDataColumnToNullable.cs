@@ -5,14 +5,14 @@
 namespace Pragmap.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class SetRoadMapDataColumnToNullable : Migration
+    public partial class SetRoadmapDataColumnToNullable : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
                 name: "Data",
-                table: "RoadMaps",
+                table: "Roadmaps",
                 type: "jsonb",
                 nullable: true,
                 oldClrType: typeof(string),
@@ -24,7 +24,7 @@ namespace Pragmap.Infrastructure.Migrations
         {
             migrationBuilder.AlterColumn<string>(
                 name: "Data",
-                table: "RoadMaps",
+                table: "Roadmaps",
                 type: "jsonb",
                 nullable: false,
                 defaultValue: "",

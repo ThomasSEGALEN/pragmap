@@ -19,8 +19,8 @@ namespace Pragmap.Infrastructure.Context
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
         public DbSet<CustomerUser> CustomersUsers { get; set; }
-        public DbSet<Customer> Customer { get; set; }
-        public DbSet<RoadMap> RoadMaps { get; set; }
+        public DbSet<Customer> Customers { get; set; }
+        public DbSet<Roadmap> Roadmaps { get; set; }
         public DbSet<ResetPasswordToken> ResetPasswordTokens { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
@@ -68,7 +68,7 @@ namespace Pragmap.Infrastructure.Context
             });
 
             modelBuilder.Entity<Customer>()
-                .HasMany(c => c.RoadMaps)
+                .HasMany(c => c.Roadmaps)
                 .WithOne(r => r.Customer)
                 .OnDelete(DeleteBehavior.Cascade);
              

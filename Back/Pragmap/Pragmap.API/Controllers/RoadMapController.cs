@@ -11,31 +11,31 @@ using Pragmap.Infrastructure.UnitOfWork;
 
 namespace Pragmap.API.Controllers
 {
-    public class RoadMapController : ODataController
+    public class RoadmapController : ODataController
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IMediator _mediatR;
 
-        public RoadMapController(IUnitOfWork unitOfWork, IMediator mediatR)
+        public RoadmapController(IUnitOfWork unitOfWork, IMediator mediatR)
         {
             _unitOfWork = unitOfWork;
             _mediatR = mediatR;
         }
 
         [EnableQuery]
-        public IQueryable<RoadMap> Get()
+        public IQueryable<Roadmap> Get()
         {
-            return _unitOfWork.GetRepository<RoadMap>().GetAll();
+            return _unitOfWork.GetRepository<Roadmap>().GetAll();
         }
 
-        public RoadMap? Get(Guid key)
+        public Roadmap? Get(Guid key)
         {
-            return _unitOfWork.GetRepository<RoadMap>().Single(key);
+            return _unitOfWork.GetRepository<Roadmap>().Single(key);
         }
 
-        public async Task<IActionResult> Post([FromBody] CreateRoadMapCommand createRoadMapCommand)
+        public async Task<IActionResult> Post([FromBody] CreateRoadmapCommand createRoadmapCommand)
         {
-            var result = await _mediatR.Send(createRoadMapCommand);
+            var result = await _mediatR.Send(createRoadmapCommand);
             if (result.IsSuccess)
             {
                 await _unitOfWork.Complete();
@@ -44,9 +44,9 @@ namespace Pragmap.API.Controllers
             return BadRequest(result.Error);
         }
 
-        public async Task<IActionResult> Put(Guid key, [FromBody] UpdateRoadMapCommand updateRoadMapCommand)
+        public async Task<IActionResult> Put(Guid key, [FromBody] UpdateRoadmapCommand updateRoadmapCommand)
         {
-            var result = await _mediatR.Send(updateRoadMapCommand);
+            var result = await _mediatR.Send(updateRoadmapCommand);
             if (result.IsSuccess)
             {
                 await _unitOfWork.Complete();
@@ -57,8 +57,8 @@ namespace Pragmap.API.Controllers
 
         public async Task<IActionResult> Delete([FromRoute] Guid key)
         {
-            var roadmapRepository = _unitOfWork.GetRepository<RoadMap>();
-            RoadMap? roadmap = roadmapRepository.Single(u => u.Id.Equals(key));
+            var roadmapRepository = _unitOfWork.GetRepository<Roadmap>();
+            Roadmap? roadmap = roadmapRepository.Single(u => u.Id.Equals(key));
             if (roadmap == null)
             {
                 return BadRequest();

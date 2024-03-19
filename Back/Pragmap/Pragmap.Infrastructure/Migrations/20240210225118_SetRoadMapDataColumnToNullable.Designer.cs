@@ -12,8 +12,8 @@ using Pragmap.Infrastructure.Context;
 namespace Pragmap.Infrastructure.Migrations
 {
     [DbContext(typeof(PragmapContext))]
-    [Migration("20240210225118_SetRoadMapDataColumnToNullable")]
-    partial class SetRoadMapDataColumnToNullable
+    [Migration("20240210225118_SetRoadmapDataColumnToNullable")]
+    partial class SetRoadmapDataColumnToNullable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,7 +98,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.CustomerUser", b =>
@@ -144,7 +144,7 @@ namespace Pragmap.Infrastructure.Migrations
                     b.ToTable("ResetPasswordTokens");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Entities.RoadMap", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.Roadmap", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -169,7 +169,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("RoadMaps");
+                    b.ToTable("Roadmaps");
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.Role", b =>

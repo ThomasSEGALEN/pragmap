@@ -61,7 +61,7 @@ export const usePaginationStore = defineStore('pagination', {
 				select: ['id', 'lastName', 'firstName', 'email', 'roleId', 'createdAt'],
 				top: this.pageSize,
 				skip: this.pageSize * this.pageIndex,
-				orderBy: { column: 'createdAt', order: 'asc' }
+				orderBy: { column: 'email', order: 'asc' }
 			})) as Array<UsersData>
 
 			this.setPageCount(Math.ceil(count / this.pageSize))
@@ -71,11 +71,11 @@ export const usePaginationStore = defineStore('pagination', {
 		async getCustomersData(): Promise<Array<CustomersData>> {
 			const count = (await customerService.getAll({ count: true })) as number
 			const customers = (await customerService.getAll({
-				select: ['id', 'name', 'createdAt'],
+				select: ['id', 'name', 'logo', 'createdAt'],
 				expand: ['customerUsers($select=userId)'],
 				top: this.pageSize,
 				skip: this.pageSize * this.pageIndex,
-				orderBy: { column: 'createdAt', order: 'asc' }
+				orderBy: { column: 'name', order: 'asc' }
 			})) as Array<CustomersData>
 
 			this.setPageCount(Math.ceil(count / this.pageSize))
@@ -88,7 +88,7 @@ export const usePaginationStore = defineStore('pagination', {
 				select: ['id', 'name', 'customerId', 'createdAt'],
 				top: this.pageSize,
 				skip: this.pageSize * this.pageIndex,
-				orderBy: { column: 'createdAt', order: 'asc' }
+				orderBy: { column: 'name', order: 'asc' }
 			})) as Array<RoadmapsData>
 
 			const customerNameRoadmaps = await Promise.all(

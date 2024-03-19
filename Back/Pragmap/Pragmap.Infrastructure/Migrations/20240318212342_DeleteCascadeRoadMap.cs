@@ -5,16 +5,16 @@
 namespace Pragmap.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class DeleteCascadeRoadMap : Migration
+    public partial class DeleteCascadeRoadmap : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddForeignKey(
-                name: "FK_RoadMaps_Customer_CustomerId",
-                table: "RoadMaps",
+                name: "FK_Roadmaps_Customers_CustomerId",
+                table: "Roadmaps",
                 column: "CustomerId",
-                principalTable: "Customer",
+                principalTable: "Customers",
                 principalColumn: "Id",
                 onDelete: ReferentialAction.Cascade);
         }
@@ -23,8 +23,8 @@ namespace Pragmap.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropForeignKey(
-                name: "FK_RoadMaps_Customer_CustomerId",
-                table: "RoadMaps");
+                name: "FK_Roadmaps_Customers_CustomerId",
+                table: "Roadmaps");
         }
     }
 }

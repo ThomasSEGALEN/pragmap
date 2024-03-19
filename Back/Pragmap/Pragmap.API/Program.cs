@@ -28,7 +28,7 @@ static IEdmModel GetEdmModel()
     builder.EnableLowerCamelCase();
     builder.EntitySet<User>("User");
     builder.EntitySet<Customer>("Customer");
-    builder.EntitySet<RoadMap>("RoadMap");
+    builder.EntitySet<Roadmap>("Roadmap");
     return builder.GetEdmModel();
 }
 
@@ -131,6 +131,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapHub<RoadMapHub>("/roadmaphub");
+app.MapHub<RoadmapHub>("/roadmaphub");
 
 app.Run();

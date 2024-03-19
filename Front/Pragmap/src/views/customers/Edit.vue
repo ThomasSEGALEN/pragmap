@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
+import { convertLogoToBase64 } from './partials/convertLogo'
 
 const { id } = defineProps<{
 	id: string
@@ -76,9 +77,7 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		const data = {
 			...values,
-			logo: values.logo.name
-				? `${values.logo.lastModified}_${values.logo.name}`
-				: editCustomer?.logo ?? '',
+			logo: await convertLogoToBase64(values.logo),
 			userIds: selected.value.map((userId) => userId.value)
 		}
 

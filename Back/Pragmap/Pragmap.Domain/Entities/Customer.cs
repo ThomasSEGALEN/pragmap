@@ -17,7 +17,7 @@ namespace Pragmap.Domain.Entities
         public DateTime UpdatedAt { get; set; }
 
         public virtual ICollection<CustomerUser>? CustomerUsers { get; set; }
-        public virtual ICollection<RoadMap>? RoadMaps { get; set; }
+        public virtual ICollection<Roadmap>? Roadmaps { get; set; }
 
     }
 }

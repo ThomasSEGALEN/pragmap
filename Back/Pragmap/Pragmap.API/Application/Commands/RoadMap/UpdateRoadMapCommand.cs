@@ -4,7 +4,7 @@ using Pragmap.Domain.Entities;
 
 namespace Pragmap.API.Application.Commands
 {
-    public class UpdateRoadMapCommand : IRequest<CommandResult<RoadMap>>
+    public class UpdateRoadmapCommand : IRequest<CommandResult<Roadmap>>
     {
         public Guid Id { get; set; }
         public string? Name { get; set; }
