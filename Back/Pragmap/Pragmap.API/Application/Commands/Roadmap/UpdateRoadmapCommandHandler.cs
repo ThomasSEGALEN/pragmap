@@ -19,9 +19,9 @@ namespace Pragmap.API.Application.Commands
                 return Task.FromResult(CommandResult<Roadmap>.Failed("La roadmap doit avoir un identifiant"));
             }
 
-            var roadMapRepository = _unitOfWork.GetRepository<Roadmap>();
+            var roadmapRepository = _unitOfWork.GetRepository<Roadmap>();
 
-            var roadmap = roadMapRepository.Single(request.Id);
+            var roadmap = roadmapRepository.Single(request.Id);
             if (roadmap == null)
             {
                 return Task.FromResult(CommandResult<Roadmap>.Failed("La roadmap n'existe pas"));
