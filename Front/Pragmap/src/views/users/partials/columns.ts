@@ -8,44 +8,44 @@ import { toast } from '@/components/ui/toast'
 
 const { roles } = useAuthStore()
 const getRole = (row: Row<UsersData>) =>
-	roles.find((role) => role.id === row.getValue('role'))!.name
+	roles.find((role) => role.id === row.getValue('Rôle'))!.name
 
 export const columns: Array<ColumnDef<UsersData>> = [
 	{
-		id: 'email',
+		id: 'Adresse e-mail',
 		accessorKey: 'email',
 		header: ({ column }) =>
 			h(DataTableColumnHeader<UsersData>, { column, title: 'Adresse e-mail' }),
-		cell: ({ row }) => h('div', row.getValue('email'))
+		cell: ({ row }) => h('div', row.getValue('Adresse e-mail'))
 	},
 	{
-		id: 'lastName',
+		id: 'Nom',
 		accessorKey: 'lastName',
 		header: ({ column }) => h(DataTableColumnHeader<UsersData>, { column, title: 'Nom' }),
-		cell: ({ row }) => h('div', row.getValue('lastName'))
+		cell: ({ row }) => h('div', row.getValue('Nom'))
 	},
 	{
-		id: 'firstName',
+		id: 'Prénom',
 		accessorKey: 'firstName',
 		header: ({ column }) => h(DataTableColumnHeader<UsersData>, { column, title: 'Prénom' }),
-		cell: ({ row }) => h('div', row.getValue('firstName'))
+		cell: ({ row }) => h('div', row.getValue('Prénom'))
 	},
 	{
-		id: 'role',
+		id: 'Rôle',
 		accessorKey: 'roleId',
 		header: ({ column }) => h(DataTableColumnHeader<UsersData>, { column, title: 'Rôle' }),
 		cell: ({ row }) => h('div', getRole(row)),
 		sortingFn: (rowA, rowB) => getRole(rowA).localeCompare(getRole(rowB))
 	},
 	{
-		id: 'createdAt',
+		id: 'Date de création',
 		accessorKey: 'createdAt',
 		header: ({ column }) =>
 			h(DataTableColumnHeader<UsersData>, { column, title: 'Date de création' }),
-		cell: ({ row }) => h('div', new Date(row.getValue('createdAt')).toLocaleDateString())
+		cell: ({ row }) => h('div', new Date(row.getValue('Date de création')).toLocaleDateString())
 	},
 	{
-		id: 'actions',
+		id: 'Actions',
 		cell: ({ row }) =>
 			h(DataTableDropDown, {
 				name: 'UsersEdit',

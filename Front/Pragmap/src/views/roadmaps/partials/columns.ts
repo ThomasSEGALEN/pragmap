@@ -9,7 +9,7 @@ import { toast } from '@/components/ui/toast'
 
 export const columns: Array<ColumnDef<RoadmapsData>> = [
 	{
-		id: 'name',
+		id: 'Nom',
 		accessorKey: 'name',
 		header: ({ column }) => h(DataTableColumnHeader<RoadmapsData>, { column, title: 'Nom' }),
 		cell: ({ row }) =>
@@ -21,24 +21,24 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 					as: 'a',
 					href: `/roadmaps/${row.original.id}/designer`
 				},
-				() => row.getValue('name')
+				() => row.getValue('Nom')
 			)
 	},
 	{
-		id: 'customer',
+		id: 'Client',
 		accessorKey: 'customerName',
 		header: ({ column }) => h(DataTableColumnHeader<RoadmapsData>, { column, title: 'Client' }),
-		cell: ({ row }) => h('div', row.getValue('customer'))
+		cell: ({ row }) => h('div', row.getValue('Client'))
 	},
 	{
-		id: 'createdAt',
+		id: 'Date de création',
 		accessorKey: 'createdAt',
 		header: ({ column }) =>
 			h(DataTableColumnHeader<RoadmapsData>, { column, title: 'Date de création' }),
-		cell: ({ row }) => h('div', new Date(row.getValue('createdAt')).toLocaleDateString())
+		cell: ({ row }) => h('div', new Date(row.getValue('Date de création')).toLocaleDateString())
 	},
 	{
-		id: 'actions',
+		id: 'Actions',
 		cell: ({ row }) =>
 			h(DataTableDropDown, {
 				name: 'RoadmapsEdit',
