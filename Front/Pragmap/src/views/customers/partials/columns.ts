@@ -10,29 +10,36 @@ import UsersPopover from './UsersPopover.vue'
 
 export const columns: Array<ColumnDef<CustomersData>> = [
 	{
-		id: 'name',
-		accessorKey: 'name',
-		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Nom' }),
-		cell: ({ row }) => h('div', row.getValue('name'))
+		id: 'Logo',
+		accessorKey: 'logo',
+		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Logo' }),
+		cell: ({ row }) => h('img', { class: "h-24 w-24 object-cover", src: `data:image/png;base64,${row.getValue('Logo')}`, alt: `Logo de ${row.getValue('Nom')}` }),
+		enableSorting: false,
 	},
 	{
-		id: 'users',
+		id: 'Nom',
+		accessorKey: 'name',
+		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Nom' }),
+		cell: ({ row }) => h('div', row.getValue('Nom'))
+	},
+	{
+		id: 'Utilisateurs',
 		accessorKey: 'customerUsers',
 		header: ({ column }) =>
 			h(DataTableColumnHeader<CustomersData>, { column, title: 'Utilisateurs' }),
 		cell: ({ row }) =>
-			h(UsersPopover, { customerUsers: row.getValue('users') as Array<ICustomerUser> }),
+			h(UsersPopover, { customerUsers: row.getValue('Utilisateurs') as Array<ICustomerUser> }),
 		enableSorting: false
 	},
 	{
-		id: 'createdAt',
+		id: 'Date de création',
 		accessorKey: 'createdAt',
 		header: ({ column }) =>
 			h(DataTableColumnHeader<CustomersData>, { column, title: 'Date de création' }),
-		cell: ({ row }) => h('div', new Date(row.getValue('createdAt')).toLocaleDateString())
+		cell: ({ row }) => h('div', new Date(row.getValue('Date de création')).toLocaleDateString())
 	},
 	{
-		id: 'actions',
+		id: 'Actions',
 		cell: ({ row }) =>
 			h(DataTableDropDown, {
 				name: 'CustomersEdit',
