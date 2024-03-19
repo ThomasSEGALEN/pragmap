@@ -12,8 +12,8 @@ using Pragmap.Infrastructure.Context;
 namespace Pragmap.Infrastructure.Migrations
 {
     [DbContext(typeof(PragmapContext))]
-    [Migration("20240318212342_DeleteCascadeRoadMap")]
-    partial class DeleteCascadeRoadMap
+    [Migration("20240318212342_DeleteCascadeRoadmap")]
+    partial class DeleteCascadeRoadmap
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -98,7 +98,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.CustomerUser", b =>
@@ -144,7 +144,7 @@ namespace Pragmap.Infrastructure.Migrations
                     b.ToTable("ResetPasswordTokens");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Entities.RoadMap", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.Roadmap", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -171,7 +171,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("RoadMaps");
+                    b.ToTable("Roadmaps");
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.Role", b =>
@@ -258,10 +258,10 @@ namespace Pragmap.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Entities.RoadMap", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.Roadmap", b =>
                 {
                     b.HasOne("Pragmap.Domain.Entities.Customer", "Customer")
-                        .WithMany("RoadMaps")
+                        .WithMany("Roadmaps")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -293,7 +293,7 @@ namespace Pragmap.Infrastructure.Migrations
                 {
                     b.Navigation("CustomerUsers");
 
-                    b.Navigation("RoadMaps");
+                    b.Navigation("Roadmaps");
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.Role", b =>

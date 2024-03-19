@@ -69,7 +69,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasIndex("RoleId");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.Customer", b =>
@@ -95,7 +95,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customer");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.CustomerUser", b =>
@@ -122,7 +122,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("CustomersUsers");
+                    b.ToTable("CustomersUsers", (string)null);
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.ResetPasswordToken", b =>
@@ -138,10 +138,10 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasKey("UserId", "Token");
 
-                    b.ToTable("ResetPasswordTokens");
+                    b.ToTable("ResetPasswordTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Entities.RoadMap", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.Roadmap", b =>
                 {
                     b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
@@ -168,7 +168,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("RoadMaps");
+                    b.ToTable("Roadmaps", (string)null);
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.Role", b =>
@@ -184,7 +184,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Roles", (string)null);
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.UpdateEmailToken", b =>
@@ -211,7 +211,7 @@ namespace Pragmap.Infrastructure.Migrations
 
                     b.HasKey("UserId", "Token");
 
-                    b.ToTable("UpdateEmailToken");
+                    b.ToTable("UpdateEmailToken", (string)null);
                 });
 
             modelBuilder.Entity("Pragmap.Controllers.Entities.User", b =>
@@ -255,10 +255,10 @@ namespace Pragmap.Infrastructure.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Pragmap.Domain.Entities.RoadMap", b =>
+            modelBuilder.Entity("Pragmap.Domain.Entities.Roadmap", b =>
                 {
                     b.HasOne("Pragmap.Domain.Entities.Customer", "Customer")
-                        .WithMany("RoadMaps")
+                        .WithMany("Roadmaps")
                         .HasForeignKey("CustomerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -290,7 +290,7 @@ namespace Pragmap.Infrastructure.Migrations
                 {
                     b.Navigation("CustomerUsers");
 
-                    b.Navigation("RoadMaps");
+                    b.Navigation("Roadmaps");
                 });
 
             modelBuilder.Entity("Pragmap.Domain.Entities.Role", b =>

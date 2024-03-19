@@ -6,46 +6,46 @@ using Pragmap.Infrastructure.UnitOfWork;
 
 namespace Pragmap.API.Application.Commands
 {
-    public class CreateRoadMapCommandHandler : IRequestHandler<CreateRoadMapCommand, CommandResult<RoadMap>>
+    public class CreateRoadmapCommandHandler : IRequestHandler<CreateRoadmapCommand, CommandResult<Roadmap>>
     {
         private readonly IUnitOfWork _unitOfWork;
-        public CreateRoadMapCommandHandler(IUnitOfWork unitOfWork)
+        public CreateRoadmapCommandHandler(IUnitOfWork unitOfWork)
         {
             _unitOfWork = unitOfWork;
         }
 
-        public Task<CommandResult<RoadMap>> Handle(CreateRoadMapCommand request, CancellationToken cancellationToken)
+        public Task<CommandResult<Roadmap>> Handle(CreateRoadmapCommand request, CancellationToken cancellationToken)
         {
             if(request.Name.IsNullOrEmpty())
             {
-                return Task.FromResult(CommandResult<RoadMap>.Failed("Une roadmap doit porter un nom"));
+                return Task.FromResult(CommandResult<Roadmap>.Failed("Une roadmap doit porter un nom"));
             }
 
             if(request.CustomerId.Equals(Guid.Empty))
             {
-                return Task.FromResult(CommandResult<RoadMap>.Failed("Une roadmap doit être associée à un client"));
+                return Task.FromResult(CommandResult<Roadmap>.Failed("Une roadmap doit être associée à un client"));
             }
 
             var customer = _unitOfWork.GetRepository<Customer>().Single(request.CustomerId);
             if(customer == null)
             {
-                return Task.FromResult(CommandResult<RoadMap>.Failed("Le client associé à la roadmap n'existe pas"));
+                return Task.FromResult(CommandResult<Roadmap>.Failed("Le client associé à la roadmap n'existe pas"));
             }
 
-            var roadmap = new RoadMap
+            var roadmap = new Roadmap
             {
                 Name = request.Name,
                 CustomerId = request.CustomerId
             };
             try
             {
-                _unitOfWork.GetRepository<RoadMap>().Add(roadmap);
+                _unitOfWork.GetRepository<Roadmap>().Add(roadmap);
             } catch (Exception e)
             {
-                return Task.FromResult(CommandResult<RoadMap>.Failed(e.Message));
+                return Task.FromResult(CommandResult<Roadmap>.Failed(e.Message));
             }
 
-            return Task.FromResult(CommandResult<RoadMap>.Success(roadmap)); 
+            return Task.FromResult(CommandResult<Roadmap>.Success(roadmap)); 
         }
     }
 }

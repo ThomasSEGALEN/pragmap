@@ -7,21 +7,21 @@ using System.Threading.Tasks;
 
 namespace Pragmap.API.Hubs
 {
-    public class RoadMapHub : Hub
+    public class RoadmapHub : Hub
     {
-        public async Task JoinRoadMap(string roadmapId)
+        public async Task JoinRoadmap(string roadmapId)
         {
             await Groups.AddToGroupAsync(Context.ConnectionId, $"roadmap-{roadmapId}");
         }
 
-        public async Task LeaveRoadMap(string roadmapId)
+        public async Task LeaveRoadmap(string roadmapId)
         {
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"roadmap-{roadmapId}");
         }
 
         public async Task SendMessage(string roadmapId, string message)
         {
-            await Clients.Group($"roadmap-{roadmapId}").SendAsync("ReceiveRoadMapMessage", message);
+            await Clients.Group($"roadmap-{roadmapId}").SendAsync("ReceiveRoadmapMessage", message);
         }
     }
 }
