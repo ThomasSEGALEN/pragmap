@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
+import { convertLogoToBase64 } from './partials/convertLogo'
 
 const { id } = defineProps<{
 	id: string
@@ -74,10 +75,9 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		const logo = await getLogo(values.logo)
 		const data = {
 			...values,
-			logo: logo,
+			logo: await convertLogoToBase64(values.logo),
 			userIds: selected.value.map((userId) => userId.value)
 		}
 
@@ -92,29 +92,6 @@ const onSubmit = handleSubmit(async (values) => {
 		})
 	}
 })
-
-
-const getLogo = (file: File) => {
-  return new Promise<string>((resolve, reject) => {
-	console.log("bite")
-    let reader = new FileReader();
-
-    reader.onload = () => {
-		console.log("bite2")
-      if (reader.result instanceof ArrayBuffer) {
-        let arrayBuffer = reader.result;
-		let uint8Array = new Uint8Array(arrayBuffer);
-		// Convertir l'image en base64
- 		let base64Image = btoa(String.fromCharCode.apply(null, Array.from(uint8Array)));
-        resolve(base64Image);
-      }
-    };
-
-    reader.onerror = reject;
-
-    reader.readAsArrayBuffer(file);
-  });
-};
 </script>
 
 <template>

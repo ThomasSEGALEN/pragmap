@@ -14,7 +14,8 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
- 
+import { convertLogoToBase64 } from './partials/convertLogo'
+
 const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
@@ -55,12 +56,11 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		const logo = await getLogo(values.logo)
 		const data = {
 			name: values.name,
-			logo: logo,
-			userIds: values.userIds.map((userId) => userId.value),
-		};
+			logo: await convertLogoToBase64(values.logo),
+			userIds: values.userIds.map((userId) => userId.value)
+		}
 
 		await customerService.create(data)
 
@@ -73,26 +73,6 @@ const onSubmit = handleSubmit(async (values) => {
 		})
 	}
 })
-
-const getLogo = (file: File) => {
-  return new Promise<string>((resolve, reject) => {
-    let reader = new FileReader();
-
-    reader.onload = () => {
-      if (reader.result instanceof ArrayBuffer) {
-        let arrayBuffer = reader.result;
-		let uint8Array = new Uint8Array(arrayBuffer);
-		// Convertir l'image en base64
- 		let base64Image = btoa(String.fromCharCode.apply(null, Array.from(uint8Array)));
-        resolve(base64Image);
-      }
-    };
-
-    reader.onerror = reject;
-
-    reader.readAsArrayBuffer(file);
-  });
-};
 </script>
 
 <template>
