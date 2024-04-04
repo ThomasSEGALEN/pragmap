@@ -27,6 +27,7 @@
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "exif-parser": "^0.1.12",
+    "gantt-schedule-timeline-calendar": "^3.35.2",
     "i18next": "^23.10.1",
     "jwt-decode": "^4.0.0",
     "lucide-vue-next": "^0.336.0",
