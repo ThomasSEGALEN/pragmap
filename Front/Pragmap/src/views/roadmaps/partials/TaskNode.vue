@@ -22,11 +22,6 @@ const { node } = useNode()
 			type="target"
 			:position="Position.Right"
 		/>
-		<Handle
-			class="handle"
-			type="source"
-			:position="Position.Bottom"
-		/>
 		<LayoutList />
 	</div>
 </template>

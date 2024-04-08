@@ -1,10 +1,21 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { type Elements, useVueFlow, VueFlow } from '@vue-flow/core'
+import { ref, computed, onMounted } from 'vue'
+import {
+	type Elements,
+	useHandleConnections,
+	useNodesData,
+	useVueFlow,
+	VueFlow
+} from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
 import DeliverableNode from './partials/DeliverableNode.vue'
 import MilestoneNode from './partials/MilestoneNode.vue'
 import TaskNode from './partials/TaskNode.vue'
+import { roadmapService } from '@/services'
+
+const { id } = defineProps<{
+	id: string
+}>()
 
 const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
@@ -13,14 +24,28 @@ onConnect((params) => {
 	addEdges([params])
 })
 const elements = ref<Elements>([])
-let json = JSON.stringify(elements.value)
+onMounted(async () => {
+	const data = (await roadmapService.getById(id)).data
+
+	elements.value = JSON.parse(data) ?? []
+})
 const addNode = (type: string) => {
 	const id = (elements.value.length + 1).toString() as unknown as string
-	const lastNode = elements.value[elements.value.length - 1] as
-		| { position: { x: number; y: number } }
-		| undefined
-	const newX = lastNode ? lastNode.position.x + 20 : window.innerWidth / 2
-	const newY = lastNode ? lastNode.position.y - 20 : window.innerHeight / 2
+	const lastNode = elements.value[elements.value.length - 1]
+	let newX
+	let newY
+
+	if (lastNode.type === 'default') {
+		newX =
+			(lastNode as unknown as { sourceNode: { position: { x: number; y: number } } }).sourceNode
+				.position.x + 20
+		newY =
+			(lastNode as unknown as { sourceNode: { position: { x: number; y: number } } }).sourceNode
+				.position.y - 20
+	} else {
+		newX = (lastNode as unknown as { position: { x: number; y: number } }).position.x + 20
+		newY = (lastNode as unknown as { position: { x: number; y: number } }).position.y - 20
+	}
 
 	elements.value.push({
 		type: type,
@@ -39,19 +64,26 @@ const addNode = (type: string) => {
 		label: type
 	})
 }
-const saveNode = () => {
-	json = JSON.stringify(elements.value)
-	console.log(json)
-}
-const importNode = () => {
-	if (json) {
-		elements.value = JSON.parse(json)
+const saveNode = async () => {
+	console.log(elements.value)
+
+	const data = {
+		id: id,
+		name: 'Pragmap',
+		data: JSON.stringify(elements.value)
 	}
+
+	await roadmapService.update(data.id, data)
+}
+const importNode = async () => {
+	const nodes = (await roadmapService.getById(id)).data
+
+	elements.value = JSON.parse(nodes)
 }
 </script>
 
 <template>
-	<div class="w-full relative">
+	<div class="w-full relative dndflow">
 		<div class="navbar">
 			<button @click="addNode('tache')">Tache</button>
 			<button @click="addNode('jalon')">Jalon</button>
