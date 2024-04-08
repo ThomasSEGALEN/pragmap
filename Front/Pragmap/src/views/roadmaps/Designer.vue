@@ -1,29 +1,30 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import {
-	type Elements,
-	useHandleConnections,
-	useNodesData,
-	useVueFlow,
-	VueFlow
-} from '@vue-flow/core'
+import { type Elements, useVueFlow, VueFlow } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
 import DeliverableNode from './partials/DeliverableNode.vue'
 import MilestoneNode from './partials/MilestoneNode.vue'
 import TaskNode from './partials/TaskNode.vue'
 import { roadmapService } from '@/services'
+import useDragAndDrop from './partials/useDragAndDrop'
 
 const { id } = defineProps<{
 	id: string
 }>()
 
-const selectedNodeId = ref(null)
-const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
-const { onConnect, addEdges } = useVueFlow()
+const elements = ref<Elements>([])
+
+const { onConnect, addEdges, dimensions } = useVueFlow()
+
+const { onDragOver, onDrop, onDragLeave, isDragOver, onDragStart } = useDragAndDrop(elements)
+
 onConnect((params) => {
 	addEdges([params])
 })
-const elements = ref<Elements>([])
+
+const selectedNodeId = ref(null)
+const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
+
 onMounted(async () => {
 	const data = (await roadmapService.getById(id)).data
 
@@ -35,7 +36,10 @@ const addNode = (type: string) => {
 	let newX
 	let newY
 
-	if (lastNode.type === 'default') {
+	if (!lastNode) {
+		newX = dimensions.value.width / 2
+		newY = dimensions.value.height / 2
+	} else if (lastNode.type === 'default') {
 		newX =
 			(lastNode as unknown as { sourceNode: { position: { x: number; y: number } } }).sourceNode
 				.position.x + 20
@@ -59,7 +63,6 @@ const addNode = (type: string) => {
 			x: newX,
 			y: newY
 		},
-		animated: true,
 		id: id,
 		label: type
 	})
@@ -83,7 +86,10 @@ const importNode = async () => {
 </script>
 
 <template>
-	<div class="w-full relative dndflow">
+	<div
+		class="w-full relative dndflow"
+		@drop="onDrop"
+	>
 		<div class="navbar">
 			<button @click="addNode('tache')">Tache</button>
 			<button @click="addNode('jalon')">Jalon</button>
@@ -91,19 +97,51 @@ const importNode = async () => {
 			<button @click="saveNode()">Save</button>
 			<button @click="importNode()">Load</button>
 		</div>
+
+		<aside>
+			<div class="flex gap-4 nodes">
+				<div
+					class="vue-flow__node-input"
+					:draggable="true"
+					@dragstart="onDragStart('task')"
+				>
+					Tâche
+				</div>
+				<div
+					class="vue-flow__node-default"
+					:draggable="true"
+					@dragstart="onDragStart('deliverable')"
+				>
+					Livrable
+				</div>
+				<div
+					class="vue-flow__node-output"
+					:draggable="true"
+					@dragstart="onDragStart('milestone')"
+				>
+					Jalon
+				</div>
+			</div>
+		</aside>
+
 		<VueFlow
 			v-model="elements"
-			class="vue-flow-basic-example"
-			:default-zoom="1"
-			:min-zoom="0.2"
-			:max-zoom="4"
-			style="height: 80vh"
+			@dragover="onDragOver($event as DragEvent)"
+			@dragleave="onDragLeave"
 		>
 			<Background
-				pattern-color="#aaa"
-				:gap="8"
-			/>
+				:size="1"
+				:gap="20"
+				pattern-color="#BDBDBD"
+				:style="{
+					backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
+					transition: 'background-color 0.2s ease'
+				}"
+			>
+				<slot />
+			</Background>
 			<MiniMap />
+
 			<template #node-tache="nodeProps">
 				<TaskNode
 					v-bind="nodeProps"
@@ -123,6 +161,7 @@ const importNode = async () => {
 				/>
 			</template>
 		</VueFlow>
+
 		<div
 			v-if="selectedNodeId && selectedNode"
 			class="settingsWindow"

@@ -1,56 +1,25 @@
-import { useVueFlow, type Elements } from '@vue-flow/core'
+import { Position, useVueFlow, type Element, type Node } from '@vue-flow/core'
 import { ref, watch, type Ref } from 'vue'
 
-/**
- * In a real world scenario you'd want to avoid creating refs in a global scope like this as they might not be cleaned up properly.
- * @type {{draggedType: Ref<string|null>, isDragOver: Ref<boolean>, isDragging: Ref<boolean>}}
- */
 const state = {
-  /**
-   * The type of the node being dragged.
-   */
-  draggedType: ref(null),
-  isDragOver: ref(false),
-  isDragging: ref(false),
+  draggedType: ref<string | null>(null),
+  isDragOver: ref<boolean>(false),
+  isDragging: ref<boolean>(false),
 }
 
-export default function useDragAndDrop(elements: Ref<Elements>) {
+export default function useDragAndDrop(elements: Ref<Element[]>) {
   const { draggedType, isDragOver, isDragging } = state
-
   const { addNodes, screenToFlowCoordinate, onNodesInitialized, updateNode } = useVueFlow()
-
   watch(isDragging, (dragging) => {
     document.body.style.userSelect = dragging ? 'none' : ''
   })
-
-  function getId(elements: Ref<Elements>) {
-    let id = 0
-    if (!elements.value.length) id = 1
-    id = elements.value.length + 1
-
-    console.log(id)
-
-    return id.toString()
-  }
-
-  function onDragStart(event, type) {
-    if (event.dataTransfer) {
-      event.dataTransfer.setData('application/vueflow', type)
-      event.dataTransfer.effectAllowed = 'move'
-    }
-
+  const onDragStart = (type: string) => {
     draggedType.value = type
     isDragging.value = true
 
     document.addEventListener('drop', onDragEnd)
   }
-
-  /**
-   * Handles the drag over event.
-   *
-   * @param {DragEvent} event
-   */
-  function onDragOver(event) {
+  const onDragOver = (event: DragEvent) => {
     event.preventDefault()
 
     if (draggedType.value) {
@@ -61,43 +30,43 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
       }
     }
   }
-
-  function onDragLeave() {
+  const onDragLeave = () => {
     isDragOver.value = false
   }
-
-  function onDragEnd() {
+  const onDragEnd = () => {
     isDragging.value = false
     isDragOver.value = false
     draggedType.value = null
     document.removeEventListener('drop', onDragEnd)
   }
-
-  /**
-   * Handles the drop event.
-   *
-   * @param {DragEvent} event
-   */
-  function onDrop(event) {
+  const onDrop = (event: DragEvent) => {
     const position = screenToFlowCoordinate({
       x: event.clientX,
       y: event.clientY,
     })
 
-    const nodeId = getId(elements)
+    console.log(elements.value.length)
 
-    const newNode = {
+    const nodeId = (elements.value.length + 1).toString()
+    const label = draggedType.value === 'task'
+      ? 'Tâche' : draggedType.value === 'deliverable'
+        ? 'Livrable' : draggedType.value === 'milestone'
+          ? 'Jalon' : 'Bloc'
+    const node = {
       id: nodeId,
-      type: draggedType.value,
-      position,
-      label: `[${nodeId}]`,
+      type: draggedType.value ?? 'node',
+      position: position,
+      label: label,
     }
-
-    /**
-     * Align node position after drop, so it's centered to the mouse
-     *
-     * We can hook into events even in a callback, and we can remove the event listener after it's been called.
-     */
+    const defaultNode = {
+      ...node,
+      sourcePosition: Position.Left,
+      targetPosition: Position.Right
+    }
+    const deliverableNode = {
+      ...node,
+      sourcePosition: Position.Top,
+    }
     const { off } = onNodesInitialized(() => {
       updateNode(nodeId, (node) => ({
         position: { x: node.position.x - node.dimensions.width / 2, y: node.position.y - node.dimensions.height / 2 },
@@ -105,6 +74,7 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 
       off()
     })
+    const newNode: Node<any, any, string> = draggedType.value === 'deliverable' ? deliverableNode : defaultNode
 
     addNodes(newNode)
   }
