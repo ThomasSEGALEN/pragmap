@@ -13,7 +13,12 @@ export default function useDragAndDrop(elements: Ref<Element[]>) {
   watch(isDragging, (dragging) => {
     document.body.style.userSelect = dragging ? 'none' : ''
   })
-  const onDragStart = (type: string) => {
+  const onDragStart = (event: DragEvent, type: string) => {
+    if (event.dataTransfer) {
+      event.dataTransfer.setData('application/vueflow', type)
+      event.dataTransfer.effectAllowed = 'move'
+    }
+
     draggedType.value = type
     isDragging.value = true
 
@@ -44,9 +49,6 @@ export default function useDragAndDrop(elements: Ref<Element[]>) {
       x: event.clientX,
       y: event.clientY,
     })
-
-    console.log(elements.value.length)
-
     const nodeId = (elements.value.length + 1).toString()
     const label = draggedType.value === 'task'
       ? 'Tâche' : draggedType.value === 'deliverable'
@@ -57,6 +59,12 @@ export default function useDragAndDrop(elements: Ref<Element[]>) {
       type: draggedType.value ?? 'node',
       position: position,
       label: label,
+      data: {
+        name: label,
+        description: `Description de ` + label,
+        duration: 0,
+        start: false
+      },
     }
     const defaultNode = {
       ...node,

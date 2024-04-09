@@ -2,9 +2,6 @@
 import { ref, computed, onMounted } from 'vue'
 import { type Elements, useVueFlow, VueFlow } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import DeliverableNode from './partials/DeliverableNode.vue'
-import MilestoneNode from './partials/MilestoneNode.vue'
-import TaskNode from './partials/TaskNode.vue'
 import { roadmapService } from '@/services'
 import useDragAndDrop from './partials/useDragAndDrop'
 
@@ -13,60 +10,18 @@ const { id } = defineProps<{
 }>()
 
 const elements = ref<Elements>([])
-
-const { onConnect, addEdges, dimensions } = useVueFlow()
-
+const { onConnect, addEdges } = useVueFlow()
 const { onDragOver, onDrop, onDragLeave, isDragOver, onDragStart } = useDragAndDrop(elements)
-
 onConnect((params) => {
 	addEdges([params])
 })
-
 const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
-
 onMounted(async () => {
 	const data = (await roadmapService.getById(id)).data
 
 	elements.value = JSON.parse(data) ?? []
 })
-const addNode = (type: string) => {
-	const id = (elements.value.length + 1).toString() as unknown as string
-	const lastNode = elements.value[elements.value.length - 1]
-	let newX
-	let newY
-
-	if (!lastNode) {
-		newX = dimensions.value.width / 2
-		newY = dimensions.value.height / 2
-	} else if (lastNode.type === 'default') {
-		newX =
-			(lastNode as unknown as { sourceNode: { position: { x: number; y: number } } }).sourceNode
-				.position.x + 20
-		newY =
-			(lastNode as unknown as { sourceNode: { position: { x: number; y: number } } }).sourceNode
-				.position.y - 20
-	} else {
-		newX = (lastNode as unknown as { position: { x: number; y: number } }).position.x + 20
-		newY = (lastNode as unknown as { position: { x: number; y: number } }).position.y - 20
-	}
-
-	elements.value.push({
-		type: type,
-		data: {
-			name: `Nouveau ` + type,
-			description: `Description de ` + type,
-			duration: 0,
-			start: false
-		},
-		position: {
-			x: newX,
-			y: newY
-		},
-		id: id,
-		label: type
-	})
-}
 const saveNode = async () => {
 	console.log(elements.value)
 
@@ -87,13 +42,10 @@ const importNode = async () => {
 
 <template>
 	<div
-		class="w-full relative dndflow"
+		class="h-[90%] w-full relative dndflow"
 		@drop="onDrop"
 	>
 		<div class="navbar">
-			<button @click="addNode('tache')">Tache</button>
-			<button @click="addNode('jalon')">Jalon</button>
-			<button @click="addNode('livrable')">Livrable</button>
 			<button @click="saveNode()">Save</button>
 			<button @click="importNode()">Load</button>
 		</div>
@@ -103,21 +55,21 @@ const importNode = async () => {
 				<div
 					class="vue-flow__node-input"
 					:draggable="true"
-					@dragstart="onDragStart('task')"
+					@dragstart="onDragStart($event, 'task')"
 				>
 					Tâche
 				</div>
 				<div
 					class="vue-flow__node-default"
 					:draggable="true"
-					@dragstart="onDragStart('deliverable')"
+					@dragstart="onDragStart($event, 'deliverable')"
 				>
 					Livrable
 				</div>
 				<div
 					class="vue-flow__node-output"
 					:draggable="true"
-					@dragstart="onDragStart('milestone')"
+					@dragstart="onDragStart($event, 'milestone')"
 				>
 					Jalon
 				</div>
@@ -128,6 +80,8 @@ const importNode = async () => {
 			v-model="elements"
 			@dragover="onDragOver($event as DragEvent)"
 			@dragleave="onDragLeave"
+			fit-view-on-init
+			@node-click="(e: any) => (selectedNodeId = e.node.id)"
 		>
 			<Background
 				:size="1"
@@ -141,25 +95,6 @@ const importNode = async () => {
 				<slot />
 			</Background>
 			<MiniMap />
-
-			<template #node-tache="nodeProps">
-				<TaskNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
-			<template #node-jalon="nodeProps">
-				<MilestoneNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
-			<template #node-livrable="nodeProps">
-				<DeliverableNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
 		</VueFlow>
 
 		<div
