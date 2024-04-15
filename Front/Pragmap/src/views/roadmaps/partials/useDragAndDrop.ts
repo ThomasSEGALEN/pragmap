@@ -68,12 +68,12 @@ export default function useDragAndDrop(elements: Ref<Element[]>) {
     }
     const defaultNode = {
       ...node,
-      sourcePosition: Position.Left,
-      targetPosition: Position.Right
+      sourcePosition: Position.Right,
+      targetPosition: Position.Left
     }
     const deliverableNode = {
       ...node,
-      sourcePosition: Position.Top,
+      targetPosition: Position.Top,
     }
     const { off } = onNodesInitialized(() => {
       updateNode(nodeId, (node) => ({

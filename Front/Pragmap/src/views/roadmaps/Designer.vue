@@ -23,8 +23,6 @@ onMounted(async () => {
 	elements.value = JSON.parse(data) ?? []
 })
 const saveNode = async () => {
-	console.log(elements.value)
-
 	const data = {
 		id: id,
 		name: 'Pragmap',
@@ -35,47 +33,53 @@ const saveNode = async () => {
 }
 const importNode = async () => {
 	const nodes = (await roadmapService.getById(id)).data
-
 	elements.value = JSON.parse(nodes)
 }
 
 
 const seeAllTasks = () => {
 
-let table: string[][] = [];
-elements.value.forEach((element) => {
-	if (element.type === 'jalon') {
-		table.push([element.id])
-	}
-})
-
-console.log(elements.value)
-table.forEach((row) => {
+	let table: string[][] = [];
 	elements.value.forEach((element) => {
-		let link = element as any
-		if (link.type === 'default') {
-			let i = elements.value.find((node) => node.id === link.target) as any
-
-			if(i != undefined) {
-				let tableRow = table.find((row) => row[0] === link.id)
-				console.log(tableRow)
-				if(tableRow) {
-					tableRow.push(i.target)
-				}
-			}
+		if (element.type === 'milestone') {
+			table.push([element.id])
 		}
 	})
-})
-console.log(table)
+
+	table.forEach((row) => {
+		elements.value.forEach((element) => {
+			let link = element as any
+			if (link.type === 'default' && link.target === row[0]) {
+				let i = elements.value.find((node) => node.id === link.source) as any
+				row.push(i.id)
+				while (findIfNodeHasParent(i) != null) {
+					i = findIfNodeHasParent(i)
+					if (i != undefined) {
+						row.push(i.id)
+					}
+				}
+
+			}
+		})
+	})
+	console.log(table)
+}
+
+const findIfNodeHasParent = (node: any) => {
+	let link = elements.value.find((link: any) => link.target === node.id) as any
+	if (link != undefined) {
+		let parent = elements.value.find((node) => node.id === link.source) as any
+		if (parent.type != 'milestone') {
+			return parent
+		}
+	}
+	return null
 }
 
 </script>
 
 <template>
-	<div
-		class="h-[90%] w-full relative dndflow"
-		@drop="onDrop"
-	>
+	<div class="h-[90%] w-full relative dndflow" @drop="onDrop">
 		<div class="navbar">
 			<button @click="saveNode()">Save</button>
 			<button @click="importNode()">Load</button>
@@ -84,80 +88,38 @@ console.log(table)
 
 		<aside>
 			<div class="flex gap-4 nodes">
-				<div
-					class="vue-flow__node-input"
-					:draggable="true"
-					@dragstart="onDragStart($event, 'task')"
-				>
+				<div class="vue-flow__node-input" :draggable="true" @dragstart="onDragStart($event, 'task')">
 					Tâche
 				</div>
-				<div
-					class="vue-flow__node-default"
-					:draggable="true"
-					@dragstart="onDragStart($event, 'deliverable')"
-				>
+				<div class="vue-flow__node-default" :draggable="true" @dragstart="onDragStart($event, 'deliverable')">
 					Livrable
 				</div>
-				<div
-					class="vue-flow__node-output"
-					:draggable="true"
-					@dragstart="onDragStart($event, 'milestone')"
-				>
+				<div class="vue-flow__node-output" :draggable="true" @dragstart="onDragStart($event, 'milestone')">
 					Jalon
 				</div>
 			</div>
 		</aside>
 
-		<VueFlow
-			v-model="elements"
-			@dragover="onDragOver($event as DragEvent)"
-			@dragleave="onDragLeave"
-			fit-view-on-init
-			@node-click="(e: any) => (selectedNodeId = e.node.id)"
-		>
-			<Background
-				:size="1"
-				:gap="20"
-				pattern-color="#BDBDBD"
-				:style="{
-					backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
-					transition: 'background-color 0.2s ease'
-				}"
-			>
+		<VueFlow v-model="elements" @dragover="onDragOver($event as DragEvent)" @dragleave="onDragLeave"
+			fit-view-on-init @node-click="(e: any) => (selectedNodeId = e.node.id)">
+			<Background :size="1" :gap="20" pattern-color="#BDBDBD" :style="{
+		backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
+		transition: 'background-color 0.2s ease'
+	}">
 				<slot />
 			</Background>
 			<MiniMap />
 		</VueFlow>
 
-		<div
-			v-if="selectedNodeId && selectedNode"
-			class="settingsWindow"
-		>
+		<div v-if="selectedNodeId && selectedNode" class="settingsWindow">
 			<h2>Node Settings</h2>
-			<div
-				v-for="(value, key) in selectedNode.data"
-				:key="key"
-			>
+			<div v-for="(value, key) in selectedNode.data" :key="key">
 				<label>{{ key }}</label>
-				<textarea
-					v-if="typeof key === 'string' && key === 'description'"
-					v-model="selectedNode.data[key]"
-					class="description"
-				></textarea>
-				<input
-					v-else-if="typeof value === 'boolean'"
-					type="checkbox"
-					v-model="selectedNode.data[key]"
-				/>
-				<input
-					v-else-if="value instanceof Date"
-					type="date"
-					v-model="selectedNode.data[key]"
-				/>
-				<input
-					v-else
-					v-model="selectedNode.data[key]"
-				/>
+				<textarea v-if="typeof key === 'string' && key === 'description'" v-model="selectedNode.data[key]"
+					class="description"></textarea>
+				<input v-else-if="typeof value === 'boolean'" type="checkbox" v-model="selectedNode.data[key]" />
+				<input v-else-if="value instanceof Date" type="date" v-model="selectedNode.data[key]" />
+				<input v-else v-model="selectedNode.data[key]" />
 			</div>
 			<button @click="selectedNodeId = null">Close</button>
 		</div>
@@ -171,6 +133,7 @@ console.log(table)
 	padding: 10px;
 	background-color: #f8f8f8;
 }
+
 .settingsWindow {
 	position: absolute;
 	right: 0;
@@ -184,10 +147,12 @@ console.log(table)
 	flex-direction: column;
 	align-items: flex-end;
 }
+
 .settingsWindow h2 {
 	color: #333;
 	margin-bottom: 1rem;
 }
+
 .settingsWindow div {
 	width: 100%;
 	padding: 0.5rem;
@@ -196,17 +161,20 @@ console.log(table)
 	border-radius: 4px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 .settingsWindow label {
 	display: block;
 	margin-bottom: 0.5rem;
 	color: #666;
 }
+
 .settingsWindow input {
 	width: 100%;
 	padding: 0.5rem;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
+
 .settingsWindow button {
 	margin-top: 1rem;
 	padding: 0.5rem 1rem;
@@ -216,6 +184,7 @@ console.log(table)
 	border-radius: 4px;
 	cursor: pointer;
 }
+
 .settingsWindow .description {
 	font-size: 0.8rem;
 	height: 4rem;
