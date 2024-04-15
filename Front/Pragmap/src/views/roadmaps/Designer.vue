@@ -38,6 +38,37 @@ const importNode = async () => {
 
 	elements.value = JSON.parse(nodes)
 }
+
+
+const seeAllTasks = () => {
+
+let table: string[][] = [];
+elements.value.forEach((element) => {
+	if (element.type === 'jalon') {
+		table.push([element.id])
+	}
+})
+
+console.log(elements.value)
+table.forEach((row) => {
+	elements.value.forEach((element) => {
+		let link = element as any
+		if (link.type === 'default') {
+			let i = elements.value.find((node) => node.id === link.target) as any
+
+			if(i != undefined) {
+				let tableRow = table.find((row) => row[0] === link.id)
+				console.log(tableRow)
+				if(tableRow) {
+					tableRow.push(i.target)
+				}
+			}
+		}
+	})
+})
+console.log(table)
+}
+
 </script>
 
 <template>
@@ -48,6 +79,7 @@ const importNode = async () => {
 		<div class="navbar">
 			<button @click="saveNode()">Save</button>
 			<button @click="importNode()">Load</button>
+			<button @click="seeAllTasks()">Page Taches</button>
 		</div>
 
 		<aside>
