@@ -52,11 +52,16 @@ const seeAllTasks = () => {
 			if (link.type === 'default' && link.target === row[0]) {
 				let i = elements.value.find((node) => node.id === link.source) as any
 				row.push(i.id)
-				while (findIfNodeHasParent(i) != null) {
-					i = findIfNodeHasParent(i)
-					if (i != undefined) {
-						row.push(i.id)
-					}
+				let parents = findIfNodeHasParent(i);
+				while (parents.length > 0) {
+					let newParents: any[] = [];
+					parents.forEach(parent => {
+						if (parent != undefined) {
+							row.push(parent.id);
+							newParents.push(...findIfNodeHasParent(parent));
+						}
+					});
+					parents = newParents;
 				}
 
 			}
@@ -66,14 +71,14 @@ const seeAllTasks = () => {
 }
 
 const findIfNodeHasParent = (node: any) => {
-	let link = elements.value.find((link: any) => link.target === node.id) as any
-	if (link != undefined) {
+	let links = elements.value.filter((link: any) => link.target === node.id)
+	let parents = links.map((link: any) => {
 		let parent = elements.value.find((node) => node.id === link.source) as any
-		if (parent.type != 'milestone') {
+		if (parent && parent.type != 'milestone') {
 			return parent
 		}
-	}
-	return null
+	}).filter(Boolean) // remove undefined values
+	return parents
 }
 
 </script>
