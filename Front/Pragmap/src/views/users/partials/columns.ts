@@ -50,11 +50,9 @@ export const columns: Array<ColumnDef<UsersData>> = [
 			h(DataTableDropDown, {
 				name: 'UsersEdit',
 				id: row.original.id,
-				deleteEntity: async (id: string) => {
+				deleteEntity: (id: string) => {
 					try {
-						await userService.delete(id)
-
-						router.go(0)
+						userService.delete(id).then(() => router.go(0))
 					} catch (error) {
 						toast({
 							title: 'Erreur',
