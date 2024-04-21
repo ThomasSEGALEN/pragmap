@@ -1,5 +1,5 @@
-import { Position, useVueFlow, type Element, type Node } from '@vue-flow/core'
-import { ref, watch, type Ref } from 'vue'
+import { ref, type Ref, watch } from 'vue'
+import { type Elements, Position, useVueFlow } from '@vue-flow/core'
 
 const state = {
   draggedType: ref<string | null>(null),
@@ -7,12 +7,14 @@ const state = {
   isDragging: ref<boolean>(false),
 }
 
-export default function useDragAndDrop(elements: Ref<Element[]>) {
+export default function useDragAndDrop(elements: Ref<Elements>) {
   const { draggedType, isDragOver, isDragging } = state
   const { addNodes, screenToFlowCoordinate, onNodesInitialized, updateNode } = useVueFlow()
+
   watch(isDragging, (dragging) => {
     document.body.style.userSelect = dragging ? 'none' : ''
   })
+
   const onDragStart = (event: DragEvent, type: string) => {
     if (event.dataTransfer) {
       event.dataTransfer.setData('application/vueflow', type)
@@ -60,10 +62,10 @@ export default function useDragAndDrop(elements: Ref<Element[]>) {
       position: position,
       label: label,
       data: {
-        name: label,
         description: `Description de ` + label,
         duration: 0,
-        start: false
+        start: false,
+        progress: 0
       },
     }
     const defaultNode = {
@@ -73,7 +75,9 @@ export default function useDragAndDrop(elements: Ref<Element[]>) {
     }
     const deliverableNode = {
       ...node,
-      targetPosition: Position.Top,
+      sourcePosition: Position.Top,
+      // targetPosition: Position.Bottom,
+      // Trouver un moyen d'avoir deux positions sources OU Modifier la logique pour récupérer les livrables depuis la source et le target
     }
     const { off } = onNodesInitialized(() => {
       updateNode(nodeId, (node) => ({
@@ -82,7 +86,7 @@ export default function useDragAndDrop(elements: Ref<Element[]>) {
 
       off()
     })
-    const newNode: Node<any, any, string> = draggedType.value === 'deliverable' ? deliverableNode : defaultNode
+    const newNode = draggedType.value === 'deliverable' ? deliverableNode : defaultNode
 
     addNodes(newNode)
   }
