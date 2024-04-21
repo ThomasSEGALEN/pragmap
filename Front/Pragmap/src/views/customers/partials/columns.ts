@@ -9,7 +9,6 @@ import { toast } from '@/components/ui/toast'
 import UsersPopover from './UsersPopover.vue'
 
 export const columns: Array<ColumnDef<CustomersData>> = [
-
 	{
 		id: 'Nom',
 		accessorKey: 'name',

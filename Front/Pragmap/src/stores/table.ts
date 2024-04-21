@@ -63,9 +63,12 @@ export const getRoadmapsData = async (): Promise<Array<RoadmapsData>> => {
 	return customerNameRoadmaps
 }
 
-export const getRoadmapData = async (id: string, nodeType: 'task' | 'deliverable'): Promise<any> => {
+export const getRoadmapData = async (
+	id: string,
+	nodeType: 'task' | 'deliverable'
+): Promise<any> => {
 	const roadmap = await roadmapService.getById(id)
-	const data = JSON.parse(roadmap.data) as Array<Node> ?? []
+	const data = (JSON.parse(roadmap.data) as Array<Node>) ?? []
 	const findIfNodeHasParent = (node: any) => {
 		const links = data.filter((link: any) => link.target === node.id)
 		const parents = links
@@ -139,9 +142,10 @@ interface State {
 }
 
 export const useTableStore = defineStore('table', {
-	state: () => ({
-		data: []
-	}) as State,
+	state: () =>
+		({
+			data: []
+		}) as State,
 	actions: {
 		setData(data: Array<Node>) {
 			this.data = data

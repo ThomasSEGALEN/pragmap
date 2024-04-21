@@ -42,28 +42,41 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 		id: 'Gestion',
 		accessorKey: 'management',
 		header: ({ column }) => h(DataTableColumnHeader<RoadmapsData>, { column, title: 'Gestion' }),
-		cell: ({ row }) => h('div', { class: 'flex flex-col place-items-start' }, [
-			h(Button, {
-				class: 'px-2 focus-visible:ring-offset-0',
-				variant: 'link',
-				asChild: true,
-			},
-				() => h(RouterLink, {
-					to: `/roadmaps/${row.original.id}/tasks`
-				}, () => 'Tâches'
+		cell: ({ row }) =>
+			h('div', { class: 'flex flex-col place-items-start' }, [
+				h(
+					Button,
+					{
+						class: 'px-2 focus-visible:ring-offset-0',
+						variant: 'link',
+						asChild: true
+					},
+					() =>
+						h(
+							RouterLink,
+							{
+								to: `/roadmaps/${row.original.id}/tasks`
+							},
+							() => 'Tâches'
+						)
+				),
+				h(
+					Button,
+					{
+						class: 'px-2 focus-visible:ring-offset-0',
+						variant: 'link',
+						asChild: true
+					},
+					() =>
+						h(
+							RouterLink,
+							{
+								to: `/roadmaps/${row.original.id}/deliverables`
+							},
+							() => 'Livrables'
+						)
 				)
-			),
-			h(Button, {
-				class: 'px-2 focus-visible:ring-offset-0',
-				variant: 'link',
-				asChild: true,
-			},
-				() => h(RouterLink, {
-					to: `/roadmaps/${row.original.id}/deliverables`
-				}, () => 'Livrables'
-				)
-			)
-		]),
+			]),
 		enableSorting: false,
 		enableHiding: false
 	},
