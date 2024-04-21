@@ -29,7 +29,7 @@ onMounted(async () => {
 	<Popover>
 		<PopoverTrigger as-child>
 			<Button
-				class="px-0 focus-visible:bg-background"
+				class="px-2 focus-visible:ring-offset-0"
 				variant="link"
 			>
 				Consulter

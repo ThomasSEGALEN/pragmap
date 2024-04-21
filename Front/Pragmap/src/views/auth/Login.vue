@@ -88,7 +88,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</FormField>
 				<div class="flex flex-col-reverse md:flex-row justify-between">
 					<Button
-						class="focus-visible:bg-background"
+						class="bg-background"
 						type="button"
 						variant="link"
 						size="sm"
