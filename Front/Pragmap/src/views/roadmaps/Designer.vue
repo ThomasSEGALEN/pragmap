@@ -1,14 +1,12 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
 import { type Elements, useVueFlow, VueFlow } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
 import { roadmapService } from '@/services'
 import useDragAndDrop from './partials/useDragAndDrop'
 
-const { id } = defineProps<{
-	id: string
-}>()
-
+const { id } = useRoute().params as { id: string }
 const elements = ref<Elements>([])
 const { onConnect, addEdges } = useVueFlow()
 const { onDragOver, onDrop, onDragLeave, isDragOver, onDragStart } = useDragAndDrop(elements)
@@ -25,7 +23,6 @@ onMounted(async () => {
 const saveNode = async () => {
 	const data = {
 		id: id,
-		name: 'Pragmap',
 		data: JSON.stringify(elements.value)
 	}
 
@@ -35,97 +32,97 @@ const importNode = async () => {
 	const nodes = (await roadmapService.getById(id)).data
 	elements.value = JSON.parse(nodes)
 }
-
-
-const seeAllTasks = () => {
-
-	let table: string[][] = [];
-	elements.value.forEach((element) => {
-		if (element.type === 'milestone') {
-			table.push([element.id])
-		}
-	})
-
-	table.forEach((row) => {
-		elements.value.forEach((element) => {
-			let link = element as any
-			if (link.type === 'default' && link.target === row[0]) {
-				let i = elements.value.find((node) => node.id === link.source) as any
-				row.push(i.id)
-				let parents = findIfNodeHasParent(i);
-				while (parents.length > 0) {
-					let newParents: any[] = [];
-					parents.forEach(parent => {
-						if (parent != undefined) {
-							row.push(parent.id);
-							newParents.push(...findIfNodeHasParent(parent));
-						}
-					});
-					parents = newParents;
-				}
-
-			}
-		})
-	})
-	console.log(table)
-}
-
-const findIfNodeHasParent = (node: any) => {
-	let links = elements.value.filter((link: any) => link.target === node.id)
-	let parents = links.map((link: any) => {
-		let parent = elements.value.find((node) => node.id === link.source) as any
-		if (parent && parent.type != 'milestone') {
-			return parent
-		}
-	}).filter(Boolean) // remove undefined values
-	return parents
-}
-
 </script>
 
 <template>
-	<div class="h-[90%] w-full relative dndflow" @drop="onDrop">
+	<div
+		class="h-full w-full relative dndflow"
+		@drop="onDrop"
+	>
 		<div class="navbar">
 			<button @click="saveNode()">Save</button>
 			<button @click="importNode()">Load</button>
-			<button @click="seeAllTasks()">Page Taches</button>
+
+			<aside>
+				<div class="flex gap-4 nodes">
+					<div
+						class="vue-flow__node-input"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'task')"
+					>
+						Tâche
+					</div>
+					<div
+						class="vue-flow__node-default"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'deliverable')"
+					>
+						Livrable
+					</div>
+					<div
+						class="vue-flow__node-output"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'milestone')"
+					>
+						Jalon
+					</div>
+				</div>
+			</aside>
 		</div>
 
-		<aside>
-			<div class="flex gap-4 nodes">
-				<div class="vue-flow__node-input" :draggable="true" @dragstart="onDragStart($event, 'task')">
-					Tâche
-				</div>
-				<div class="vue-flow__node-default" :draggable="true" @dragstart="onDragStart($event, 'deliverable')">
-					Livrable
-				</div>
-				<div class="vue-flow__node-output" :draggable="true" @dragstart="onDragStart($event, 'milestone')">
-					Jalon
-				</div>
-			</div>
-		</aside>
-
-		<VueFlow v-model="elements" @dragover="onDragOver($event as DragEvent)" @dragleave="onDragLeave"
-			fit-view-on-init @node-click="(e: any) => (selectedNodeId = e.node.id)">
-			<Background :size="1" :gap="20" pattern-color="#BDBDBD" :style="{
-		backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
-		transition: 'background-color 0.2s ease'
-	}">
+		<VueFlow
+			v-model="elements"
+			fit-view-on-init
+			@dragover="onDragOver($event as DragEvent)"
+			@dragleave="onDragLeave"
+			@node-click="(e: any) => (selectedNodeId = e.node.id)"
+		>
+			<Background
+				:size="1"
+				:gap="20"
+				pattern-color="#BDBDBD"
+				:style="{
+					backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
+					transition: 'background-color 0.2s ease'
+				}"
+			>
 				<slot />
 			</Background>
 			<MiniMap />
 		</VueFlow>
 
-		<div v-if="selectedNodeId && selectedNode" class="settingsWindow">
+		<div
+			v-if="selectedNodeId && selectedNode"
+			class="settingsWindow"
+		>
 			<h2>Node Settings</h2>
-			<div v-for="(value, key) in selectedNode.data" :key="key">
-				<label>{{ key }}</label>
-				<textarea v-if="typeof key === 'string' && key === 'description'" v-model="selectedNode.data[key]"
-					class="description"></textarea>
-				<input v-else-if="typeof value === 'boolean'" type="checkbox" v-model="selectedNode.data[key]" />
-				<input v-else-if="value instanceof Date" type="date" v-model="selectedNode.data[key]" />
-				<input v-else v-model="selectedNode.data[key]" />
-			</div>
+			<label>Nom</label>
+			<input v-model="selectedNode.label" />
+
+			<label>Description</label>
+			<textarea
+				v-model="selectedNode.data['description']"
+				class="w-full"
+			></textarea>
+
+			<label>Start</label>
+			<input
+				type="checkbox"
+				v-model="selectedNode.data['start']"
+			/>
+
+			<label>Duration</label>
+			<input
+				type="number"
+				v-model="selectedNode.data['duration']"
+			/>
+
+			<label>Progress</label>
+			<input
+				type="number"
+				v-model="selectedNode.data['progress']"
+			/>
+
 			<button @click="selectedNodeId = null">Close</button>
 		</div>
 	</div>
@@ -135,7 +132,6 @@ const findIfNodeHasParent = (node: any) => {
 .navbar {
 	display: flex;
 	justify-content: space-between;
-	padding: 10px;
 	background-color: #f8f8f8;
 }
 
@@ -144,13 +140,13 @@ const findIfNodeHasParent = (node: any) => {
 	right: 0;
 	top: 0;
 	width: 300px;
-	height: 100%;
+	height: 46.1rem;
 	background: #f8f8f8;
 	border-left: 1px solid #ccc;
 	padding: 1rem;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
+	margin-top: 2.5rem;
 }
 
 .settingsWindow h2 {
