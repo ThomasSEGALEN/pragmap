@@ -22,6 +22,6 @@ export interface IPostRoadmap {
 
 export interface IPutRoadmap {
 	id: string
-	name: string
+	name?: string
 	data?: string
 }
