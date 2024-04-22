@@ -70,18 +70,16 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 				duration: 0,
 				start: false,
 				progress: 0
-			}
+			},
+			sourcePosition: Position.Left,
 		}
 		const defaultNode = {
 			...node,
-			sourcePosition: Position.Right,
-			targetPosition: Position.Left
+			targetPosition: Position.Right
 		}
 		const deliverableNode = {
 			...node,
-			sourcePosition: Position.Top
-			// targetPosition: Position.Bottom,
-			// Trouver un moyen d'avoir deux positions sources OU Modifier la logique pour récupérer les livrables depuis la source et le target
+			targetPosition: Position.Left
 		}
 		const { off } = onNodesInitialized(() => {
 			updateNode(nodeId, (node) => ({
