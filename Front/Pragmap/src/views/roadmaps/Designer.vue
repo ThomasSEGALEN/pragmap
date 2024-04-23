@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, reactive, toRefs } from 'vue'
+import { ref, computed, reactive, onMounted, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
 import {
 	type Elements,
 	useVueFlow,
@@ -11,6 +12,8 @@ import {
 	type ViewportTransform
 } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
+import { roadmapService } from '@/services'
+import useDragAndDrop from './partials/useDragAndDrop'
 import { signalRService } from '@/services'
 import type { UserPostion } from '@/types/userPosition'
 import { HubConnectionState } from '@microsoft/signalr'
