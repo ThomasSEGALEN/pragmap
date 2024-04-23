@@ -34,7 +34,7 @@ export default {
 		<DropdownMenu>
 			<DropdownMenuTrigger as-child>
 				<Button
-					class="-ml-3 h-8 data-[state=open]:bg-accent focus-visible:bg-background"
+					class="-ml-3 h-8 data-[state=open]:bg-accent focus-visible:ring-offset-0"
 					variant="ghost"
 					size="sm"
 				>

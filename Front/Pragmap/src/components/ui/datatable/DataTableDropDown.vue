@@ -33,7 +33,7 @@ defineProps<{
 	<DropdownMenu>
 		<DropdownMenuTrigger as-child>
 			<Button
-				class="h-8 w-8 relative p-0 focus-visible:bg-background"
+				class="h-8 w-8 relative p-0 focus-visible:ring-offset-0"
 				variant="ghost"
 			>
 				<MoreHorizontal class="h-4 w-4" />
@@ -48,7 +48,7 @@ defineProps<{
 				</DropdownMenuItem>
 				<AlertDialog>
 					<DropdownMenuItem
-						@select="(e) => e.preventDefault()"
+						@select="(event) => event.preventDefault()"
 						as-child
 					>
 						<AlertDialogTrigger as-child>

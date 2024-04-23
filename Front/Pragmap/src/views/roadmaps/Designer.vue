@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, reactive, toRefs } from 'vue'
+import { ref, computed, reactive, onMounted, toRefs } from 'vue'
+import { useRoute } from 'vue-router'
 import {
 	type Elements,
 	useVueFlow,
@@ -11,20 +12,39 @@ import {
 	type ViewportTransform
 } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import DeliverableNode from './partials/DeliverableNode.vue'
-import MilestoneNode from './partials/MilestoneNode.vue'
-import TaskNode from './partials/TaskNode.vue'
+import { roadmapService } from '@/services'
+import useDragAndDrop from './partials/useDragAndDrop'
 import { signalRService } from '@/services'
 import type { UserPostion } from '@/types/userPosition'
 import { HubConnectionState } from '@microsoft/signalr'
 
+const { id } = useRoute().params as { id: string }
+const elements = ref<Elements>([])
 signalRService.startConnection()
 const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
 const { onConnect, addEdges } = useVueFlow()
+const { onDragOver, onDrop, onDragLeave, isDragOver, onDragStart } = useDragAndDrop(elements)
 onConnect((params) => {
 	addEdges([params])
 })
+onMounted(async () => {
+	const data = (await roadmapService.getById(id)).data
+
+	elements.value = JSON.parse(data) ?? []
+})
+const saveNode = async () => {
+	const data = {
+		id: id,
+		data: JSON.stringify(elements.value)
+	}
+
+	await roadmapService.update(data.id, data)
+}
+const importNode = async () => {
+	const nodes = (await roadmapService.getById(id)).data
+	elements.value = JSON.parse(nodes)
+}
 let userPositions = reactive<UserPostion[]>([])
 let currentUserPosition: UserPostion = {
 	userId: '1',
@@ -33,11 +53,9 @@ let currentUserPosition: UserPostion = {
 	yPosition: 0,
 	scale: 1
 }
-
 const randomNumber = (min: number, max: number) => {
 	return Math.floor(Math.random() * (max - min + 1) + min)
 }
-
 const randomUserPosition = () => {
 	const random = randomNumber(0, 10)
 	if (random > 5) {
@@ -51,49 +69,9 @@ const randomUserPosition = () => {
 	}
 }
 randomUserPosition()
-
 let flowTransform: ViewportTransform = { x: 0, y: 0, zoom: 1 }
-
 const roadmapId = '4c3db0f3-f7cb-4e7c-9b6b-6637d561c41c'
 let roadMapMouseMoveTimeout: number | null | undefined = null
-
-const elements = ref<Elements>([])
-let json = JSON.stringify(elements.value)
-const addNode = (type: string) => {
-	const id = (elements.value.length + 1).toString() as unknown as string
-	const lastNode = elements.value[elements.value.length - 1] as
-		| { position: { x: number; y: number } }
-		| undefined
-	const newX = lastNode ? lastNode.position.x + 20 : window.innerWidth / 2
-	const newY = lastNode ? lastNode.position.y - 20 : window.innerHeight / 2
-
-	elements.value.push({
-		type: type,
-		data: {
-			name: `Nouveau ` + type,
-			description: `Description de ` + type,
-			duration: 0,
-			start: false
-		},
-		position: {
-			x: newX,
-			y: newY
-		},
-		animated: true,
-		id: id,
-		label: type
-	})
-}
-const saveNode = () => {
-	json = JSON.stringify(elements.value)
-	console.log(json)
-}
-const importNode = () => {
-	if (json) {
-		elements.value = JSON.parse(json)
-	}
-}
-
 const connectToRoadmap = async () => {
 	while (signalRService.connection.state !== HubConnectionState.Connected) {
 		await new Promise((resolve) => setTimeout(resolve, 2000))
@@ -111,9 +89,7 @@ const connectToRoadmap = async () => {
 		}
 	})
 }
-
 connectToRoadmap()
-
 const mouseMove = (event: MouseEvent) => {
 	if (roadMapMouseMoveTimeout) {
 		return
@@ -131,33 +107,55 @@ const mouseMove = (event: MouseEvent) => {
 		}
 	}, 0)
 }
-
 const handleMove = (moveEvent: { event: any; flowTransform: ViewportTransform }) => {
 	flowTransform = moveEvent.flowTransform
 }
-
 // Convert the reactive object to refs
 let uuuserPositions = toRefs(userPositions)
 </script>
 
 <template>
-	<div class="w-full relative">
+	<div
+		class="h-full w-full relative dndflow"
+		@drop="onDrop"
+	>
 		<div class="navbar">
-			<button @click="addNode('tache')">Tache</button>
-			<button @click="addNode('jalon')">Jalon</button>
-			<button @click="addNode('livrable')">Livrable</button>
 			<button @click="saveNode()">Save</button>
 			<button @click="importNode()">Load</button>
+
+			<aside>
+				<div class="flex gap-4 nodes">
+					<div
+						class="vue-flow__node-input"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'task')"
+					>
+						Tâche
+					</div>
+					<div
+						class="vue-flow__node-default"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'deliverable')"
+					>
+						Livrable
+					</div>
+					<div
+						class="vue-flow__node-output"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'milestone')"
+					>
+						Jalon
+					</div>
+				</div>
+			</aside>
 		</div>
+
 		<VueFlow
 			v-model="elements"
-			class="vue-flow-basic-example"
-			:default-zoom="1"
-			:min-zoom="0.2"
-			:max-zoom="4"
-			style="height: 80vh"
-			@pane-mouse-move="mouseMove"
-			@move="handleMove"
+			fit-view-on-init
+			@dragover="onDragOver($event as DragEvent)"
+			@dragleave="onDragLeave"
+			@node-click="(e: any) => (selectedNodeId = e.node.id)"
 		>
 			<div
 				v-for="(userPosition, index) in userPositions"
@@ -172,59 +170,51 @@ let uuuserPositions = toRefs(userPositions)
 				<span>{{ userPosition.username }}</span>
 			</div>
 			<Background
-				pattern-color="#aaa"
-				:gap="8"
-			/>
+				:size="1"
+				:gap="20"
+				pattern-color="#BDBDBD"
+				:style="{
+					backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
+					transition: 'background-color 0.2s ease'
+				}"
+			>
+				<slot />
+			</Background>
 			<MiniMap />
-			<template #node-tache="nodeProps">
-				<TaskNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
-			<template #node-jalon="nodeProps">
-				<MilestoneNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
-			<template #node-livrable="nodeProps">
-				<DeliverableNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
 		</VueFlow>
+
 		<div
 			v-if="selectedNodeId && selectedNode"
 			class="settingsWindow"
 		>
 			<h2>Node Settings</h2>
-			<div
-				v-for="(value, key) in selectedNode.data"
-				:key="key"
-			>
-				<label>{{ key }}</label>
-				<textarea
-					v-if="typeof key === 'string' && key === 'description'"
-					v-model="selectedNode.data[key]"
-					class="description"
-				></textarea>
-				<input
-					v-else-if="typeof value === 'boolean'"
-					type="checkbox"
-					v-model="selectedNode.data[key]"
-				/>
-				<input
-					v-else-if="value instanceof Date"
-					type="date"
-					v-model="selectedNode.data[key]"
-				/>
-				<input
-					v-else
-					v-model="selectedNode.data[key]"
-				/>
-			</div>
+			<label>Nom</label>
+			<input v-model="selectedNode.label" />
+
+			<label>Description</label>
+			<textarea
+				v-model="selectedNode.data['description']"
+				class="w-full"
+			></textarea>
+
+			<label>Start</label>
+			<input
+				type="checkbox"
+				v-model="selectedNode.data['start']"
+			/>
+
+			<label>Duration</label>
+			<input
+				type="number"
+				v-model="selectedNode.data['duration']"
+			/>
+
+			<label>Progress</label>
+			<input
+				type="number"
+				v-model="selectedNode.data['progress']"
+			/>
+
 			<button @click="selectedNodeId = null">Close</button>
 		</div>
 	</div>
@@ -263,7 +253,6 @@ let uuuserPositions = toRefs(userPositions)
 .navbar {
 	display: flex;
 	justify-content: space-between;
-	padding: 10px;
 	background-color: #f8f8f8;
 }
 
@@ -272,13 +261,13 @@ let uuuserPositions = toRefs(userPositions)
 	right: 0;
 	top: 0;
 	width: 300px;
-	height: 100%;
+	height: 46.1rem;
 	background: #f8f8f8;
 	border-left: 1px solid #ccc;
 	padding: 1rem;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
+	margin-top: 2.5rem;
 }
 
 .settingsWindow h2 {

@@ -10,6 +10,12 @@ import UsersPopover from './UsersPopover.vue'
 
 export const columns: Array<ColumnDef<CustomersData>> = [
 	{
+		id: 'Nom',
+		accessorKey: 'name',
+		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Nom' }),
+		cell: ({ row }) => h('div', row.getValue('Nom'))
+	},
+	{
 		id: 'Logo',
 		accessorKey: 'logo',
 		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Logo' }),
@@ -20,12 +26,6 @@ export const columns: Array<ColumnDef<CustomersData>> = [
 				alt: `Logo de ${row.getValue('Nom')}`
 			}),
 		enableSorting: false
-	},
-	{
-		id: 'Nom',
-		accessorKey: 'name',
-		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Nom' }),
-		cell: ({ row }) => h('div', row.getValue('Nom'))
 	},
 	{
 		id: 'Utilisateurs',
@@ -49,11 +49,9 @@ export const columns: Array<ColumnDef<CustomersData>> = [
 			h(DataTableDropDown, {
 				name: 'CustomersEdit',
 				id: row.original.id,
-				deleteEntity: async (id: string) => {
+				deleteEntity: (id: string) => {
 					try {
-						await customerService.delete(id)
-
-						router.go(0)
+						customerService.delete(id).then(() => router.go(0))
 					} catch (error) {
 						toast({
 							title: 'Erreur',

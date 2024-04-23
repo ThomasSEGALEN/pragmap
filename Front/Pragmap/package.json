@@ -20,7 +20,7 @@
     "@vue-flow/additional-components": "latest",
     "@vue-flow/background": "^1.2.0",
     "@vue-flow/controls": "^1.1.0",
-    "@vue-flow/core": "^1.33.0",
+    "@vue-flow/core": "^1.33.5",
     "@vue-flow/minimap": "^1.4.0",
     "@vueuse/core": "^10.8.0",
     "axios": "^1.6.5",

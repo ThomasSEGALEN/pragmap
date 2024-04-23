@@ -107,7 +107,24 @@ const router = createRouter({
 			name: 'RoadmapsDesigner',
 			component: () => import('@/views/roadmaps/Designer.vue'),
 			beforeEnter: authMiddleware,
-			meta: { name: 'Designer de roadmap', requiresAuth: true }
+			meta: { name: 'Designer de roadmap', requiresAuth: true },
+			props: true
+		},
+		{
+			path: '/roadmaps/:id/tasks',
+			name: 'RoadmapsTasks',
+			component: () => import('@/views/roadmaps/tasks/Index.vue'),
+			beforeEnter: authMiddleware,
+			meta: { name: 'Tâches de la roadmap', requiresAuth: true },
+			props: true
+		},
+		{
+			path: '/roadmaps/:id/deliverables',
+			name: 'RoadmapsDeliverables',
+			component: () => import('@/views/roadmaps/deliverables/Index.vue'),
+			beforeEnter: authMiddleware,
+			meta: { name: 'Livrables de la roadmap', requiresAuth: true },
+			props: true
 		},
 		{
 			path: '/profile',

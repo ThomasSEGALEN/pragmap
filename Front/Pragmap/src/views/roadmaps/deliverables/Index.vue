@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { getCustomersData, type CustomersData } from '@/stores'
+import { useRoute } from 'vue-router'
+import { getRoadmapData, type Node } from '@/stores'
 import { DataTable } from '@/components/ui/datatable'
 import { columns } from './partials/columns'
 
-const data = ref<Array<CustomersData>>([])
+const { id } = useRoute().params as { id: string }
+const data = ref<Array<Node>>([])
 
-data.value = await getCustomersData()
+data.value = await getRoadmapData(id, 'deliverable')
 </script>
 
 <template>
