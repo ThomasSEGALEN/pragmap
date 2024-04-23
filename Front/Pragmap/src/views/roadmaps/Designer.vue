@@ -11,9 +11,6 @@ import {
 	type ViewportTransform
 } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import DeliverableNode from './partials/DeliverableNode.vue'
-import MilestoneNode from './partials/MilestoneNode.vue'
-import TaskNode from './partials/TaskNode.vue'
 import { signalRService } from '@/services'
 import type { UserPostion } from '@/types/userPosition'
 import { HubConnectionState } from '@microsoft/signalr'
