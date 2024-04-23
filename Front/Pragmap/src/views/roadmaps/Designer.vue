@@ -28,8 +28,6 @@ const { onDragOver, onDrop, onDragLeave, isDragOver, onDragStart } = useDragAndD
 onConnect((params) => {
 	addEdges([params])
 })
-const selectedNodeId = ref(null)
-const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
 onMounted(async () => {
 	const data = (await roadmapService.getById(id)).data
 
