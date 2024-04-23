@@ -19,9 +19,22 @@ namespace Pragmap.API.Hubs
             await Groups.RemoveFromGroupAsync(Context.ConnectionId, $"roadmap-{roadmapId}");
         }
 
-        public async Task SendMessage(string roadmapId, string message)
+        public async Task UpdateRoadmapData(string roadmapId, string data)
         {
-            await Clients.Group($"roadmap-{roadmapId}").SendAsync("ReceiveRoadmapMessage", message);
+            await Clients.Group($"roadmap-{roadmapId}").SendAsync("ReceiveRoadmapData", data);
         }
+        public async Task UpdateUserPosition(string roadmapId, UserPosition userPosition)
+        {
+            await Clients.Group($"roadmap-{roadmapId}").SendAsync("ReceiveUserPosition", userPosition);
+        }
+       
+    }
+    public class UserPosition
+    {
+        public string UserId { get; set; }
+        public string Username { get; set; }
+        public decimal XPosition { get; set; }
+        public decimal YPosition { get; set; }
+        public decimal Scale { get; set; }
     }
 }
