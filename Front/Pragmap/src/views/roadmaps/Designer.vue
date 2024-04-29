@@ -1,26 +1,17 @@
 <script setup lang="ts">
-import { ref, computed, reactive, onMounted, toRefs } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
-import {
-	type Elements,
-	useVueFlow,
-	useGetPointerPosition,
-	VueFlow,
-	type MouseTouchEvent,
-	type EdgeMouseEvent,
-	type XYPosition,
-	type ViewportTransform
-} from '@vue-flow/core'
+import { type Elements, useVueFlow, type ViewportTransform, VueFlow } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import { roadmapService } from '@/services'
-import useDragAndDrop from './partials/useDragAndDrop'
-import { signalRService } from '@/services'
-import type { UserPostion } from '@/types/userPosition'
 import { HubConnectionState } from '@microsoft/signalr'
+import { roadmapService, signalRService } from '@/services'
+import { useAuthStore } from '@/stores'
+import type { UserPostion } from '@/types'
+import useDragAndDrop from './partials/useDragAndDrop'
 
 const { id } = useRoute().params as { id: string }
+const { user } = useAuthStore()
 const elements = ref<Elements>([])
-signalRService.startConnection()
 const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
 const { onConnect, addEdges } = useVueFlow()
@@ -45,47 +36,31 @@ const importNode = async () => {
 	const nodes = (await roadmapService.getById(id)).data
 	elements.value = JSON.parse(nodes)
 }
-let userPositions = reactive<UserPostion[]>([])
+signalRService.startConnection()
+let userPositions = ref<UserPostion[]>([])
 let currentUserPosition: UserPostion = {
-	userId: '1',
-	username: 'JM',
+	userId: user.id,
+	username: user.firstName,
 	xPosition: 0,
 	yPosition: 0,
 	scale: 1
 }
-const randomNumber = (min: number, max: number) => {
-	return Math.floor(Math.random() * (max - min + 1) + min)
-}
-const randomUserPosition = () => {
-	const random = randomNumber(0, 10)
-	if (random > 5) {
-		currentUserPosition = {
-			userId: Math.random().toString(),
-			username: 'User ' + Math.random().toString(),
-			xPosition: randomNumber(0, 1000),
-			yPosition: randomNumber(0, 1000),
-			scale: 1
-		}
-	}
-}
-randomUserPosition()
 let flowTransform: ViewportTransform = { x: 0, y: 0, zoom: 1 }
-const roadmapId = '4c3db0f3-f7cb-4e7c-9b6b-6637d561c41c'
 let roadMapMouseMoveTimeout: number | null | undefined = null
 const connectToRoadmap = async () => {
 	while (signalRService.connection.state !== HubConnectionState.Connected) {
 		await new Promise((resolve) => setTimeout(resolve, 2000))
-		console.log('Waiting for connection')
 	}
-	signalRService.joinRoadMap(roadmapId)
+	signalRService.joinRoadMap(id)
 	signalRService.receiveUserPosition((userPosition) => {
-		const existingUserPositionIndex = userPositions.findIndex(
+		const existingUserPositionIndex = userPositions.value.findIndex(
 			(up) => up.userId === userPosition.userId
 		)
+
 		if (existingUserPositionIndex !== -1) {
-			userPositions[existingUserPositionIndex] = userPosition
+			userPositions.value[existingUserPositionIndex] = userPosition
 		} else {
-			userPositions.push(userPosition)
+			userPositions.value.push(userPosition)
 		}
 	})
 }
@@ -94,13 +69,14 @@ const mouseMove = (event: MouseEvent) => {
 	if (roadMapMouseMoveTimeout) {
 		return
 	}
-	roadMapMouseMoveTimeout = window.setTimeout(() => {
-		console.log(event.offsetX, flowTransform.x, flowTransform.zoom)
 
-		currentUserPosition.scale = 1 //flowTransform.zoom;
-		currentUserPosition.xPosition = event.offsetX //- flowTransform.x * flowTransform.zoom) / flowTransform.zoom;
-		currentUserPosition.yPosition = event.offsetY //- flowTransform.y * flowTransform.zoom) / flowTransform.zoom;
-		signalRService.updateUserPosition(roadmapId, currentUserPosition)
+	roadMapMouseMoveTimeout = window.setTimeout(() => {
+		currentUserPosition.scale = 1
+		currentUserPosition.xPosition = event.offsetX - flowTransform.x - 35
+		currentUserPosition.yPosition = event.offsetY
+
+		signalRService.updateUserPosition(id, currentUserPosition)
+
 		if (roadMapMouseMoveTimeout) {
 			clearTimeout(roadMapMouseMoveTimeout)
 			roadMapMouseMoveTimeout = null
@@ -110,8 +86,6 @@ const mouseMove = (event: MouseEvent) => {
 const handleMove = (moveEvent: { event: any; flowTransform: ViewportTransform }) => {
 	flowTransform = moveEvent.flowTransform
 }
-// Convert the reactive object to refs
-let uuuserPositions = toRefs(userPositions)
 </script>
 
 <template>
@@ -156,9 +130,13 @@ let uuuserPositions = toRefs(userPositions)
 			@dragover="onDragOver($event as DragEvent)"
 			@dragleave="onDragLeave"
 			@node-click="(e: any) => (selectedNodeId = e.node.id)"
+			@pane-mouse-move="mouseMove"
+			@move="handleMove"
 		>
 			<div
-				v-for="(userPosition, index) in userPositions"
+				v-for="(userPosition, index) in userPositions.filter(
+					(userPosition) => userPosition.userId !== user.id
+				)"
 				:key="index"
 				class="user-cursor"
 				:style="{
