@@ -55,6 +55,22 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 						h(
 							RouterLink,
 							{
+								to: `/roadmaps/${row.original.id}/schedule`
+							},
+							() => 'Planning'
+						)
+				),
+				h(
+					Button,
+					{
+						class: 'px-2 focus-visible:ring-offset-0',
+						variant: 'link',
+						asChild: true
+					},
+					() =>
+						h(
+							RouterLink,
+							{
 								to: `/roadmaps/${row.original.id}/tasks`
 							},
 							() => 'Tâches'
