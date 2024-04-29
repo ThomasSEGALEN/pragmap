@@ -1,15 +1,15 @@
 <script setup lang="ts">
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { roadmapService } from '@/services'
+import { getRoadmapData } from '@/stores'
 
 const { id } = useRoute().params as { id: string }
 
-const roadmapData = ref()
+const tasks = ref()
 
-onMounted(async () => (roadmapData.value = JSON.parse((await roadmapService.getById(id)).data)))
+onMounted(async () => (tasks.value = await getRoadmapData(id, 'task')))
 </script>
 
 <template>
-	<pre>{{ roadmapData }}</pre>
+	<pre>{{ tasks }}</pre>
 </template>
