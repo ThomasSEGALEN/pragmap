@@ -129,7 +129,7 @@ const router = createRouter({
 		{
 			path: '/roadmaps/:id/schedule',
 			name: 'RoadmapsSchedule',
-			component: () => import('@/views/roadmaps/ScheduleTest.vue'),
+			component: () => import('@/views/roadmaps/Schedule.vue'),
 			beforeEnter: authMiddleware,
 			meta: { name: 'Planning de roadmap', requiresAuth: true },
 		},
