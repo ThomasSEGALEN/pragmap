@@ -38,7 +38,7 @@ const getInitials = () =>
 			>
 				<div class="relative w-full flex flex-row justify-between items-center">
 					<Button
-						class="md:hidden h-8 w-8 focus-visible:bg-background"
+						class="md:hidden h-8 w-8 bg-background"
 						variant="ghost"
 						size="icon"
 						@click="toggleSidebar"
@@ -50,7 +50,7 @@ const getInitials = () =>
 					<DropdownMenu>
 						<DropdownMenuTrigger as-child>
 							<Button
-								class="relative h-8 w-8 rounded-full focus-visible:bg-background"
+								class="relative h-8 w-8 rounded-full bg-background"
 								variant="ghost"
 							>
 								<Avatar class="h-8 w-8">
@@ -101,9 +101,7 @@ const getInitials = () =>
 					@toggle-sidebar="toggleSidebar"
 				/>
 			</header>
-			<main
-				class="h-full w-full flex flex-1 justify-center p-6 md:p-12 mt-16 md:mt-0 bg-background"
-			>
+			<main class="w-full flex flex-1 justify-center p-6 md:p-12 mt-16 md:mt-0 bg-background">
 				<slot />
 			</main>
 		</div>

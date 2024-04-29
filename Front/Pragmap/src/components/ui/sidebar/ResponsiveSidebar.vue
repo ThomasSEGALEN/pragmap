@@ -24,11 +24,11 @@ const route = useRoute()
 				Pragmap
 			</div>
 			<Button
-				class="h-8 w-full justify-start sm:justify-center focus-visible:bg-background"
+				class="h-8 w-full justify-start sm:justify-center bg-background"
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/' }"
 				variant="ghost"
-				as-child
 				@click="$emit('toggleSidebar')"
+				as-child
 			>
 				<RouterLink to="/">Accueil</RouterLink>
 			</Button>
@@ -41,20 +41,20 @@ const route = useRoute()
 				Utilisateurs
 			</div>
 			<Button
-				class="h-8 w-full justify-start sm:justify-center focus-visible:bg-background"
+				class="h-8 w-full justify-start sm:justify-center bg-background"
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
 				variant="ghost"
-				as-child
 				@click="$emit('toggleSidebar')"
+				as-child
 			>
 				<RouterLink to="/users">Lister</RouterLink>
 			</Button>
 			<Button
-				class="h-8 w-full justify-start sm:justify-center focus-visible:bg-background"
+				class="h-8 w-full justify-start sm:justify-center bg-background"
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
 				variant="ghost"
-				as-child
 				@click="$emit('toggleSidebar')"
+				as-child
 			>
 				<RouterLink to="/users/create">Créer</RouterLink>
 			</Button>
@@ -67,20 +67,20 @@ const route = useRoute()
 				Clients
 			</div>
 			<Button
-				class="h-8 w-full justify-start sm:justify-center focus-visible:bg-background"
+				class="h-8 w-full justify-start sm:justify-center bg-background"
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
 				variant="ghost"
-				as-child
 				@click="$emit('toggleSidebar')"
+				as-child
 			>
 				<RouterLink to="/customers">Lister</RouterLink>
 			</Button>
 			<Button
-				class="h-8 w-full justify-start sm:justify-center focus-visible:bg-background"
+				class="h-8 w-full justify-start sm:justify-center bg-background"
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/customers/create' }"
 				variant="ghost"
-				as-child
 				@click="$emit('toggleSidebar')"
+				as-child
 			>
 				<RouterLink to="/customers/create">Créer</RouterLink>
 			</Button>
@@ -93,20 +93,20 @@ const route = useRoute()
 				Roadmaps
 			</div>
 			<Button
-				class="h-8 w-full justify-start sm:justify-center focus-visible:bg-background"
+				class="h-8 w-full justify-start sm:justify-center bg-background"
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
 				variant="ghost"
-				as-child
 				@click="$emit('toggleSidebar')"
+				as-child
 			>
 				<RouterLink to="/roadmaps">Lister</RouterLink>
 			</Button>
 			<Button
-				class="h-8 w-full justify-start sm:justify-center focus-visible:bg-background"
+				class="h-8 w-full justify-start sm:justify-center bg-background"
 				:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
 				variant="ghost"
-				as-child
 				@click="$emit('toggleSidebar')"
+				as-child
 			>
 				<RouterLink to="/roadmaps/create">Créer</RouterLink>
 			</Button>

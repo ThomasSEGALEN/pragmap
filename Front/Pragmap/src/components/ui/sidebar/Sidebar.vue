@@ -15,7 +15,7 @@ const { user } = useAuthStore()
 	<div :class="cn('pb-12', $attrs.class ?? '')">
 		<div class="h-full p-2">
 			<Button
-				class="w-full justify-start p-0 focus-visible:bg-background"
+				class="w-full justify-start p-0 bg-background"
 				variant="link"
 				as-child
 			>
@@ -32,7 +32,7 @@ const { user } = useAuthStore()
 						</div>
 						<div class="flex flex-col space-y-2">
 							<Button
-								class="h-8 w-full justify-start focus-visible:bg-background"
+								class="h-8 w-full justify-start bg-background"
 								:class="{ 'bg-accent text-accent-foreground': route.path === '/users' }"
 								variant="ghost"
 								as-child
@@ -40,7 +40,7 @@ const { user } = useAuthStore()
 								<RouterLink to="/users">Lister</RouterLink>
 							</Button>
 							<Button
-								class="h-8 w-full justify-start focus-visible:bg-background"
+								class="h-8 w-full justify-start bg-background"
 								:class="{ 'bg-accent text-accent-foreground': route.path === '/users/create' }"
 								variant="ghost"
 								as-child
@@ -56,7 +56,7 @@ const { user } = useAuthStore()
 						</div>
 						<div class="flex flex-col space-y-2">
 							<Button
-								class="h-8 w-full justify-start focus-visible:bg-background"
+								class="h-8 w-full justify-start bg-background"
 								:class="{ 'bg-accent text-accent-foreground': route.path === '/customers' }"
 								variant="ghost"
 								as-child
@@ -64,7 +64,7 @@ const { user } = useAuthStore()
 								<RouterLink to="/customers">Lister</RouterLink>
 							</Button>
 							<Button
-								class="h-8 w-full justify-start focus-visible:bg-background"
+								class="h-8 w-full justify-start bg-background"
 								:class="{
 									'bg-accent text-accent-foreground': route.path === '/customers/create'
 								}"
@@ -82,7 +82,7 @@ const { user } = useAuthStore()
 						</div>
 						<div class="flex flex-col space-y-2">
 							<Button
-								class="h-8 w-full justify-start focus-visible:bg-background"
+								class="h-8 w-full justify-start bg-background"
 								:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps' }"
 								variant="ghost"
 								as-child
@@ -90,7 +90,7 @@ const { user } = useAuthStore()
 								<RouterLink to="/roadmaps">Lister</RouterLink>
 							</Button>
 							<Button
-								class="h-8 w-full justify-start focus-visible:bg-background"
+								class="h-8 w-full justify-start bg-background"
 								:class="{ 'bg-accent text-accent-foreground': route.path === '/roadmaps/create' }"
 								variant="ghost"
 								as-child
@@ -113,7 +113,7 @@ const { user } = useAuthStore()
 					<Separator class="my-4" />
 					<div class="flex flex-col space-y-2">
 						<Button
-							class="h-8 w-full justify-start focus-visible:bg-background"
+							class="h-8 w-full justify-start bg-background"
 							:class="{
 								'bg-accent text-accent-foreground': route.path === '/profile'
 							}"
@@ -128,7 +128,7 @@ const { user } = useAuthStore()
 							</RouterLink>
 						</Button>
 						<Button
-							class="h-8 w-full justify-start focus-visible:bg-background"
+							class="h-8 w-full justify-start bg-background"
 							variant="ghost"
 							as-child
 						>

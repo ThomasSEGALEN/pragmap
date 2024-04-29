@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
-import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { cn, z } from '@/lib/utils'
@@ -17,10 +17,7 @@ import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 import { convertLogoToBase64 } from './partials/convertLogo'
 
-const { id } = defineProps<{
-	id: string
-}>()
-
+const { id } = useRoute().params as { id: string }
 const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
@@ -158,7 +155,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</FormField>
 				<div class="flex flex-col-reverse sm:flex-row justify-between">
 					<Button
-						class="focus-visible:bg-background"
+						class="bg-background"
 						type="button"
 						variant="link"
 						size="sm"

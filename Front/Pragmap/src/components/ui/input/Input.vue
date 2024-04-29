@@ -67,7 +67,7 @@ export default {
 		/>
 		<template v-if="inputType === 'password'">
 			<Button
-				class="absolute top-0 right-0 flex justify-center items-center"
+				class="absolute top-0 right-0 flex justify-center items-center focus-visible:ring-offset-0"
 				type="button"
 				variant="link"
 				size="icon"

@@ -10,6 +10,7 @@ import {
 	FlexRender,
 	getCoreRowModel,
 	getFilteredRowModel,
+	getPaginationRowModel,
 	getSortedRowModel,
 	useVueTable
 } from '@tanstack/vue-table'
@@ -39,6 +40,7 @@ const table = useVueTable({
 		return props.columns
 	},
 	getCoreRowModel: getCoreRowModel(),
+	getPaginationRowModel: getPaginationRowModel(),
 	getSortedRowModel: getSortedRowModel(),
 	getFilteredRowModel: getFilteredRowModel(),
 	onSortingChange: (updaterOrValue) => valueUpdater(updaterOrValue, sorting),

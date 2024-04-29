@@ -1,155 +1,258 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
-import { type Elements, useVueFlow, VueFlow } from '@vue-flow/core'
+import { ref, computed, onMounted } from 'vue'
+import { useRoute } from 'vue-router'
+import { type Elements, useVueFlow, type ViewportTransform, VueFlow } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import DeliverableNode from './partials/DeliverableNode.vue'
-import MilestoneNode from './partials/MilestoneNode.vue'
-import TaskNode from './partials/TaskNode.vue'
+import { HubConnectionState } from '@microsoft/signalr'
+import { roadmapService, signalRService } from '@/services'
+import { useAuthStore } from '@/stores'
+import type { UserPostion } from '@/types'
+import useDragAndDrop from './partials/useDragAndDrop'
 
+const { id } = useRoute().params as { id: string }
+const { user } = useAuthStore()
+const elements = ref<Elements>([])
 const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
 const { onConnect, addEdges } = useVueFlow()
+const { onDragOver, onDrop, onDragLeave, isDragOver, onDragStart } = useDragAndDrop(elements)
 onConnect((params) => {
 	addEdges([params])
 })
-const elements = ref<Elements>([])
-let json = JSON.stringify(elements.value)
-const addNode = (type: string) => {
-	const id = (elements.value.length + 1).toString() as unknown as string
-	const lastNode = elements.value[elements.value.length - 1] as
-		| { position: { x: number; y: number } }
-		| undefined
-	const newX = lastNode ? lastNode.position.x + 20 : window.innerWidth / 2
-	const newY = lastNode ? lastNode.position.y - 20 : window.innerHeight / 2
+onMounted(async () => {
+	const data = (await roadmapService.getById(id)).data
 
-	elements.value.push({
-		type: type,
-		data: {
-			name: `Nouveau ` + type,
-			description: `Description de ` + type,
-			duration: 0,
-			start: false
-		},
-		position: {
-			x: newX,
-			y: newY
-		},
-		animated: true,
+	elements.value = JSON.parse(data) ?? []
+})
+const saveNode = async () => {
+	const data = {
 		id: id,
-		label: type
+		data: JSON.stringify(elements.value)
+	}
+
+	await roadmapService.update(data.id, data)
+}
+const importNode = async () => {
+	const nodes = (await roadmapService.getById(id)).data
+	elements.value = JSON.parse(nodes)
+}
+signalRService.startConnection()
+let userPositions = ref<UserPostion[]>([])
+let currentUserPosition: UserPostion = {
+	userId: user.id,
+	username: user.firstName,
+	xPosition: 0,
+	yPosition: 0,
+	scale: 1
+}
+let flowTransform: ViewportTransform = { x: 0, y: 0, zoom: 1 }
+let roadMapMouseMoveTimeout: number | null | undefined = null
+const connectToRoadmap = async () => {
+	while (signalRService.connection.state !== HubConnectionState.Connected) {
+		await new Promise((resolve) => setTimeout(resolve, 2000))
+	}
+	signalRService.joinRoadMap(id)
+	signalRService.receiveUserPosition((userPosition) => {
+		const existingUserPositionIndex = userPositions.value.findIndex(
+			(up) => up.userId === userPosition.userId
+		)
+
+		if (existingUserPositionIndex !== -1) {
+			userPositions.value[existingUserPositionIndex] = userPosition
+		} else {
+			userPositions.value.push(userPosition)
+		}
 	})
 }
-const saveNode = () => {
-	json = JSON.stringify(elements.value)
-	console.log(json)
-}
-const importNode = () => {
-	if (json) {
-		elements.value = JSON.parse(json)
+connectToRoadmap()
+const mouseMove = (event: MouseEvent) => {
+	if (roadMapMouseMoveTimeout) {
+		return
 	}
+
+	roadMapMouseMoveTimeout = window.setTimeout(() => {
+		currentUserPosition.scale = 1
+		currentUserPosition.xPosition = event.offsetX - flowTransform.x - 35
+		currentUserPosition.yPosition = event.offsetY
+
+		signalRService.updateUserPosition(id, currentUserPosition)
+
+		if (roadMapMouseMoveTimeout) {
+			clearTimeout(roadMapMouseMoveTimeout)
+			roadMapMouseMoveTimeout = null
+		}
+	}, 0)
+}
+const handleMove = (moveEvent: { event: any; flowTransform: ViewportTransform }) => {
+	flowTransform = moveEvent.flowTransform
 }
 </script>
 
 <template>
-	<div class="w-full relative">
+	<div
+		class="h-full w-full relative dndflow"
+		@drop="onDrop"
+	>
 		<div class="navbar">
-			<button @click="addNode('tache')">Tache</button>
-			<button @click="addNode('jalon')">Jalon</button>
-			<button @click="addNode('livrable')">Livrable</button>
 			<button @click="saveNode()">Save</button>
 			<button @click="importNode()">Load</button>
+
+			<aside>
+				<div class="flex gap-4 nodes">
+					<div
+						class="vue-flow__node-input"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'task')"
+					>
+						Tâche
+					</div>
+					<div
+						class="vue-flow__node-default"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'deliverable')"
+					>
+						Livrable
+					</div>
+					<div
+						class="vue-flow__node-output"
+						:draggable="true"
+						@dragstart="onDragStart($event, 'milestone')"
+					>
+						Jalon
+					</div>
+				</div>
+			</aside>
 		</div>
+
 		<VueFlow
 			v-model="elements"
-			class="vue-flow-basic-example"
-			:default-zoom="1"
-			:min-zoom="0.2"
-			:max-zoom="4"
-			style="height: 80vh"
+			fit-view-on-init
+			@dragover="onDragOver($event as DragEvent)"
+			@dragleave="onDragLeave"
+			@node-click="(e: any) => (selectedNodeId = e.node.id)"
+			@pane-mouse-move="mouseMove"
+			@move="handleMove"
 		>
+			<div
+				v-for="(userPosition, index) in userPositions.filter(
+					(userPosition) => userPosition.userId !== user.id
+				)"
+				:key="index"
+				class="user-cursor"
+				:style="{
+					left: userPosition.xPosition + 'px',
+					top: userPosition.yPosition + 'px',
+					scale: userPosition.scale
+				}"
+			>
+				<span>{{ userPosition.username }}</span>
+			</div>
 			<Background
-				pattern-color="#aaa"
-				:gap="8"
-			/>
+				:size="1"
+				:gap="20"
+				pattern-color="#BDBDBD"
+				:style="{
+					backgroundColor: isDragOver ? '#e7f3ff' : 'transparent',
+					transition: 'background-color 0.2s ease'
+				}"
+			>
+				<slot />
+			</Background>
 			<MiniMap />
-			<template #node-tache="nodeProps">
-				<TaskNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
-			<template #node-jalon="nodeProps">
-				<MilestoneNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
-			<template #node-livrable="nodeProps">
-				<DeliverableNode
-					v-bind="nodeProps"
-					@node-clicked="selectedNodeId = $event"
-				/>
-			</template>
 		</VueFlow>
+
 		<div
 			v-if="selectedNodeId && selectedNode"
 			class="settingsWindow"
 		>
 			<h2>Node Settings</h2>
-			<div
-				v-for="(value, key) in selectedNode.data"
-				:key="key"
-			>
-				<label>{{ key }}</label>
-				<textarea
-					v-if="typeof key === 'string' && key === 'description'"
-					v-model="selectedNode.data[key]"
-					class="description"
-				></textarea>
-				<input
-					v-else-if="typeof value === 'boolean'"
-					type="checkbox"
-					v-model="selectedNode.data[key]"
-				/>
-				<input
-					v-else-if="value instanceof Date"
-					type="date"
-					v-model="selectedNode.data[key]"
-				/>
-				<input
-					v-else
-					v-model="selectedNode.data[key]"
-				/>
-			</div>
+			<label>Nom</label>
+			<input v-model="selectedNode.label" />
+
+			<label>Description</label>
+			<textarea
+				v-model="selectedNode.data['description']"
+				class="w-full"
+			></textarea>
+
+			<label>Start</label>
+			<input
+				type="checkbox"
+				v-model="selectedNode.data['start']"
+			/>
+
+			<label>Duration</label>
+			<input
+				type="number"
+				v-model="selectedNode.data['duration']"
+			/>
+
+			<label>Progress</label>
+			<input
+				type="number"
+				v-model="selectedNode.data['progress']"
+			/>
+
 			<button @click="selectedNodeId = null">Close</button>
 		</div>
 	</div>
 </template>
 
 <style scoped>
+.user-cursor {
+	position: absolute;
+	z-index: 99999;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	pointer-events: none;
+	background-color: #bababa;
+	width: 32px;
+	height: 32px;
+	transform: translate(-50%, -50%);
+	border-radius: 50%;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.user-cursor span {
+	font-size: 12px;
+}
+
+.vue-flow {
+	&:has(.tacheNode:hover),
+	&:has(.jalonNode:hover),
+	&:has(.livrableNode:hover) {
+		.user-cursor {
+			display: none;
+		}
+	}
+}
+
 .navbar {
 	display: flex;
 	justify-content: space-between;
-	padding: 10px;
 	background-color: #f8f8f8;
 }
+
 .settingsWindow {
 	position: absolute;
 	right: 0;
 	top: 0;
 	width: 300px;
-	height: 100%;
+	height: 46.1rem;
 	background: #f8f8f8;
 	border-left: 1px solid #ccc;
 	padding: 1rem;
 	display: flex;
 	flex-direction: column;
-	align-items: flex-end;
+	margin-top: 2.5rem;
 }
+
 .settingsWindow h2 {
 	color: #333;
 	margin-bottom: 1rem;
 }
+
 .settingsWindow div {
 	width: 100%;
 	padding: 0.5rem;
@@ -158,17 +261,20 @@ const importNode = () => {
 	border-radius: 4px;
 	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+
 .settingsWindow label {
 	display: block;
 	margin-bottom: 0.5rem;
 	color: #666;
 }
+
 .settingsWindow input {
 	width: 100%;
 	padding: 0.5rem;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 }
+
 .settingsWindow button {
 	margin-top: 1rem;
 	padding: 0.5rem 1rem;
@@ -178,6 +284,7 @@ const importNode = () => {
 	border-radius: 4px;
 	cursor: pointer;
 }
+
 .settingsWindow .description {
 	font-size: 0.8rem;
 	height: 4rem;

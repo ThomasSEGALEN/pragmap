@@ -1,7 +1,7 @@
 export interface IRoadmap {
 	id: string
 	name: string
-	data: Array<Record<any, any>> | []
+	data: string
 	customerId: string
 	customerName: string
 	createdAt: string
@@ -10,7 +10,7 @@ export interface IRoadmap {
 export interface IGetRoadmap {
 	id: string
 	name: string
-	data: Array<Record<any, any>> | []
+	data: string
 	customerId: string
 	createdAt: string
 	updatedAt: string
@@ -22,6 +22,6 @@ export interface IPostRoadmap {
 
 export interface IPutRoadmap {
 	id: string
-	name: string
-	data?: Array<Record<any, any>> | []
+	name?: string
+	data?: string
 }
