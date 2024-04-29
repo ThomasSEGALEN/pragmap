@@ -9,9 +9,7 @@ class SignalRService {
             .withUrl("https://localhost:44323/roadmaphub").withAutomaticReconnect()
             .build();
 
-        this.connection.start().then(() => {
-            console.log("SignalR Connected");
-        }).catch((err: any) => console.error("SignalR Connection Error: ", err));
+        this.connection.start().catch((err: any) => console.error("SignalR Connection Error: ", err));
     }
 
     joinRoadMap(roadmapId: string) {
