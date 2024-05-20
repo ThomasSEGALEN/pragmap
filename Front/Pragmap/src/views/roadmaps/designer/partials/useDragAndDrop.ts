@@ -60,25 +60,37 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 					: draggedType.value === 'milestone'
 						? 'Jalon'
 						: 'Bloc'
-		const node = {
+		const defaultNode = {
 			id: nodeId,
 			type: draggedType.value ?? 'node',
 			position: position,
 			label: label,
+			sourcePosition: Position.Left,
+		}
+		const taskNode = {
+			...defaultNode,
 			data: {
 				description: `Description de ` + label,
 				duration: 0,
-				start: false,
 				progress: 0
 			},
-			sourcePosition: Position.Left,
-		}
-		const defaultNode = {
-			...node,
 			targetPosition: Position.Right
 		}
 		const deliverableNode = {
-			...node,
+			...defaultNode,
+			data: {
+				description: `Description de ` + label,
+				duration: 0,
+				progress: 0,
+				file: ''
+			},
+			targetPosition: Position.Left
+		}
+		const milestoneNode = {
+			...defaultNode,
+			data: {
+				description: `Description de ` + label,
+			},
 			targetPosition: Position.Left
 		}
 		const { off } = onNodesInitialized(() => {
@@ -91,7 +103,7 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 
 			off()
 		})
-		const newNode = draggedType.value === 'deliverable' ? deliverableNode : defaultNode
+		const newNode = draggedType.value === 'task' ? taskNode : draggedType.value === 'deliverable' ? deliverableNode : milestoneNode
 
 		addNodes(newNode)
 	}
