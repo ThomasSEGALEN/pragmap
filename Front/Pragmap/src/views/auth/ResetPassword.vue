@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, z } from '@/lib/utils'
+import { cn, sleep, z } from '@/lib/utils'
 import { authService } from '@/services'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -58,7 +58,8 @@ const onSubmit = handleSubmit(async (values) => {
 			password: values.password
 		}
 
-		authService.resetPassword(data)
+		await authService.resetPassword(data)
+		await sleep(500)
 
 		router.push('/login')
 	} catch (error) {
@@ -136,7 +137,7 @@ const onSubmit = handleSubmit(async (values) => {
 					</Button>
 					<Button
 						v-else
-						type="disabled"
+						disabled
 					>
 						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 						Réinitialisation...

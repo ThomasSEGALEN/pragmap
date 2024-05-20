@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, z } from '@/lib/utils'
+import { cn, sleep, z } from '@/lib/utils'
 import { customerService, roadmapService } from '@/services'
 import type { ICustomer } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -29,9 +29,9 @@ options.value = (
 }))
 
 const customers = ref<Array<ICustomer>>([])
-onMounted(async () => {
-	customers.value = (await customerService.getAll()) as Array<ICustomer>
-})
+
+customers.value = (await customerService.getAll()) as Array<ICustomer>
+
 const formSchema = toTypedSchema(
 	z.object({
 		name: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
@@ -52,6 +52,7 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await roadmapService.create(data)
+		await sleep(500)
 
 		router.push('/roadmaps')
 	} catch (error) {
@@ -124,7 +125,7 @@ const onSubmit = handleSubmit(async (values) => {
 					</Button>
 					<Button
 						v-else
-						type="disabled"
+						disabled
 					>
 						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 						Création...
