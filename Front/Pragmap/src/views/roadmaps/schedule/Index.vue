@@ -77,3 +77,6 @@ const chartOptions = {
 	}
 }
 </script> -->
+
+<script lang="ts" setup></script>
+<template>Schedule</template>
