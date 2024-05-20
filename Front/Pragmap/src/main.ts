@@ -5,6 +5,7 @@ import { createPinia } from 'pinia'
 import App from '@/App.vue'
 import router from '@/router'
 import { useAuthStore } from '@/stores'
+import VueApexCharts from "vue3-apexcharts";
 
 const app = createApp(App)
 const pinia = createPinia()
@@ -12,6 +13,7 @@ const pinia = createPinia()
 app.use(pinia)
 app.use(router)
 
+app.use(VueApexCharts);
 app.mount('#app')
 
 export const api = axios.create({
