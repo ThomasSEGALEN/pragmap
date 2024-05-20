@@ -18,12 +18,12 @@ export interface IGetCustomer {
 }
 export interface IPostCustomer {
 	name: string
-	logo: string
+	logo: string | null
 	userIds: Array<string> | []
 }
 export interface IPutCustomer {
 	id: string
 	name: string
-	logo: string
+	logo: string | null
 	userIds: Array<string> | []
 }
