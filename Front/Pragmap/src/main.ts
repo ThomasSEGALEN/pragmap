@@ -12,8 +12,8 @@ const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
+app.use(VueApexCharts)
 
-app.use(VueApexCharts);
 app.mount('#app')
 
 export const api = axios.create({
