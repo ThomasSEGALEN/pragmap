@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
 	<div
 		id="chart"
 		class="w-full h-full"
@@ -76,4 +76,4 @@ const chartOptions = {
 		}
 	}
 }
-</script>
+</script> -->
