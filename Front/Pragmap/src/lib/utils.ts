@@ -8,13 +8,25 @@ import { z } from 'zod'
 import { zodI18nMap } from 'zod-i18n-map'
 import translation from '@/lib/zod.json'
 
-export function cn(...inputs: ClassValue[]) {
+export const cn = (...inputs: ClassValue[]) => {
 	return twMerge(clsx(inputs))
 }
 
-export function valueUpdater<T extends Updater<any>>(updaterOrValue: T, ref: Ref) {
+export const valueUpdater = <T extends Updater<any>>(updaterOrValue: T, ref: Ref) => {
 	ref.value = typeof updaterOrValue === 'function' ? updaterOrValue(ref.value) : updaterOrValue
 }
+
+export const convertToBase64 = (file: File): Promise<string> => {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader()
+
+		reader.readAsDataURL(file)
+		reader.onload = () => resolve(reader.result as string)
+		reader.onerror = (error) => reject(error)
+	})
+}
+
+export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 i18next.init({
 	lng: 'fr',
