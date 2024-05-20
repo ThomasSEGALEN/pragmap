@@ -1,11 +1,11 @@
 import '@/assets/main.css'
 import axios from 'axios'
+import VueApexCharts from "vue3-apexcharts"
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from '@/App.vue'
 import router from '@/router'
 import { useAuthStore } from '@/stores'
-import VueApexCharts from "vue3-apexcharts";
 
 const app = createApp(App)
 const pinia = createPinia()
