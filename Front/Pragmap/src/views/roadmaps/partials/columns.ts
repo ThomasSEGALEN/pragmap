@@ -5,6 +5,7 @@ import router from '@/router'
 import { roadmapService } from '@/services'
 import type { RoadmapsData } from '@/stores'
 import { Button } from '@/components/ui/button'
+import { CalendarDays, FileText, ListTodo } from 'lucide-vue-next'
 import { DataTableColumnHeader, DataTableDropDown } from '@/components/ui/datatable'
 import { toast } from '@/components/ui/toast'
 
@@ -43,12 +44,13 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 		accessorKey: 'management',
 		header: ({ column }) => h(DataTableColumnHeader<RoadmapsData>, { column, title: 'Gestion' }),
 		cell: ({ row }) =>
-			h('div', { class: 'flex flex-col place-items-start' }, [
+			h('div', { class: 'flex space-x-2' }, [
 				h(
 					Button,
 					{
-						class: 'px-2 focus-visible:ring-offset-0',
-						variant: 'link',
+						class: 'w-auto px-2 focus-visible:ring-offset-0',
+						variant: 'outline',
+						size: 'icon',
 						asChild: true
 					},
 					() =>
@@ -57,14 +59,15 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 							{
 								to: `/roadmaps/${row.original.id}/schedule`
 							},
-							() => 'Planning'
+							() => h(CalendarDays)
 						)
 				),
 				h(
 					Button,
 					{
-						class: 'px-2 focus-visible:ring-offset-0',
-						variant: 'link',
+						class: 'w-auto px-2 focus-visible:ring-offset-0',
+						variant: 'outline',
+						size: 'icon',
 						asChild: true
 					},
 					() =>
@@ -73,14 +76,15 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 							{
 								to: `/roadmaps/${row.original.id}/tasks`
 							},
-							() => 'Tâches'
+							() => h(ListTodo)
 						)
 				),
 				h(
 					Button,
 					{
-						class: 'px-2 focus-visible:ring-offset-0',
-						variant: 'link',
+						class: 'w-auto px-2 focus-visible:ring-offset-0',
+						variant: 'outline',
+						size: 'icon',
 						asChild: true
 					},
 					() =>
@@ -89,7 +93,7 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 							{
 								to: `/roadmaps/${row.original.id}/deliverables`
 							},
-							() => 'Livrables'
+							() => h(FileText)
 						)
 				)
 			]),
