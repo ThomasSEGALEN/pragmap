@@ -36,7 +36,7 @@ const { handleSubmit, isSubmitting } = useForm({
 const onSubmit = handleSubmit(async (values) => {
 	try {
 		await roadmapService.update(id, values)
-		await sleep(500)
+		await sleep(250)
 
 		router.push('/roadmaps')
 	} catch (error) {

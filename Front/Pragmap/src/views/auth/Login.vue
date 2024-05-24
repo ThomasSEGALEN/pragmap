@@ -30,7 +30,7 @@ const { handleSubmit, isSubmitting } = useForm({
 const onSubmit = handleSubmit(async (values) => {
 	try {
 		await login(values)
-		await sleep(500)
+		await sleep(250)
 
 		router.push('/')
 	} catch (error) {

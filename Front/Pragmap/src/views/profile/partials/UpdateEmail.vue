@@ -32,7 +32,7 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await userService.askEmailUpdate(data)
-		await sleep(500)
+		await sleep(250)
 
 		toast({
 			title: 'Succès',

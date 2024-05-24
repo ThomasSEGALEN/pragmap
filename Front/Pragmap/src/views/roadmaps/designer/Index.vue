@@ -69,7 +69,7 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await saveData()
-		await sleep(500)
+		await sleep(250)
 	} catch (error) {
 		toast({
 			title: 'Erreur',

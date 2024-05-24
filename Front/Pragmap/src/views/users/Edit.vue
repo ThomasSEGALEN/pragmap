@@ -59,7 +59,7 @@ const { handleSubmit, isSubmitting } = useForm({
 const onSubmit = handleSubmit(async (values) => {
 	try {
 		await userService.update(id, values)
-		await sleep(500)
+		await sleep(250)
 
 		router.push('/users')
 	} catch (error) {

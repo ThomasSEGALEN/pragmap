@@ -59,7 +59,7 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await authService.resetPassword(data)
-		await sleep(500)
+		await sleep(250)
 
 		router.push('/login')
 	} catch (error) {

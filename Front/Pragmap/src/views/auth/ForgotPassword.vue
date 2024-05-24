@@ -26,7 +26,7 @@ const { handleSubmit, isSubmitting } = useForm({
 const onSubmit = handleSubmit(async (values) => {
 	try {
 		await authService.forgotPassword(values)
-		await sleep(500)
+		await sleep(250)
 
 		toast({
 			title: 'Succès',

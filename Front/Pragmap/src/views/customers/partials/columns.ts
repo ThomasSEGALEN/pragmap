@@ -24,16 +24,15 @@ export const columns: Array<ColumnDef<CustomersData>> = [
 			//TODO : nullable string for Logo
 			row.getValue('Logo')
 				? h('img', {
-					class: 'h-24 w-24 object-cover',
-					src: row.getValue('Logo'),
-					alt: `Logo de ${row.getValue('Nom')}`
-				})
+						class: 'h-24 w-24 object-cover',
+						src: row.getValue('Logo'),
+						alt: `Logo de ${row.getValue('Nom')}`
+					})
 				: h('img', {
-					class: 'h-24 w-24 object-cover',
-					src: logoPlaceholder,
-					alt: `Logo de ${row.getValue('Nom')}`
-				})
-		,
+						class: 'h-24 w-24 object-cover',
+						src: logoPlaceholder,
+						alt: `Logo de ${row.getValue('Nom')}`
+					}),
 		enableSorting: false
 	},
 	{

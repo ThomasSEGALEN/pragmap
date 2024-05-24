@@ -65,7 +65,7 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 			type: draggedType.value ?? 'node',
 			position: position,
 			label: label,
-			sourcePosition: Position.Left,
+			sourcePosition: Position.Left
 		}
 		const taskNode = {
 			...defaultNode,
@@ -89,7 +89,7 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 		const milestoneNode = {
 			...defaultNode,
 			data: {
-				description: `Description de ` + label,
+				description: `Description de ` + label
 			},
 			targetPosition: Position.Left
 		}
@@ -103,7 +103,12 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 
 			off()
 		})
-		const newNode = draggedType.value === 'task' ? taskNode : draggedType.value === 'deliverable' ? deliverableNode : milestoneNode
+		const newNode =
+			draggedType.value === 'task'
+				? taskNode
+				: draggedType.value === 'deliverable'
+					? deliverableNode
+					: milestoneNode
 
 		addNodes(newNode)
 	}

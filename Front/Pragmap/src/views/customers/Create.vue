@@ -64,7 +64,7 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await customerService.create(data)
-		await sleep(500)
+		await sleep(250)
 
 		router.push('/customers')
 	} catch (error) {

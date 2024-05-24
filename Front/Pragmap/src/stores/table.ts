@@ -113,14 +113,16 @@ export const getRoadmapData = async (
 
 	const finalDataTable: Array<Node> = []
 
-	data.filter((node) => node.type === nodeType).forEach((node) => {
-		finalDataTable.push({
-			id: node.id,
-			label: node.label,
-			type: node.type,
-			...node.data
+	data
+		.filter((node) => node.type === nodeType)
+		.forEach((node) => {
+			finalDataTable.push({
+				id: node.id,
+				label: node.label,
+				type: node.type,
+				...node.data
+			})
 		})
-	})
 
 	return finalDataTable
 }

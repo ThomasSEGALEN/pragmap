@@ -52,7 +52,7 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await roadmapService.create(data)
-		await sleep(500)
+		await sleep(250)
 
 		router.push('/roadmaps')
 	} catch (error) {
