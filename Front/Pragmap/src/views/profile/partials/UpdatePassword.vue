@@ -2,7 +2,7 @@
 import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, z } from '@/lib/utils'
+import { cn, sleep, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -52,6 +52,7 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await userService.updatePassword(data)
+		await sleep(250)
 
 		router.push('/logout')
 
@@ -137,7 +138,7 @@ const onSubmit = handleSubmit(async (values) => {
 				</Button>
 				<Button
 					v-else
-					type="disabled"
+					disabled
 				>
 					<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 					Modification...

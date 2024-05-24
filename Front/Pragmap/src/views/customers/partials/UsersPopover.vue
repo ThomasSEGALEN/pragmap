@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { userService } from '@/services'
 import type { ICustomerUser } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -8,21 +8,20 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 const { customerUsers } = defineProps<{ customerUsers: Array<ICustomerUser> }>()
 
 const users = ref<Array<Record<'id' | 'name', string>>>([])
-onMounted(async () => {
-	users.value = await Promise.all(
-		customerUsers.map(async (customerUser) => {
-			const user = await userService.getById(customerUser.userId, {
-				select: ['id', 'lastName', 'firstName']
-			})
 
-			return {
-				id: user.id,
-				name: `${user.lastName.charAt(0).toUpperCase() + user.lastName.substring(1)} ${user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1)}`
-			}
+users.value = await Promise.all(
+	customerUsers.map(async (customerUser) => {
+		const user = await userService.getById(customerUser.userId, {
+			select: ['id', 'lastName', 'firstName']
 		})
-	)
-	users.value.sort((a, b) => a.name.localeCompare(b.name))
-})
+
+		return {
+			id: user.id,
+			name: `${user.lastName.charAt(0).toUpperCase() + user.lastName.substring(1)} ${user.firstName.charAt(0).toUpperCase() + user.firstName.substring(1)}`
+		}
+	})
+)
+users.value.sort((a, b) => a.name.localeCompare(b.name))
 </script>
 
 <template>

@@ -17,10 +17,10 @@ export type Node = {
 	type: string
 	data?: NodeData
 }
+//TODO : Refaire le type pour les différentes nodes
 export type NodeData = {
 	description: string
 	duration: number
-	start: boolean
 	progress: number
 }
 
@@ -111,28 +111,18 @@ export const getRoadmapData = async (
 
 	useTableStore().setData(data)
 
-	const idTable = table.map((row) => [...new Set(row)])
-	const dataTable: Array<Array<Node>> = []
-
-	idTable.forEach((row) => {
-		const item = row
-			.map((id) => data.find((element) => element.id === id))
-			.filter((element): element is Node => element?.type === nodeType)
-
-		dataTable.push(item)
-	})
-
-	const flatDataTable = dataTable.flat()
 	const finalDataTable: Array<Node> = []
 
-	flatDataTable.forEach((element) => {
-		finalDataTable.push({
-			id: element.id,
-			label: element.label,
-			type: element.type,
-			...element.data
+	data
+		.filter((node) => node.type === nodeType)
+		.forEach((node) => {
+			finalDataTable.push({
+				id: node.id,
+				label: node.label,
+				type: node.type,
+				...node.data
+			})
 		})
-	})
 
 	return finalDataTable
 }

@@ -20,7 +20,6 @@ export const columns: Array<ColumnDef<any>> = [
 						label: string
 						description: string
 						duration: number
-						start: boolean
 						progress: number
 					}>
 				>,
@@ -45,7 +44,6 @@ export const columns: Array<ColumnDef<any>> = [
 						label: string
 						description: string
 						duration: number
-						start: boolean
 						progress: number
 					}>
 				>,
@@ -70,7 +68,6 @@ export const columns: Array<ColumnDef<any>> = [
 						label: string
 						description: string
 						duration: number
-						start: boolean
 						progress: number
 					}>
 				>,
@@ -100,7 +97,6 @@ export const columns: Array<ColumnDef<any>> = [
 						label: string
 						description: string
 						duration: number
-						start: boolean
 						progress: number
 					}>
 				>,

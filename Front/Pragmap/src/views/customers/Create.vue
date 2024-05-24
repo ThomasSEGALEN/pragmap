@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, z } from '@/lib/utils'
+import { cn, convertToBase64, sleep, z } from '@/lib/utils'
 import { customerService, userService } from '@/services'
 import type { IUser } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -14,7 +14,6 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
-import { convertLogoToBase64 } from './partials/convertLogo'
 
 const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
@@ -32,15 +31,17 @@ options.value = (
 const formSchema = toTypedSchema(
 	z.object({
 		name: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
-		logo: z.custom<File>().superRefine((value, context) => {
-			if (!value?.name) {
-				return context.addIssue({
-					code: z.ZodIssueCode.custom,
-					message: 'Obligatoire',
-					path: ['logo']
-				})
-			}
-		}),
+		logo: z.instanceof(File).default(new File([], '')),
+		// logo: z.custom<File>()
+		// .superRefine((value, context) => {
+		// 	if (!value?.name) {
+		// 		return context.addIssue({
+		// 			code: z.ZodIssueCode.custom,
+		// 			message: 'Obligatoire',
+		// 			path: ['logo']
+		// 		})
+		// 	}
+		// })
 		userIds: z
 			.array(
 				z.object({
@@ -58,11 +59,12 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		const data = {
 			name: values.name,
-			logo: await convertLogoToBase64(values.logo),
+			logo: values.logo.size > 0 ? await convertToBase64(values.logo) : null,
 			userIds: values.userIds.map((userId) => userId.value)
 		}
 
 		await customerService.create(data)
+		await sleep(250)
 
 		router.push('/customers')
 	} catch (error) {
@@ -156,7 +158,7 @@ const onSubmit = handleSubmit(async (values) => {
 					</Button>
 					<Button
 						v-else
-						type="disabled"
+						disabled
 					>
 						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 						Création...

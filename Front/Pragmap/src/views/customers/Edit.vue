@@ -4,7 +4,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, z } from '@/lib/utils'
+import { cn, convertToBase64, sleep, z } from '@/lib/utils'
 import { customerService, userService } from '@/services'
 import { useFormStore } from '@/stores'
 import type { IUser } from '@/types'
@@ -15,7 +15,6 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
-import { convertLogoToBase64 } from './partials/convertLogo'
 
 const { id } = useRoute().params as { id: string }
 const router = useRouter()
@@ -74,11 +73,12 @@ const onSubmit = handleSubmit(async (values) => {
 	try {
 		const data = {
 			...values,
-			logo: await convertLogoToBase64(values.logo),
+			logo: values.logo.size > 0 ? await convertToBase64(values.logo) : null,
 			userIds: selected.value.map((userId) => userId.value)
 		}
 
 		await customerService.update(id, data)
+		await sleep(250)
 
 		router.push('/customers')
 	} catch (error) {
@@ -171,7 +171,7 @@ const onSubmit = handleSubmit(async (values) => {
 					</Button>
 					<Button
 						v-else
-						type="disabled"
+						disabled
 					>
 						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 						Modification...

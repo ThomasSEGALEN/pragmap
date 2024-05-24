@@ -7,6 +7,7 @@ import type { ICustomerUser } from '@/types'
 import { DataTableColumnHeader, DataTableDropDown } from '@/components/ui/datatable'
 import { toast } from '@/components/ui/toast'
 import UsersPopover from './UsersPopover.vue'
+import logoPlaceholder from '@/assets/logo-placeholder.png'
 
 export const columns: Array<ColumnDef<CustomersData>> = [
 	{
@@ -20,11 +21,18 @@ export const columns: Array<ColumnDef<CustomersData>> = [
 		accessorKey: 'logo',
 		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Logo' }),
 		cell: ({ row }) =>
-			h('img', {
-				class: 'h-24 w-24 object-cover',
-				src: row.getValue('Logo'),
-				alt: `Logo de ${row.getValue('Nom')}`
-			}),
+			//TODO : nullable string for Logo
+			row.getValue('Logo')
+				? h('img', {
+						class: 'h-24 w-24 object-cover',
+						src: row.getValue('Logo'),
+						alt: `Logo de ${row.getValue('Nom')}`
+					})
+				: h('img', {
+						class: 'h-24 w-24 object-cover',
+						src: logoPlaceholder,
+						alt: `Logo de ${row.getValue('Nom')}`
+					}),
 		enableSorting: false
 	},
 	{

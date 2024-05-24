@@ -105,7 +105,7 @@ const router = createRouter({
 		{
 			path: '/roadmaps/:id/designer',
 			name: 'RoadmapsDesigner',
-			component: () => import('@/views/roadmaps/Designer.vue'),
+			component: () => import('@/views/roadmaps/designer/Index.vue'),
 			beforeEnter: authMiddleware,
 			meta: { name: 'Designer de roadmap', requiresAuth: true },
 			props: true
@@ -125,6 +125,13 @@ const router = createRouter({
 			beforeEnter: authMiddleware,
 			meta: { name: 'Livrables de la roadmap', requiresAuth: true },
 			props: true
+		},
+		{
+			path: '/roadmaps/:id/schedule',
+			name: 'RoadmapsSchedule',
+			component: () => import('@/views/roadmaps/schedule/Index.vue'),
+			beforeEnter: authMiddleware,
+			meta: { name: 'Planning de roadmap', requiresAuth: true }
 		},
 		{
 			path: '/profile',
