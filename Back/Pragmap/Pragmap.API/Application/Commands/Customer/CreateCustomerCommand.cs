@@ -9,7 +9,7 @@ namespace Pragmap.API.Application.Commands
     {
         public string Name { get; set; }
 
-        public string Logo { get; set; }
+        public string? Logo { get; set; }
 
         public IEnumerable<Guid>? UserIds { get; set; }
     }
