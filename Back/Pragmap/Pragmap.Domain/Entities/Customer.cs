@@ -10,7 +10,7 @@ namespace Pragmap.Domain.Entities
         [MaxLength(255)]
         public string Name { get; set; }
 
-        public string Logo { get; set; }
+        public string? Logo { get; set; }
 
         public DateTime CreatedAt { get; set; }
 

@@ -20,7 +20,7 @@ namespace Pragmap.API.Application.Commands
             var customer = new Customer
             {
                 Name = request.Name,
-                Logo = request.Logo,
+                Logo = request?.Logo,
             };
 
             if (request.UserIds != null)
