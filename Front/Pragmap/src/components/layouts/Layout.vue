@@ -29,7 +29,7 @@ const getInitials = () =>
 <template>
 	<div class="flex">
 		<Sidebar
-			class="fixed h-full min-w-60 hidden md:block border-r z-50 overflow-y-auto bg-background"
+			class="fixed h-full w-full max-w-60 hidden md:block border-r z-50 overflow-y-auto bg-background"
 		/>
 		<div class="h-screen w-full flex flex-col md:ml-60">
 			<header
