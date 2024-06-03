@@ -72,7 +72,9 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 			data: {
 				description: `Description de ` + label,
 				duration: 0,
-				progress: 0
+				progress: 0,
+				startDate: new Date().toISOString(),
+				endDate: new Date().toISOString(),
 			},
 			targetPosition: Position.Right
 		}

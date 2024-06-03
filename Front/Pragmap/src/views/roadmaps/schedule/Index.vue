@@ -1,82 +1,48 @@
-<!-- <template>
-	<div
-		id="chart"
-		class="w-full h-full"
-	>
-		<apexchart
-			type="rangeBar"
-			height="350"
-			:options="chartOptions"
-			:series="series"
-		></apexchart>
-	</div>
+<template>
+	<g-gantt-chart chart-start="2021-07-12 12:00" chart-end="2021-07-14 12:00" precision="hour" bar-start="myBeginDate"
+		bar-end="myEndDate">
+		<g-gantt-row label="My row 1" :bars="row1BarList" />
+		<g-gantt-row label="My row 2" :bars="row2BarList" />
+	</g-gantt-chart>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { getRoadmapData } from '@/stores'
-import moment from 'moment'
+
+import { getRoadmapData } from "@/stores";
+import { ref } from "vue"
+import { useRoute } from "vue-router";
 
 const { id } = useRoute().params as { id: string }
-
 const tasks = ref([])
-const series = ref([])
-
-onMounted(async () => {
-	tasks.value = await getRoadmapData(id, 'task')
-
-	series.value = [
-		{
-			data: tasks.value.map((task) => ({
-				x: task.label,
-				y: [new Date('2019-02-27').getTime(), new Date('2019-03-04').getTime()],
-				fillColor: '#008FFB' // replace with the actual color for each task
-			}))
-		}
-	]
-})
-const chartOptions = {
-	chart: {
-		height: 350,
-		type: 'rangeBar'
-	},
-	plotOptions: {
-		bar: {
-			horizontal: true,
-			distributed: true,
-			dataLabels: {
-				hideOverflowingLabels: false
-			}
-		}
-	},
-	dataLabels: {
-		enabled: true,
-		formatter: function (val, opts) {
-			var label = opts.w.globals.labels[opts.dataPointIndex]
-			var a = moment(val[0])
-			var b = moment(val[1])
-			var diff = b.diff(a, 'days')
-			return label + ': ' + diff + (diff > 1 ? ' days' : ' day')
-		},
-		style: {
-			colors: ['#f3f4f5', '#fff']
-		}
-	},
-	xaxis: {
-		type: 'datetime'
-	},
-	yaxis: {
-		show: false
-	},
-	grid: {
-		row: {
-			colors: ['#f3f4f5', '#fff'],
-			opacity: 1
+tasks.value = await getRoadmapData(id, 'task')
+console.log(tasks.value)
+const row1BarList = ref([
+	{
+		myBeginDate: "2021-07-13 13:00",
+		myEndDate: "2021-07-13 19:00",
+		ganttBarConfig: {
+			// each bar must have a nested ganttBarConfig object ...
+			id: "unique-id-1", // ... and a unique "id" property
+			label: "Lorem ipsum dolor"
 		}
 	}
-}
-</script> -->
-
-<script lang="ts" setup></script>
-<template>Schedule</template>
+])
+const row2BarList = ref([
+	{
+		myBeginDate: "2021-07-13 00:00",
+		myEndDate: "2021-07-14 02:00",
+		ganttBarConfig: {
+			id: "another-unique-id-2",
+			hasHandles: true,
+			label: "Hey, look at me",
+			style: {
+				// arbitrary CSS styling for your bar
+				background: "#e09b69",
+				borderRadius: "20px",
+				color: "black"
+			},
+			class: "foo" // you can also add CSS classes to your bars!
+		}
+	}
+])
+</script>
