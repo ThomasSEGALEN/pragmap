@@ -45,6 +45,8 @@ const formSchema = toTypedSchema(
 	z.object({
 		name: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
 		description: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
+		startDate: z.coerce.date(),
+		endDate: z.coerce.date(),
 		duration: z.coerce.number().refine((value) => value >= 0),
 		progress: z.coerce.number().refine((value) => value >= 0),
 		file: z.instanceof(File).default(new File([], ''))
@@ -203,6 +205,40 @@ const onSubmit = handleSubmit(async (values) => {
 							<Input
 								v-bind="componentField"
 								type="number"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-if="selectedNode.type == 'task'"
+					v-slot="{ componentField }"
+					v-model="selectedNode.data['startDate']"
+					name="startDate"
+				>
+					<FormItem class="w-full">
+						<FormLabel>Date de commencement</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="date"
+							/>
+						</FormControl>
+						<FormMessage />
+					</FormItem>
+				</FormField>
+				<FormField
+					v-if="selectedNode.type == 'task'"
+					v-slot="{ componentField }"
+					v-model="selectedNode.data['endDate']"
+					name="endDate"
+				>
+					<FormItem class="w-full">
+						<FormLabel>Date de Fin</FormLabel>
+						<FormControl>
+							<Input
+								v-bind="componentField"
+								type="date"
 							/>
 						</FormControl>
 						<FormMessage />

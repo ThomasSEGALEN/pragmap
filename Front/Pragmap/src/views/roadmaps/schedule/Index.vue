@@ -1,82 +1,51 @@
-<!-- <template>
-	<div
-		id="chart"
-		class="w-full h-full"
-	>
-		<apexchart
-			type="rangeBar"
-			height="350"
-			:options="chartOptions"
-			:series="series"
-		></apexchart>
-	</div>
+<template>
+	<g-gantt-chart  :chart-start="chartStart" :chart-end="chartEnd"  precision="week" bar-start="myBeginDate"
+    bar-end="myEndDate" class="w-full">
+<g-gantt-row v-for="(task, index) in sortedTasks" :key="index"  :bars="[task]" />
+</g-gantt-chart>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-import { getRoadmapData } from '@/stores'
-import moment from 'moment'
+
+import { getRoadmapData } from "@/stores";
+import { ref } from "vue"
+import { useRoute } from "vue-router";
+import { format, min, max, differenceInDays, addDays } from "date-fns";
 
 const { id } = useRoute().params as { id: string }
-
 const tasks = ref([])
-const series = ref([])
-
-onMounted(async () => {
-	tasks.value = await getRoadmapData(id, 'task')
-
-	series.value = [
-		{
-			data: tasks.value.map((task) => ({
-				x: task.label,
-				y: [new Date('2019-02-27').getTime(), new Date('2019-03-04').getTime()],
-				fillColor: '#008FFB' // replace with the actual color for each task
-			}))
-		}
-	]
-})
-const chartOptions = {
-	chart: {
-		height: 350,
-		type: 'rangeBar'
-	},
-	plotOptions: {
-		bar: {
-			horizontal: true,
-			distributed: true,
-			dataLabels: {
-				hideOverflowingLabels: false
-			}
-		}
-	},
-	dataLabels: {
-		enabled: true,
-		formatter: function (val, opts) {
-			var label = opts.w.globals.labels[opts.dataPointIndex]
-			var a = moment(val[0])
-			var b = moment(val[1])
-			var diff = b.diff(a, 'days')
-			return label + ': ' + diff + (diff > 1 ? ' days' : ' day')
-		},
+tasks.value = await getRoadmapData(id, 'task')
+console.log(tasks.value)
+const transformedTasks = tasks.value.map(task => ({
+	myBeginDate: format(new Date((task as { startDate: string }).startDate), 'yyyy-MM-dd HH:mm'),
+	myEndDate: format(new Date((task as { endDate: string }).endDate), 'yyyy-MM-dd HH:mm'),
+	ganttBarConfig: {
+		id: `${(task as { id: string }).id}`,
+		hasHandles: true,
+		label: (task as { label: string }).label,
 		style: {
-			colors: ['#f3f4f5', '#fff']
-		}
-	},
-	xaxis: {
-		type: 'datetime'
-	},
-	yaxis: {
-		show: false
-	},
-	grid: {
-		row: {
-			colors: ['#f3f4f5', '#fff'],
-			opacity: 1
-		}
+			background: `linear-gradient(90deg, rgba(224, 155, 105, 1) ${(task as { progress: number }).progress}%, rgba(224, 155, 105, 0) ${(task as { progress: number }).progress}%, rgba(211, 211, 211, 1) ${(task as { progress: number }).progress}%)`,
+			color: "black"
+		},
+		class: "foo"
 	}
-}
-</script> -->
+}));
 
-<script lang="ts" setup></script>
-<template>Schedule</template>
+
+// Calculer les dates de début et de fin minimales et maximales
+let minStartDate = min(transformedTasks.map(task => new Date(task.myBeginDate)));
+let maxEndDate = max(transformedTasks.map(task => new Date(task.myEndDate)));
+
+// Si la différence entre chartEnd et chartStart est inférieure à un jour, ajouter un jour à chartEnd
+if (differenceInDays(maxEndDate, minStartDate) < 1) {
+  maxEndDate = addDays(maxEndDate, 1);
+}
+let sortedTasks = [...transformedTasks].sort((a, b) => {
+return new Date(a.myBeginDate).getTime() - new Date(b.myBeginDate).getTime();
+});
+// Formater les dates pour qu'elles soient au format 'yyyy-MM-dd HH:mm'
+let chartStart = format(minStartDate, 'yyyy-MM-dd HH:mm');
+let chartEnd = format(maxEndDate, 'yyyy-MM-dd HH:mm');
+
+
+</script>
