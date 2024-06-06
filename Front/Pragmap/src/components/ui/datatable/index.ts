@@ -1,5 +1,5 @@
 export { default as DataTable } from './DataTable.vue'
+export { default as DataTableAction } from './DataTableAction.vue'
 export { default as DataTableColumnHeader } from './DataTableColumnHeader.vue'
-export { default as DataTableDropDown } from './DataTableDropDown.vue'
 export { default as DataTableFilter } from './DataTableFilter.vue'
 export { default as DataTablePagination } from './DataTablePagination.vue'
