@@ -25,7 +25,6 @@ const { editCustomer } = useFormStore()
 const userIds = editCustomer?.customerUsers?.map(
 	(customerUser) => customerUser.userId
 ) as Array<string>
-
 options.value = (
 	(await userService.getAll({ select: ['id', 'lastName', 'firstName'] })) as Array<IUser>
 ).map((user) => ({
@@ -44,7 +43,6 @@ selected.value = await Promise.all(
 		}
 	})
 )
-
 const formSchema = toTypedSchema(
 	z.object({
 		id: z.string().default(id),

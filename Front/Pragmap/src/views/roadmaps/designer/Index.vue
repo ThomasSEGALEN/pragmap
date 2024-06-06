@@ -24,15 +24,11 @@ const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
 const { onConnect, addEdges } = useVueFlow()
 const { onDragOver, onDrop, onDragLeave, isDragOver, onDragStart } = useDragAndDrop(elements)
-
 onConnect((params) => {
 	addEdges([params])
 })
-
 const data = (await roadmapService.getById(id)).data
-
 elements.value = JSON.parse(data) ?? []
-
 const saveData = async () => {
 	const data = {
 		id: id,

@@ -249,14 +249,5 @@ export const routes = [
 			requiresAuth: false,
 			requiredRoles: [Role.Administrator, Role.Manager, Role.Editor, Role.Reader]
 		}
-	},
-	{
-		path: '/:pathMatch(.*)*',
-		name: 'NotFound',
-		component: () => import('@/views/NotFound.vue'),
-		meta: {
-			requiresAuth: false,
-			requiredRoles: [Role.Administrator, Role.Manager, Role.Editor, Role.Reader]
-		}
 	}
 ]

@@ -67,9 +67,7 @@ const onSubmit = handleSubmit(async (values) => {
 	const keys = update.key.split('.')
 	const finalKey = keys.pop() as string
 	const node = keys.reduce((node, key) => node[key], newEntity as { [key: string]: any })
-
 	node[finalKey] = update.value
-
 	const newData = roadmapData.map((obj: any) => (obj.id === entityId ? newEntity : obj))
 
 	try {

@@ -6,9 +6,7 @@ import { format, min, max, differenceInDays, addDays } from 'date-fns'
 
 const { id } = useRoute().params as { id: string }
 const tasks = ref([])
-
 tasks.value = await getRoadmapData(id, 'task')
-
 const transformedTasks = tasks.value.map((task) => ({
 	myBeginDate: format(new Date((task as { startDate: string }).startDate), 'yyyy-MM-dd HH:mm'),
 	myEndDate: format(new Date((task as { endDate: string }).endDate), 'yyyy-MM-dd HH:mm'),
@@ -35,13 +33,14 @@ let sortedTasks = [...transformedTasks].sort((a, b) => {
 })
 let chartStart = format(minStartDate, 'yyyy-MM-dd HH:mm')
 let chartEnd = format(maxEndDate, 'yyyy-MM-dd HH:mm')
+
+// TODO: Ajouter le jalon sur le côté ou après la dernière tâche
 </script>
 
 <template>
 	<g-gantt-chart
 		:chart-start="chartStart"
 		:chart-end="chartEnd"
-		precision="week"
 		bar-start="myBeginDate"
 		bar-end="myEndDate"
 		class="w-full"

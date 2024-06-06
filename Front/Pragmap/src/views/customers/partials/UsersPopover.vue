@@ -8,7 +8,6 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 const { customerUsers } = defineProps<{ customerUsers: Array<ICustomerUser> }>()
 
 const users = ref<Array<Record<'id' | 'name', string>>>([])
-
 users.value = await Promise.all(
 	customerUsers.map(async (customerUser) => {
 		const user = await userService.getById(customerUser.userId, {

@@ -18,14 +18,12 @@ const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
 const selected = ref<Array<Record<'label' | 'value', string>>>([])
 const options = ref<Array<Record<'label' | 'value', string>>>([])
-
 options.value = (
 	(await userService.getAll({ select: ['id', 'lastName', 'firstName'] })) as Array<IUser>
 ).map((user) => ({
 	label: `${user.firstName} ${user.lastName}`,
 	value: user.id
 }))
-
 const formSchema = toTypedSchema(
 	z.object({
 		name: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
