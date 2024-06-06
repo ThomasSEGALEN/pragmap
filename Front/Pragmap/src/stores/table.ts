@@ -1,12 +1,13 @@
 import { customerService, roadmapService, userService } from '@/services'
-import type { ICustomer, IRoadmap, IUser } from '@/types'
+import { Role, type ICustomer, type IRoadmap, type IUser } from '@/types'
 import { defineStore } from 'pinia'
+import { useAuthStore } from './auth'
 
 export type UsersData = Pick<
 	IUser,
 	'id' | 'lastName' | 'firstName' | 'email' | 'roleId' | 'createdAt'
 >
-export type CustomersData = Pick<ICustomer, 'id' | 'name' | 'createdAt'>
+export type CustomersData = Pick<ICustomer, 'id' | 'name' | 'customerUsers' | 'createdAt'>
 export type RoadmapsData = Pick<
 	IRoadmap,
 	'id' | 'name' | 'customerId' | 'customerName' | 'createdAt'
@@ -24,6 +25,12 @@ export type NodeData = {
 	progress: number
 }
 
+const checkUserIsAdmin = async (): Promise<boolean> => {
+	const { getRole } = useAuthStore()
+	const isAdmin = (await getRole()).name === Role.Administrator
+
+	return isAdmin
+}
 export const getUsersData = async (): Promise<Array<UsersData>> => {
 	const users = (await userService.getAll({
 		select: ['id', 'lastName', 'firstName', 'email', 'roleId', 'createdAt'],
@@ -33,18 +40,26 @@ export const getUsersData = async (): Promise<Array<UsersData>> => {
 	return users
 }
 export const getCustomersData = async (): Promise<Array<CustomersData>> => {
+	const { user } = useAuthStore()
+	const isAdmin = await checkUserIsAdmin()
+
 	const customers = (await customerService.getAll({
 		select: ['id', 'name', 'logo', 'createdAt'],
-		expand: ['customerUsers($select=userId)'],
-		orderBy: { column: 'name', order: 'asc' }
+		expand: ['CustomerUsers($select=userId)'],
+		orderBy: { column: 'name', order: 'asc' },
+		filter: isAdmin ? undefined : [`CustomerUsers/any(u:u/UserId eq ${user.id})`]
 	})) as Array<CustomersData>
 
 	return customers
 }
 export const getRoadmapsData = async (): Promise<Array<RoadmapsData>> => {
+	const { user } = useAuthStore()
+	const isAdmin = await checkUserIsAdmin()
+
 	const roadmaps = (await roadmapService.getAll({
 		select: ['id', 'name', 'customerId', 'createdAt'],
-		orderBy: { column: 'name', order: 'asc' }
+		orderBy: { column: 'name', order: 'asc' },
+		filter: isAdmin ? undefined : [`Customer/CustomerUsers/any(u:u/UserId eq ${user.id})`]
 	})) as Array<RoadmapsData>
 
 	const customerNameRoadmaps = await Promise.all(
@@ -62,7 +77,6 @@ export const getRoadmapsData = async (): Promise<Array<RoadmapsData>> => {
 
 	return customerNameRoadmaps
 }
-
 export const getRoadmapData = async (
 	id: string,
 	nodeType: 'task' | 'deliverable'
