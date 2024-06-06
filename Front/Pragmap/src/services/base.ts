@@ -1,4 +1,6 @@
 import { api } from '@/main'
+import router from '@/router'
+import { sleep } from '@/lib/utils'
 
 export interface IApiOptions<T> {
 	select?: Array<keyof T>
@@ -81,19 +83,27 @@ export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V
 	}
 
 	public async create(data: U): Promise<void> {
+		await sleep()
+
 		try {
 			await api.post(`/${this.apiPath}`, data)
 		} catch (error) {
 			throw new Error('Create Error')
 		}
+
+		router.push(`/${this.apiPath}s`)
 	}
 
 	public async update(id: string, data: V): Promise<void> {
+		await sleep()
+
 		try {
 			await api.put(`/${this.apiPath}/${id}`, data)
 		} catch (error) {
 			throw new Error('Update Error')
 		}
+
+		router.push(`/${this.apiPath}s`)
 	}
 
 	public async delete(id: string): Promise<void> {
@@ -102,5 +112,7 @@ export abstract class BaseService<T, S, U, V> implements IBaseService<T, S, U, V
 		} catch (error) {
 			throw new Error('Delete Error')
 		}
+
+		router.go(0)
 	}
 }
