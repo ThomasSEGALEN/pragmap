@@ -38,7 +38,7 @@ users.value.sort((a, b) => a.name.localeCompare(b.name))
 			<h4 class="font-medium leading-none text-md">Utilisateurs :</h4>
 			<ul
 				v-if="users.length"
-				class="mt-2"
+				class="max-h-24 mt-2 overflow-y-auto"
 			>
 				<li
 					v-for="user in users"

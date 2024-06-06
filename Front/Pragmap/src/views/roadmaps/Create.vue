@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, sleep, z } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { customerService, roadmapService } from '@/services'
 import type { ICustomer } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -15,7 +14,6 @@ import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 
-const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
 const selected = ref<Record<'label' | 'value', string>>()
@@ -52,13 +50,10 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await roadmapService.create(data)
-		await sleep(250)
-
-		router.push('/roadmaps')
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à créer la roadmap.`,
+			description: `Nous ne sommes pas parvenus à créer cette roadmap.`,
 			duration: 5000
 		})
 	}

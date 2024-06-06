@@ -6,7 +6,7 @@ import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { type Elements, useVueFlow, VueFlow } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import { convertToBase64, sleep, z } from '@/lib/utils'
+import { convertToBase64, z } from '@/lib/utils'
 import { roadmapService } from '@/services'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -69,11 +69,10 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await saveData()
-		await sleep(250)
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: 'Nous ne sommes pas parvenus à modifier la roadmap.',
+			description: 'Nous ne sommes pas parvenus à modifier cette roadmap.',
 			duration: 5000
 		})
 	}

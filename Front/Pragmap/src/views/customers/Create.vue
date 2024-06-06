@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, convertToBase64, sleep, z } from '@/lib/utils'
+import { cn, convertToBase64, z } from '@/lib/utils'
 import { customerService, userService } from '@/services'
 import type { IUser } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -15,7 +14,6 @@ import { Loader2 } from 'lucide-vue-next'
 import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 
-const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
 const selected = ref<Array<Record<'label' | 'value', string>>>([])
@@ -64,13 +62,10 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await customerService.create(data)
-		await sleep(250)
-
-		router.push('/customers')
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: 'Nous ne sommes pas parvenus à créer un client.',
+			description: 'Nous ne sommes pas parvenus à créer ce client.',
 			duration: 5000
 		})
 	}

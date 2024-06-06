@@ -1,13 +1,11 @@
 import { h } from 'vue'
-import { RouterLink } from 'vue-router'
 import type { ColumnDef } from '@tanstack/vue-table'
-import router from '@/router'
 import { roadmapService } from '@/services'
 import type { RoadmapsData } from '@/stores'
 import { Button } from '@/components/ui/button'
-import { CalendarDays, FileText, ListTodo } from 'lucide-vue-next'
-import { DataTableColumnHeader, DataTableDropDown } from '@/components/ui/datatable'
+import { DataTableAction, DataTableColumnHeader } from '@/components/ui/datatable'
 import { toast } from '@/components/ui/toast'
+import RoadmapActions from './RoadmapActions.vue'
 
 export const columns: Array<ColumnDef<RoadmapsData>> = [
 	{
@@ -43,72 +41,22 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 		id: 'Gestion',
 		accessorKey: 'management',
 		header: ({ column }) => h(DataTableColumnHeader<RoadmapsData>, { column, title: 'Gestion' }),
-		cell: ({ row }) =>
-			h('div', { class: 'flex space-x-2' }, [
-				h(
-					Button,
-					{
-						class: 'w-auto px-2 focus-visible:ring-offset-0',
-						variant: 'outline',
-						size: 'icon',
-						asChild: true
-					},
-					() =>
-						h(
-							RouterLink,
-							{
-								to: `/roadmaps/${row.original.id}/schedule`
-							},
-							() => h(CalendarDays)
-						)
-				),
-				h(
-					Button,
-					{
-						class: 'w-auto px-2 focus-visible:ring-offset-0',
-						variant: 'outline',
-						size: 'icon',
-						asChild: true
-					},
-					() =>
-						h(
-							RouterLink,
-							{
-								to: `/roadmaps/${row.original.id}/tasks`
-							},
-							() => h(ListTodo)
-						)
-				),
-				h(
-					Button,
-					{
-						class: 'w-auto px-2 focus-visible:ring-offset-0',
-						variant: 'outline',
-						size: 'icon',
-						asChild: true
-					},
-					() =>
-						h(
-							RouterLink,
-							{
-								to: `/roadmaps/${row.original.id}/deliverables`
-							},
-							() => h(FileText)
-						)
-				)
-			]),
+		cell: ({ row }) => h(RoadmapActions, { id: row.original.id }),
 		enableSorting: false,
 		enableHiding: false
 	},
 	{
 		id: 'Actions',
+		accessorKey: 'actions',
+		header: ({ column }) => h(DataTableColumnHeader<RoadmapsData>, { column, title: 'Actions' }),
 		cell: ({ row }) =>
-			h(DataTableDropDown, {
+			h(DataTableAction, {
 				name: 'RoadmapsEdit',
 				id: row.original.id,
-				deleteEntity: (id: string) => {
+				customerId: row.original.customerId as string,
+				deleteEntity: async (id: string) => {
 					try {
-						roadmapService.delete(id).then(() => router.go(0))
+						await roadmapService.delete(id)
 					} catch (error) {
 						toast({
 							title: 'Erreur',
@@ -118,6 +66,7 @@ export const columns: Array<ColumnDef<RoadmapsData>> = [
 					}
 				}
 			}),
+		enableSorting: false,
 		enableHiding: false
 	}
 ]

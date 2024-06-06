@@ -3,7 +3,7 @@ import { ref } from 'vue'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, sleep, z } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -32,7 +32,6 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await userService.askEmailUpdate(data)
-		await sleep(250)
 
 		toast({
 			title: 'Succès',
@@ -51,7 +50,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Card :class="cn('h-fit w-[420px]', $attrs.class ?? '')">
+	<Card :class="cn('h-fit max-w-[420px]', $attrs.class ?? '')">
 		<CardHeader>
 			<CardTitle>Modification de l'adresse e-mail</CardTitle>
 			<CardDescription>Renseignez votre nouvelle adresse e-mail</CardDescription>

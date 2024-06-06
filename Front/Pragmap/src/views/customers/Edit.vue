@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, convertToBase64, sleep, z } from '@/lib/utils'
+import { cn, convertToBase64, z } from '@/lib/utils'
 import { customerService, userService } from '@/services'
 import { useFormStore } from '@/stores'
 import type { IUser } from '@/types'
@@ -17,7 +17,6 @@ import { MultiSelect } from '@/components/ui/multi-select'
 import { toast } from '@/components/ui/toast'
 
 const { id } = useRoute().params as { id: string }
-const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
 const selected = ref<Array<{ label: string; value: string }>>([])
@@ -78,9 +77,6 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await customerService.update(id, data)
-		await sleep(250)
-
-		router.push('/customers')
 	} catch (error) {
 		toast({
 			title: 'Erreur',

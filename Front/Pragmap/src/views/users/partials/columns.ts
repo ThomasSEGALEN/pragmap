@@ -1,9 +1,8 @@
 import { h } from 'vue'
 import type { ColumnDef, Row } from '@tanstack/vue-table'
-import router from '@/router'
 import { userService } from '@/services'
 import { useAuthStore, type UsersData } from '@/stores'
-import { DataTableColumnHeader, DataTableDropDown } from '@/components/ui/datatable'
+import { DataTableAction, DataTableColumnHeader } from '@/components/ui/datatable'
 import { toast } from '@/components/ui/toast'
 
 const { roles } = useAuthStore()
@@ -46,13 +45,15 @@ export const columns: Array<ColumnDef<UsersData>> = [
 	},
 	{
 		id: 'Actions',
+		accessorKey: 'actions',
+		header: ({ column }) => h(DataTableColumnHeader<UsersData>, { column, title: 'Actions' }),
 		cell: ({ row }) =>
-			h(DataTableDropDown, {
+			h(DataTableAction, {
 				name: 'UsersEdit',
 				id: row.original.id,
-				deleteEntity: (id: string) => {
+				deleteEntity: async (id: string) => {
 					try {
-						userService.delete(id).then(() => router.go(0))
+						await userService.delete(id)
 					} catch (error) {
 						toast({
 							title: 'Erreur',
@@ -62,6 +63,7 @@ export const columns: Array<ColumnDef<UsersData>> = [
 					}
 				}
 			}),
+		enableSorting: false,
 		enableHiding: false
 	}
 ]
