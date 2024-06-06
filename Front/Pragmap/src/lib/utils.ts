@@ -26,7 +26,9 @@ export const convertToBase64 = (file: File): Promise<string> => {
 	})
 }
 
-export const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms))
+export const SLEEP_TIME = 250
+
+export const sleep = (ms: number = SLEEP_TIME) => new Promise((r) => setTimeout(r, ms))
 
 i18next.init({
 	lng: 'fr',
