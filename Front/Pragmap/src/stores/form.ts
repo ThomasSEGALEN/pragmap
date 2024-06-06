@@ -30,7 +30,7 @@ export const useFormStore = defineStore('form', {
 		async getEditCustomerById(id: string): Promise<void> {
 			const customer = await customerService.getById(id, {
 				select: ['id', 'name', 'logo'],
-				expand: ['customerUsers($select=userId)']
+				expand: ['CustomerUsers($select=userId)']
 			})
 
 			this.$state.editCustomer = customer
