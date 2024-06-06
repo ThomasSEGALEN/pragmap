@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory, type NavigationGuardNext } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 import { useAuthStore, useFormStore } from '@/stores'
 import { Role } from '@/types'
 import { useToast } from '@/components/ui/toast'
@@ -21,7 +21,13 @@ router.beforeEach(async (to, from, next) => {
 	if (role === Role.Administrator) return next()
 
 	const requiredRoles = to.meta.requiredRoles as Array<string>
-	const authorizationsRoutes = ['CustomersEdit', 'RoadmapsEdit', 'RoadmapsSchedule', 'RoadmapsTasks', 'RoadmapsDeliverables']
+	const authorizationsRoutes = [
+		'CustomersEdit',
+		'RoadmapsEdit',
+		'RoadmapsSchedule',
+		'RoadmapsTasks',
+		'RoadmapsDeliverables'
+	]
 	const errorToastRedirect = () => {
 		setTimeout(() => {
 			toast({
