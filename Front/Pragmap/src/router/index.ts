@@ -17,6 +17,7 @@ router.beforeEach(async (to, from, next) => {
 
 	if (!isAuthenticated && requiresAuth) return next({ name: 'Login' })
 	if (isAuthenticated && !requiresAuth) return next({ name: 'Home' })
+	if (!isAuthenticated && !requiresAuth) return next()
 
 	const role = (await getRole()).name
 
