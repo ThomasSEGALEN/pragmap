@@ -47,7 +47,7 @@ export const getCustomersData = async (): Promise<Array<CustomersData>> => {
 		select: ['id', 'name', 'logo', 'createdAt'],
 		expand: ['CustomerUsers($select=userId)'],
 		orderBy: { column: 'name', order: 'asc' },
-		filter: isAdmin ? undefined : [`CustomerUsers/any(u:u/UserId eq ${user.id})`]
+		filter: isAdmin ? [''] : [`CustomerUsers/any(u:u/UserId eq ${user.id})`]
 	})) as Array<CustomersData>
 
 	return customers
@@ -59,7 +59,7 @@ export const getRoadmapsData = async (): Promise<Array<RoadmapsData>> => {
 	const roadmaps = (await roadmapService.getAll({
 		select: ['id', 'name', 'customerId', 'createdAt'],
 		orderBy: { column: 'name', order: 'asc' },
-		filter: isAdmin ? undefined : [`Customer/CustomerUsers/any(u:u/UserId eq ${user.id})`]
+		filter: isAdmin ? [''] : [`Customer/CustomerUsers/any(u:u/UserId eq ${user.id})`]
 	})) as Array<RoadmapsData>
 
 	const customerNameRoadmaps = await Promise.all(
