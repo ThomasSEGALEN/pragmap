@@ -7,6 +7,8 @@ import UpdateDialog from '../../partials/UpdateDialog.vue'
 
 const { getTasksData } = useTableStore()
 
+// TODO: Régler le problème de chargement du composant UpdateDialog
+
 export const columns: Array<ColumnDef<any>> = [
 	{
 		id: 'Label',

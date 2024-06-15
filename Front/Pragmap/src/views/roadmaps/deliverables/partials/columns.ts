@@ -9,6 +9,8 @@ import UpdateDialog from '../../partials/UpdateDialog.vue'
 
 const { getDeliverablesData } = useTableStore()
 
+// TODO: Régler le problème de chargement du composant UpdateDialog
+
 export const columns: Array<ColumnDef<any>> = [
 	{
 		id: 'Label',
@@ -137,30 +139,30 @@ export const columns: Array<ColumnDef<any>> = [
 		cell: ({ row }) =>
 			row.getValue('Fichier')
 				? h(
-						Button,
-						{
-							class: 'w-auto px-2 focus-visible:ring-offset-0',
-							variant: 'outline',
-							asChild: true
-						},
-						() =>
-							h(
-								'a',
-								{
-									href: row.getValue('Fichier'),
-									download: row.getValue('Label')
-								},
-								[h(Download, { class: 'pr-2' }), 'Télécharger']
-							)
-					)
+					Button,
+					{
+						class: 'w-auto px-2 focus-visible:ring-offset-0',
+						variant: 'outline',
+						asChild: true
+					},
+					() =>
+						h(
+							'a',
+							{
+								href: row.getValue('Fichier'),
+								download: row.getValue('Label')
+							},
+							[h(Download, { class: 'pr-2' }), 'Télécharger']
+						)
+				)
 				: h(
-						Button,
-						{
-							class: 'w-auto px-2 focus-visible:ring-offset-0',
-							variant: 'outline',
-							disabled: true
-						},
-						() => [h(Download, { class: 'pr-2' }), 'Télécharger']
-					)
+					Button,
+					{
+						class: 'w-auto px-2 focus-visible:ring-offset-0',
+						variant: 'outline',
+						disabled: true
+					},
+					() => [h(Download, { class: 'pr-2' }), 'Télécharger']
+				)
 	}
 ]
