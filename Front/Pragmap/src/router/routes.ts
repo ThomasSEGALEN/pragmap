@@ -201,12 +201,7 @@ export const routes = [
 	{
 		path: '/',
 		name: 'Home',
-		component: () => import('@/views/Home.vue'),
-		meta: {
-			name: 'Accueil',
-			requiresAuth: true,
-			requiredRoles: [Role.Administrator, Role.Manager, Role.Editor, Role.Reader]
-		}
+		redirect: () => '/roadmaps'
 	},
 	{
 		path: '/logout',
