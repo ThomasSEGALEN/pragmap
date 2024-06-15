@@ -28,16 +28,6 @@ const formSchema = toTypedSchema(
 	z.object({
 		name: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
 		logo: z.instanceof(File).default(new File([], '')),
-		// logo: z.custom<File>()
-		// .superRefine((value, context) => {
-		// 	if (!value?.name) {
-		// 		return context.addIssue({
-		// 			code: z.ZodIssueCode.custom,
-		// 			message: 'Obligatoire',
-		// 			path: ['logo']
-		// 		})
-		// 	}
-		// })
 		userIds: z
 			.array(
 				z.object({

@@ -43,18 +43,12 @@ const formSchema = toTypedSchema(
 		description: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
 		startDate: z.coerce.date(),
 		endDate: z.coerce.date(),
-		duration: z.coerce.number().refine((value) => value >= 0),
-		progress: z.coerce.number().refine((value) => value >= 0),
+		duration: z.coerce
+			.number()
+			.min(0)
+			.refine((value) => value >= 0),
+		progress: z.coerce.number().min(0).max(100),
 		file: z.instanceof(File).default(new File([], ''))
-		// .superRefine((value, context) => {
-		// 	if (!value?.name) {
-		// 		return context.addIssue({
-		// 			code: z.ZodIssueCode.custom,
-		// 			message: 'Obligatoire',
-		// 			path: ['logo']
-		// 		})
-		// 	}
-		// })
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -140,7 +134,7 @@ const onSubmit = handleSubmit(async (values) => {
 			class="h-full w-[20rem] absolute top-0 right-0 flex flex-col justify-start space-y-2 p-4 py-12 border bg-primary-foreground"
 		>
 			<form
-				class="space-y-6"
+				class="px-2 space-y-6 overflow-auto"
 				@submit="onSubmit"
 			>
 				<FormField
@@ -213,7 +207,7 @@ const onSubmit = handleSubmit(async (values) => {
 					name="startDate"
 				>
 					<FormItem class="w-full">
-						<FormLabel>Date de commencement</FormLabel>
+						<FormLabel>Date de début</FormLabel>
 						<FormControl>
 							<Input
 								v-bind="componentField"
@@ -230,7 +224,7 @@ const onSubmit = handleSubmit(async (values) => {
 					name="endDate"
 				>
 					<FormItem class="w-full">
-						<FormLabel>Date de Fin</FormLabel>
+						<FormLabel>Date de fin</FormLabel>
 						<FormControl>
 							<Input
 								v-bind="componentField"
