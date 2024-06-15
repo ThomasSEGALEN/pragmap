@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { useAuthStore } from '@/stores/auth'
+import { Role } from '@/types/role'
 import {
 	AlertDialog,
 	AlertDialogAction,
@@ -11,6 +13,8 @@ import {
 	AlertDialogTrigger
 } from '@/components/ui/alert-dialog'
 import { Button } from '@/components/ui/button'
+import { Pencil, Trash2 } from 'lucide-vue-next'
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 
 defineProps<{
 	name: string
@@ -19,16 +23,7 @@ defineProps<{
 	deleteEntity: (id: string) => void
 }>()
 
-// import { customerService } from '@/services'
-// const customerUsers = (await customerService.getById(customerId, { expand: ['customerUsers'] })).customerUsers as Array<ICustomerUser>
-
-import { useAuthStore } from '@/stores/auth'
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
-import { Pencil, Trash2 } from 'lucide-vue-next'
-
-import { Role } from '@/types/role'
 const { getRole } = useAuthStore()
-
 const roleName = (await getRole()).name
 </script>
 
