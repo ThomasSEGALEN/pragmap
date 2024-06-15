@@ -14,10 +14,12 @@ router.beforeEach(async (to, from, next) => {
 	const { getCustomerAuthorizations, getRoadmapAuthorizations, getRole, isAuthenticated } =
 		useAuthStore()
 	const requiresAuth = to.meta.requiresAuth as boolean
-	const role = (await getRole()).name
 
 	if (!isAuthenticated && requiresAuth) return next({ name: 'Login' })
 	if (isAuthenticated && !requiresAuth) return next({ name: 'Home' })
+
+	const role = (await getRole()).name
+
 	if (role === Role.Administrator) return next()
 
 	const requiredRoles = to.meta.requiredRoles as Array<string>
