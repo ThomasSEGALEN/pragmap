@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, sleep, z } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,7 +30,6 @@ const { handleSubmit, isSubmitting } = useForm({
 const onSubmit = handleSubmit(async (values) => {
 	try {
 		await login(values)
-		await sleep(250)
 
 		router.push('/')
 	} catch (error) {

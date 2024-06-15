@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, sleep, z } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { authService } from '@/services'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -14,7 +14,6 @@ import { Loader2, Send } from 'lucide-vue-next'
 import { RouterLink } from 'vue-router'
 import { toast } from '@/components/ui/toast'
 
-const router = useRouter()
 const { query } = useRoute()
 const passwordInput = ref<(HTMLInputElement & { refValue: HTMLInputElement | null }) | null>(null)
 const refValue = computed(() => passwordInput.value?.refValue)
@@ -59,9 +58,6 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await authService.resetPassword(data)
-		await sleep(250)
-
-		router.push('/login')
 	} catch (error) {
 		toast({
 			title: 'Erreur',

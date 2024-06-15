@@ -1,10 +1,9 @@
 import { h } from 'vue'
 import type { ColumnDef } from '@tanstack/vue-table'
-import router from '@/router'
 import { customerService } from '@/services'
 import type { CustomersData } from '@/stores'
-import type { ICustomerUser } from '@/types'
-import { DataTableColumnHeader, DataTableDropDown } from '@/components/ui/datatable'
+import { type ICustomerUser } from '@/types'
+import { DataTableColumnHeader, DataTableAction } from '@/components/ui/datatable'
 import { toast } from '@/components/ui/toast'
 import UsersPopover from './UsersPopover.vue'
 import logoPlaceholder from '@/assets/logo-placeholder.png'
@@ -21,7 +20,6 @@ export const columns: Array<ColumnDef<CustomersData>> = [
 		accessorKey: 'logo',
 		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Logo' }),
 		cell: ({ row }) =>
-			//TODO : nullable string for Logo
 			row.getValue('Logo')
 				? h('img', {
 						class: 'h-24 w-24 object-cover',
@@ -37,11 +35,11 @@ export const columns: Array<ColumnDef<CustomersData>> = [
 	},
 	{
 		id: 'Utilisateurs',
-		accessorKey: 'customerUsers',
+		accessorKey: 'users',
 		header: ({ column }) =>
 			h(DataTableColumnHeader<CustomersData>, { column, title: 'Utilisateurs' }),
 		cell: ({ row }) =>
-			h(UsersPopover, { customerUsers: row.getValue('Utilisateurs') as Array<ICustomerUser> }),
+			h(UsersPopover, { customerUsers: row.original.customerUsers as Array<ICustomerUser> }),
 		enableSorting: false
 	},
 	{
@@ -53,13 +51,16 @@ export const columns: Array<ColumnDef<CustomersData>> = [
 	},
 	{
 		id: 'Actions',
+		accessorKey: 'actions',
+		header: ({ column }) => h(DataTableColumnHeader<CustomersData>, { column, title: 'Actions' }),
 		cell: ({ row }) =>
-			h(DataTableDropDown, {
+			h(DataTableAction, {
 				name: 'CustomersEdit',
 				id: row.original.id,
-				deleteEntity: (id: string) => {
+				customerId: row.original.id as string,
+				deleteEntity: async (id: string) => {
 					try {
-						customerService.delete(id).then(() => router.go(0))
+						await customerService.delete(id)
 					} catch (error) {
 						toast({
 							title: 'Erreur',
@@ -69,6 +70,7 @@ export const columns: Array<ColumnDef<CustomersData>> = [
 					}
 				}
 			}),
+		enableSorting: false,
 		enableHiding: false
 	}
 ]

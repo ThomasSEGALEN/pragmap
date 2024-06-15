@@ -6,7 +6,7 @@ import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
 import { type Elements, useVueFlow, VueFlow } from '@vue-flow/core'
 import { MiniMap, Background } from '@vue-flow/additional-components'
-import { convertToBase64, sleep, z } from '@/lib/utils'
+import { convertToBase64, z } from '@/lib/utils'
 import { roadmapService } from '@/services'
 import { Button } from '@/components/ui/button'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -24,15 +24,11 @@ const selectedNodeId = ref(null)
 const selectedNode = computed(() => elements.value.find((node) => node.id === selectedNodeId.value))
 const { onConnect, addEdges } = useVueFlow()
 const { onDragOver, onDrop, onDragLeave, isDragOver, onDragStart } = useDragAndDrop(elements)
-
 onConnect((params) => {
 	addEdges([params])
 })
-
 const data = (await roadmapService.getById(id)).data
-
 elements.value = JSON.parse(data) ?? []
-
 const saveData = async () => {
 	const data = {
 		id: id,
@@ -47,18 +43,12 @@ const formSchema = toTypedSchema(
 		description: z.string().trim().min(1, { message: 'Obligatoire' }).max(255),
 		startDate: z.coerce.date(),
 		endDate: z.coerce.date(),
-		duration: z.coerce.number().refine((value) => value >= 0),
-		progress: z.coerce.number().refine((value) => value >= 0),
+		duration: z.coerce
+			.number()
+			.min(0)
+			.refine((value) => value >= 0),
+		progress: z.coerce.number().min(0).max(100),
 		file: z.instanceof(File).default(new File([], ''))
-		// .superRefine((value, context) => {
-		// 	if (!value?.name) {
-		// 		return context.addIssue({
-		// 			code: z.ZodIssueCode.custom,
-		// 			message: 'Obligatoire',
-		// 			path: ['logo']
-		// 		})
-		// 	}
-		// })
 	})
 )
 const { handleSubmit, isSubmitting } = useForm({
@@ -71,11 +61,10 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await saveData()
-		await sleep(250)
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: 'Nous ne sommes pas parvenus à modifier la roadmap.',
+			description: 'Nous ne sommes pas parvenus à modifier cette roadmap.',
 			duration: 5000
 		})
 	}
@@ -145,7 +134,7 @@ const onSubmit = handleSubmit(async (values) => {
 			class="h-full w-[20rem] absolute top-0 right-0 flex flex-col justify-start space-y-2 p-4 py-12 border bg-primary-foreground"
 		>
 			<form
-				class="space-y-6"
+				class="px-2 space-y-6 overflow-auto"
 				@submit="onSubmit"
 			>
 				<FormField
@@ -218,7 +207,7 @@ const onSubmit = handleSubmit(async (values) => {
 					name="startDate"
 				>
 					<FormItem class="w-full">
-						<FormLabel>Date de commencement</FormLabel>
+						<FormLabel>Date de début</FormLabel>
 						<FormControl>
 							<Input
 								v-bind="componentField"
@@ -235,7 +224,7 @@ const onSubmit = handleSubmit(async (values) => {
 					name="endDate"
 				>
 					<FormItem class="w-full">
-						<FormLabel>Date de Fin</FormLabel>
+						<FormLabel>Date de fin</FormLabel>
 						<FormControl>
 							<Input
 								v-bind="componentField"

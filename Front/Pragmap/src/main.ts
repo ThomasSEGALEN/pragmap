@@ -1,19 +1,17 @@
 import '@/assets/main.css'
 import axios from 'axios'
-// import VueApexCharts from "vue3-apexcharts"
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
+import ganttastic from '@infectoone/vue-ganttastic'
 import App from '@/App.vue'
 import router from '@/router'
 import { useAuthStore } from '@/stores'
-import ganttastic from '@infectoone/vue-ganttastic'
 
 const app = createApp(App)
 const pinia = createPinia()
 
 app.use(pinia)
 app.use(router)
-// app.use(VueApexCharts)
 app.use(ganttastic)
 
 app.mount('#app')

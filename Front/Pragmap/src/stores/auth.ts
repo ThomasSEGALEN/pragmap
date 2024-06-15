@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { useLocalStorage } from '@vueuse/core'
 import { jwtDecode } from 'jwt-decode'
-import { authService, roleService, userService } from '@/services'
+import { authService, customerService, roadmapService, roleService, userService } from '@/services'
 import type { IAuth, IGetUser, ILogin, IRole } from '@/types'
 
 interface State {
@@ -30,8 +30,6 @@ export const useAuthStore = defineStore('auth', {
 			await this.getRoles()
 		},
 		logout(): void {
-			this.$state.user = {} as IGetUser
-			this.$state.roles = []
 			this.$state.accessToken = ''
 		},
 		async getUser(accessToken: string): Promise<void> {
@@ -40,6 +38,30 @@ export const useAuthStore = defineStore('auth', {
 			this.$state.user = await userService.getById(userId, {
 				select: ['id', 'lastName', 'firstName', 'email', 'roleId']
 			})
+		},
+		async getRole(): Promise<IRole> {
+			const roleId = (await userService.getById(this.$state.user.id, { select: ['roleId'] })).roleId
+
+			return this.$state.roles.find((role) => role.id === roleId) as IRole
+		},
+		async getCustomerAuthorizations(customerId: string): Promise<boolean> {
+			const customerUsers = (
+				await customerService.getById(customerId, {
+					select: ['customerUsers'],
+					expand: ['CustomerUsers($select=userId)']
+				})
+			).customerUsers
+
+			return customerUsers.some((customerUser) => customerUser.userId === this.$state.user.id)
+		},
+		async getRoadmapAuthorizations(roadmapId: string): Promise<boolean> {
+			const customerId = (
+				await roadmapService.getById(roadmapId, {
+					select: ['customerId']
+				})
+			).customerId
+
+			return await this.getCustomerAuthorizations(customerId)
 		},
 		async getRoles(): Promise<void> {
 			this.$state.roles = await roleService.getAll()

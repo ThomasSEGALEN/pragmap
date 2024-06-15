@@ -1,10 +1,9 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRouter } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, sleep, z } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -23,7 +22,6 @@ import {
 import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
-const router = useRouter()
 const { roles } = useAuthStore()
 const roleInput = ref<HTMLInputElement | null>(null)
 useFocus(roleInput, { initialValue: true })
@@ -62,13 +60,10 @@ const { handleSubmit, isSubmitting } = useForm({
 const onSubmit = handleSubmit(async (values) => {
 	try {
 		await userService.create(values)
-		await sleep(250)
-
-		router.push('/users')
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: 'Nous ne sommes pas parvenus à créer un utilisateur.',
+			description: 'Nous ne sommes pas parvenus à créer cet utilisateur.',
 			duration: 5000
 		})
 	}

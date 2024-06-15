@@ -1,12 +1,13 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, sleep, z } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore, useFormStore } from '@/stores'
+import { Role } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
@@ -24,7 +25,6 @@ import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
 const { id } = useRoute().params as { id: string }
-const router = useRouter()
 const { roles } = useAuthStore()
 const roleInput = ref<HTMLInputElement | null>(null)
 useFocus(roleInput, { initialValue: true })
@@ -58,10 +58,23 @@ const { handleSubmit, isSubmitting } = useForm({
 })
 const onSubmit = handleSubmit(async (values) => {
 	try {
-		await userService.update(id, values)
-		await sleep(250)
+		const { getRole } = useAuthStore()
+		const { editUser } = useFormStore()
+		const role = (await getRole()).name
 
-		router.push('/users')
+		if (editUser?.roleId !== values.roleId) {
+			if (role !== Role.Administrator) {
+				toast({
+					title: 'Erreur',
+					description: "Vous n'avez pas les droits pour modifier le rôle de cet utilisateur.",
+					duration: 5000,
+					variant: 'destructive'
+				})
+
+				return
+			}
+		}
+		await userService.update(id, values)
 	} catch (error) {
 		toast({
 			title: 'Erreur',

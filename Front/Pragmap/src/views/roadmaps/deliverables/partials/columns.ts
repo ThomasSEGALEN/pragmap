@@ -9,9 +9,11 @@ import UpdateDialog from '../../partials/UpdateDialog.vue'
 
 const { getDeliverablesData } = useTableStore()
 
+// TODO: Régler le problème de chargement du composant UpdateDialog
+
 export const columns: Array<ColumnDef<any>> = [
 	{
-		id: 'Nom',
+		id: 'Label',
 		accessorKey: 'label',
 		header: ({ column }) =>
 			h(
@@ -25,13 +27,13 @@ export const columns: Array<ColumnDef<any>> = [
 						progress: number
 					}>
 				>,
-				{ column, title: 'Nom' }
+				{ column, title: 'Label' }
 			),
 		cell: ({ row }) =>
 			h(
 				UpdateDialog,
 				{ entities: getDeliverablesData(), entityId: row.original.id, entityData: 'label' },
-				() => h('div', row.getValue('Nom'))
+				() => h('div', row.getValue('Label'))
 			)
 	},
 	{
@@ -137,30 +139,30 @@ export const columns: Array<ColumnDef<any>> = [
 		cell: ({ row }) =>
 			row.getValue('Fichier')
 				? h(
-						Button,
-						{
-							class: 'w-auto px-2 focus-visible:ring-offset-0',
-							variant: 'outline',
-							asChild: true
-						},
-						() =>
-							h(
-								'a',
-								{
-									href: row.getValue('Fichier'),
-									download: row.getValue('Nom')
-								},
-								[h(Download, { class: 'pr-2' }), 'Télécharger']
-							)
-					)
+					Button,
+					{
+						class: 'w-auto px-2 focus-visible:ring-offset-0',
+						variant: 'outline',
+						asChild: true
+					},
+					() =>
+						h(
+							'a',
+							{
+								href: row.getValue('Fichier'),
+								download: row.getValue('Label')
+							},
+							[h(Download, { class: 'pr-2' }), 'Télécharger']
+						)
+				)
 				: h(
-						Button,
-						{
-							class: 'w-auto px-2 focus-visible:ring-offset-0',
-							variant: 'outline',
-							disabled: true
-						},
-						() => [h(Download, { class: 'pr-2' }), 'Télécharger']
-					)
+					Button,
+					{
+						class: 'w-auto px-2 focus-visible:ring-offset-0',
+						variant: 'outline',
+						disabled: true
+					},
+					() => [h(Download, { class: 'pr-2' }), 'Télécharger']
+				)
 	}
 ]

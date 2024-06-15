@@ -7,9 +7,11 @@ import UpdateDialog from '../../partials/UpdateDialog.vue'
 
 const { getTasksData } = useTableStore()
 
+// TODO: Régler le problème de chargement du composant UpdateDialog
+
 export const columns: Array<ColumnDef<any>> = [
 	{
-		id: 'Nom',
+		id: 'Label',
 		accessorKey: 'label',
 		header: ({ column }) =>
 			h(
@@ -23,13 +25,13 @@ export const columns: Array<ColumnDef<any>> = [
 						progress: number
 					}>
 				>,
-				{ column, title: 'Nom' }
+				{ column, title: 'Label' }
 			),
 		cell: ({ row }) =>
 			h(
 				UpdateDialog,
 				{ entities: getTasksData(), entityId: row.original.id, entityData: 'label' },
-				() => h('div', row.getValue('Nom'))
+				() => h('div', row.getValue('Label'))
 			)
 	},
 	{

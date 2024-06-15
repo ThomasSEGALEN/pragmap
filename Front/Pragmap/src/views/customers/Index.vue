@@ -5,7 +5,6 @@ import { DataTable } from '@/components/ui/datatable'
 import { columns } from './partials/columns'
 
 const data = ref<Array<CustomersData>>([])
-
 data.value = await getCustomersData()
 </script>
 

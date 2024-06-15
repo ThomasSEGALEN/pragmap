@@ -1,10 +1,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 import { useFocus } from '@vueuse/core'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, sleep, z } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { roadmapService } from '@/services'
 import { useFormStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -15,7 +15,6 @@ import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
 const { id } = useRoute().params as { id: string }
-const router = useRouter()
 const nameInput = ref<HTMLInputElement | null>(null)
 useFocus(nameInput, { initialValue: true })
 const { editRoadmap } = useFormStore()
@@ -36,13 +35,10 @@ const { handleSubmit, isSubmitting } = useForm({
 const onSubmit = handleSubmit(async (values) => {
 	try {
 		await roadmapService.update(id, values)
-		await sleep(250)
-
-		router.push('/roadmaps')
 	} catch (error) {
 		toast({
 			title: 'Erreur',
-			description: `Nous ne sommes pas parvenus à modifier la roadmap.`,
+			description: `Nous ne sommes pas parvenus à modifier cette roadmap.`,
 			duration: 5000
 		})
 	}

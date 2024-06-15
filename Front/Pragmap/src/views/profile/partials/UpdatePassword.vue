@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { useRouter } from 'vue-router'
 import { useForm } from 'vee-validate'
 import { toTypedSchema } from '@vee-validate/zod'
-import { cn, sleep, z } from '@/lib/utils'
+import { cn, z } from '@/lib/utils'
 import { userService } from '@/services'
 import { useAuthStore } from '@/stores'
 import { Button } from '@/components/ui/button'
@@ -12,7 +11,6 @@ import { Input } from '@/components/ui/input'
 import { Loader2 } from 'lucide-vue-next'
 import { toast } from '@/components/ui/toast'
 
-const router = useRouter()
 const authStore = useAuthStore()
 const formSchema = toTypedSchema(
 	z
@@ -52,15 +50,14 @@ const onSubmit = handleSubmit(async (values) => {
 		}
 
 		await userService.updatePassword(data)
-		await sleep(250)
 
-		router.push('/logout')
-
-		toast({
-			title: 'Erreur',
-			description: 'Nous sommes parvenus à modifier votre mot de passe.',
-			duration: 5000
-		})
+		setTimeout(() => {
+			toast({
+				title: 'Succès',
+				description: 'Votre mot de passe a été modifié, veuillez vous reconnecter.',
+				duration: 5000
+			})
+		}, 100)
 	} catch (error) {
 		toast({
 			title: 'Erreur',
@@ -72,7 +69,7 @@ const onSubmit = handleSubmit(async (values) => {
 </script>
 
 <template>
-	<Card :class="cn('h-fit w-[420px]', $attrs.class ?? '')">
+	<Card :class="cn('h-fit max-w-[420px]', $attrs.class ?? '')">
 		<CardHeader>
 			<CardTitle>Modification du mot de passe</CardTitle>
 			<CardDescription>Renseignez votre nouveau mot de passe</CardDescription>

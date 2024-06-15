@@ -7,7 +7,6 @@ import { columns } from './partials/columns'
 
 const { id } = useRoute().params as { id: string }
 const data = ref<Array<Node>>([])
-
 data.value = await getRoadmapData(id, 'deliverable')
 </script>
 

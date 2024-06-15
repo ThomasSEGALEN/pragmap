@@ -18,23 +18,6 @@ const route = useRoute()
 	>
 		<div class="w-full flex flex-col md:hidden">
 			<div
-				class="flex justify-start sm:justify-center items-center font-semibold text-sm text-muted-foreground ml-2 sm:ml-0 mb-2"
-			>
-				<GanttChart class="h-4 w-4 mr-2" />
-				Pragmap
-			</div>
-			<Button
-				class="h-8 w-full justify-start sm:justify-center bg-background"
-				:class="{ 'bg-accent text-accent-foreground': route.path === '/' }"
-				variant="ghost"
-				@click="$emit('toggleSidebar')"
-				as-child
-			>
-				<RouterLink to="/">Accueil</RouterLink>
-			</Button>
-		</div>
-		<div class="w-full flex flex-col md:hidden">
-			<div
 				class="flex justify-start sm:justify-center items-center font-semibold text-muted-foreground text-sm ml-2 sm:ml-0 mb-2"
 			>
 				<UserRound class="h-4 w-4 mr-2" />
