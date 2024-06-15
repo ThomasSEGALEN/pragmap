@@ -15,10 +15,9 @@ const transformedTasks = tasks.value.map((task) => ({
 		hasHandles: true,
 		label: (task as { label: string }).label,
 		style: {
-			background: `linear-gradient(90deg, rgba(224, 155, 105, 1) ${(task as { progress: number }).progress}%, rgba(224, 155, 105, 0) ${(task as { progress: number }).progress}%, rgba(211, 211, 211, 1) ${(task as { progress: number }).progress}%)`,
-			color: 'black'
-		},
-		class: 'foo'
+			background: `linear-gradient(90deg, hsla(120, 61%, 50%, 1) ${(task as { progress: number }).progress}%, hsla(120, 61%, 50%, 1) ${(task as { progress: number }).progress}%, hsla(0, 0%, 93%, 1) ${(task as { progress: number }).progress}%)`,
+			color: 'hsla(240, 5.9%, 10%, 1)'
+		}
 	}
 }))
 let minStartDate = min(transformedTasks.map((task) => new Date(task.myBeginDate)))
@@ -33,8 +32,6 @@ let sortedTasks = [...transformedTasks].sort((a, b) => {
 })
 let chartStart = format(minStartDate, 'yyyy-MM-dd HH:mm')
 let chartEnd = format(maxEndDate, 'yyyy-MM-dd HH:mm')
-
-// TODO: Ajouter le jalon sur le côté ou après la dernière tâche
 </script>
 
 <template>
