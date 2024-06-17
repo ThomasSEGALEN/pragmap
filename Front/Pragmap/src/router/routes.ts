@@ -244,5 +244,15 @@ export const routes = [
 			requiresAuth: false,
 			requiredRoles: [Role.Administrator, Role.Manager, Role.Editor, Role.Reader]
 		}
+	},
+	{
+		path: '/roadmaps/:id/designer2',
+		name: 'RoadmapsDesigner2',
+		component: () => import('@/views/roadmaps/designer/Index2.vue'),
+		meta: {
+			name: 'Designer de roadmap 2',
+			requiresAuth: true,
+			requiredRoles: [Role.Administrator, Role.Manager, Role.Editor, Role.Reader]
+		},
 	}
 ]
