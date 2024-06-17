@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref } from 'vue'
-import { Position, useVueFlow, VueFlow, type Elements } from '@vue-flow/core'
+import { Panel, Position, useVueFlow, VueFlow, type Elements, type Node } from '@vue-flow/core'
 // import { Handle, Position, useVueFlow, VueFlow } from '@vue-flow/core'
 import { Background } from '@vue-flow/background'
 import { Controls } from '@vue-flow/controls'
 import { MiniMap } from '@vue-flow/minimap'
 import ResizableNode from './partials/ResizableNode.vue'
 import ToolbarNode from './partials/ToolbarNode.vue'
+import CustomNode from './partials/CustomNode.vue'
 
-const { onConnect, addEdges, addNodes, nodes } = useVueFlow()
+const { onConnect, addEdges, addNodes, updateNode, nodes } = useVueFlow()
 
 onConnect((params) => {
 	addEdges([params])
@@ -102,11 +103,13 @@ const elements = ref<Elements>([
 const addNode = () => {
 	addNodes({
 		id: `${nodes.value.length + 1}`,
-		type: 'menu',
+		type: 'custom',
 		data: { label: 'new node' },
 		position: { x: 0, y: 0 }
 	})
 }
+
+const selectedNode = ref<Node | null>(null)
 </script>
 
 <template>
@@ -121,7 +124,17 @@ const addNode = () => {
 			v-model="elements"
 			fit-view-on-init
 			elevate-edges-on-select
+			@node-click="
+				(e: any) => (selectedNode === e.node ? (selectedNode = null) : (selectedNode = e.node))
+			"
 		>
+			<template #node-custom="props">
+				<CustomNode
+					:id="props.id"
+					:data="props.data"
+				/>
+			</template>
+
 			<template #node-resizable="resizableNodeProps">
 				<ResizableNode :data="resizableNodeProps.data" />
 			</template>
@@ -133,6 +146,15 @@ const addNode = () => {
 				/>
 			</template>
 
+			<Panel
+				v-if="selectedNode"
+				position="top-right"
+			>
+				<div class="field">
+					<label for="label">Label:</label>
+					<input v-model="selectedNode.data.label" />
+				</div>
+			</Panel>
 			<MiniMap />
 			<Controls />
 			<Background />
