@@ -18,5 +18,8 @@
 		{
 			"path": "./tsconfig.vitest.json"
 		}
+	],
+	"include": [
+		"types/**/*",
 	]
 }

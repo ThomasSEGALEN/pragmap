@@ -15,6 +15,9 @@ import { Loader2 } from 'lucide-vue-next'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/toast'
 import useDragAndDrop from './partials/useDragAndDrop'
+import { NodeResizer } from '@vue-flow/node-resizer'
+import '@vue-flow/node-resizer/dist/style.css'
+import ResizableNode from './partials/resizableNode.vue'
 
 const { id } = useRoute().params as { id: string }
 const nameInput = ref<HTMLInputElement | null>(null)
@@ -69,95 +72,118 @@ const onSubmit = handleSubmit(async (values) => {
 		})
 	}
 })
-</script>
 
+// Helper function to determine if the node is inside a group node
+const isNodeInsideGroup = (node, groupNode) => {
+	const nodeX = node.computedPosition.x;
+	const nodeY = node.computedPosition.y;
+	const nodeWidth = node.dimensions.width;
+	const nodeHeight = node.dimensions.height;
+	const groupNodeX = groupNode.computedPosition.x;
+	const groupNodeY = groupNode.computedPosition.y;
+	const groupNodeWidth = groupNode.dimensions.width;
+	const groupNodeHeight = groupNode.dimensions.height;
+	return (
+		nodeX > groupNodeX &&
+		nodeY > groupNodeY &&
+		nodeX + nodeWidth < groupNodeX + groupNodeWidth &&
+		nodeY + nodeHeight < groupNodeY + groupNodeHeight
+	);
+};
+const {screenToFlowCoordinate} = useVueFlow()
+
+const handleNodeDragStop = (event) => {
+  console.log(event.event.clientX);
+  const node = elements.value.find((el) => el.id === event.node.id);
+  const nodeWidth = node.dimensions.width;
+  const nodeHeight = node.dimensions.height;
+
+  let parentNodeId = null;
+  elements.value.forEach((el) => {
+    if (el.data.type === 'group' && isNodeInsideGroup(node, el)) {
+      parentNodeId = el.id;
+    }
+  });
+
+  const newNodePosition = screenToFlowCoordinate({ x: event.event.clientX, y: event.event.clientY });
+
+  if (parentNodeId != null) {
+    const parentNode = elements.value.find((el) => el.id === parentNodeId);
+
+    // Adjust the node's position relative to the parent node
+    node.position = {
+      x: newNodePosition.x - parentNode.computedPosition.x - nodeWidth / 2,
+      y: newNodePosition.y - parentNode.computedPosition.y - nodeHeight / 2,
+    };
+
+    node.parentNode = parentNodeId;
+  } else {
+    // If no parent node, the position is relative to the viewport
+    node.position = {
+      x: newNodePosition.x - nodeWidth / 2,
+      y: newNodePosition.y - nodeHeight / 2,
+    };
+
+    node.parentNode = null;
+  }
+  console.log(elements.value);
+  saveData();
+};
+
+</script>
+<style scoped>
+@import './node.css';
+</style>
 <template>
-	<div
-		class="w-full relative flex flex-col"
-		@drop="onDrop($event)"
-	>
+	<div class="w-full relative flex flex-col" @drop="onDrop($event)">
 		<div class="flex justify-between border-x border-t bg-primary-foreground">
 			<aside>
 				<div class="flex gap-4 nodes">
-					<div
-						class="vue-flow__node-input"
-						:draggable="true"
-						@dragstart="onDragStart($event, 'task')"
-					>
+					<div class="vue-flow__node-input" :draggable="true" @dragstart="onDragStart($event, 'task')">
 						Tâche
 					</div>
-					<div
-						class="vue-flow__node-default"
-						:draggable="true"
-						@dragstart="onDragStart($event, 'deliverable')"
-					>
+					<div class="vue-flow__node-default" :draggable="true"
+						@dragstart="onDragStart($event, 'deliverable')">
 						Livrable
 					</div>
-					<div
-						class="vue-flow__node-output"
-						:draggable="true"
-						@dragstart="onDragStart($event, 'milestone')"
-					>
+					<div class="vue-flow__node-output" :draggable="true" @dragstart="onDragStart($event, 'milestone')">
 						Jalon
+					</div>
+					<div class="vue-flow__node-default vue-flow__node-parent" :draggable="true"
+						@dragstart="onDragStart($event, 'group')">
+						Groupe
 					</div>
 				</div>
 			</aside>
 		</div>
-		<VueFlow
-			class="border"
-			v-model="elements"
-			fit-view-on-init
-			@dragover="onDragOver($event as DragEvent)"
-			@dragleave="onDragLeave"
-			@node-click="
-				(e: any) =>
-					selectedNodeId === e.node.id ? (selectedNodeId = null) : (selectedNodeId = e.node.id)
-			"
-			@pane-click="selectedNodeId ? (selectedNodeId = null) : null"
-			@node-drag-stop="saveData"
-		>
-			<Background
-				:size="1"
-				:gap="25"
-				pattern-color="#BDBDBD"
-				:style="{
-					backgroundColor: isDragOver ? '#FAFAFA' : 'transparent',
-					transition: 'background-color 0.2s ease'
-				}"
-			>
+		<VueFlow class="border" v-model="elements" fit-view-on-init @dragover="onDragOver($event as DragEvent)"
+			@dragleave="onDragLeave" @node-click="(e: any) =>
+			selectedNodeId === e.node.id ? (selectedNodeId = null) : (selectedNodeId = e.node.id)
+		" @pane-click="selectedNodeId ? (selectedNodeId = null) : null" @node-drag-stop="handleNodeDragStop">
+			<Background :size="1" :gap="25" pattern-color="#BDBDBD" :style="{
+		backgroundColor: isDragOver ? '#FAFAFA' : 'transparent',
+		transition: 'background-color 0.2s ease'
+	}">
 				<slot />
 			</Background>
+			<template #node-resizable="resizableNodeProps">
+				<ResizableNode :data="resizableNodeProps" />
+			</template>
 			<MiniMap />
 		</VueFlow>
-		<div
-			v-if="selectedNodeId && selectedNode"
-			class="h-full w-[20rem] absolute top-0 right-0 flex flex-col justify-start space-y-2 p-4 py-12 border bg-primary-foreground"
-		>
-			<form
-				class="px-2 space-y-6 overflow-auto"
-				@submit="onSubmit"
-			>
-				<FormField
-					v-slot="{ componentField }"
-					v-model="selectedNode.label"
-					name="name"
-				>
+		<div v-if="selectedNodeId && selectedNode"
+			class="h-full w-[20rem] absolute top-0 right-0 flex flex-col justify-start space-y-2 p-4 py-12 border bg-primary-foreground">
+			<form class="px-2 space-y-6 overflow-auto" @submit="onSubmit">
+				<FormField v-slot="{ componentField }" v-model="selectedNode.label" name="name">
 					<FormItem class="w-full">
 						<FormLabel>Nom</FormLabel>
 						<FormControl>
-							<Input
-								v-bind="componentField"
-								ref="nameInput"
-							/>
+							<Input v-bind="componentField" ref="nameInput" />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
 				</FormField>
-				<FormField
-					v-slot="{ componentField }"
-					v-model="selectedNode.data['description']"
-					name="description"
-				>
+				<FormField v-slot="{ componentField }" v-model="selectedNode.data['description']" name="description">
 					<FormItem class="w-full">
 						<FormLabel>Description</FormLabel>
 						<FormControl>
@@ -166,120 +192,63 @@ const onSubmit = handleSubmit(async (values) => {
 						<FormMessage />
 					</FormItem>
 				</FormField>
-				<FormField
-					v-if="selectedNode.type !== 'milestone'"
-					v-slot="{ componentField }"
-					v-model="selectedNode.data['duration']"
-					name="duration"
-				>
-					<FormItem class="w-full">
-						<FormLabel>Durée</FormLabel>
-						<FormControl>
-							<Input
-								v-bind="componentField"
-								type="number"
-							/>
-						</FormControl>
-						<FormMessage />
-					</FormItem>
-				</FormField>
-				<FormField
-					v-if="selectedNode.type !== 'milestone'"
-					v-slot="{ componentField }"
-					v-model="selectedNode.data['progress']"
-					name="progress"
-				>
+				<FormField v-if="selectedNode.type !== 'milestone'" v-slot="{ componentField }"
+					v-model="selectedNode.data['progress']" name="progress">
 					<FormItem class="w-full">
 						<FormLabel>Progression</FormLabel>
 						<FormControl>
-							<Input
-								v-bind="componentField"
-								type="number"
-							/>
+							<Input v-bind="componentField" type="number" />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
 				</FormField>
-				<FormField
-					v-if="selectedNode.type == 'task'"
-					v-slot="{ componentField }"
-					v-model="selectedNode.data['startDate']"
-					name="startDate"
-				>
+				<FormField v-slot="{ componentField }"
+					v-model="selectedNode.data['startDate']" name="startDate">
 					<FormItem class="w-full">
 						<FormLabel>Date de début</FormLabel>
 						<FormControl>
-							<Input
-								v-bind="componentField"
-								type="date"
-							/>
+							<Input v-bind="componentField" type="date" />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
 				</FormField>
-				<FormField
-					v-if="selectedNode.type == 'task'"
-					v-slot="{ componentField }"
-					v-model="selectedNode.data['endDate']"
-					name="endDate"
-				>
+				<FormField v-slot="{ componentField }"
+					v-model="selectedNode.data['endDate']" name="endDate">
 					<FormItem class="w-full">
 						<FormLabel>Date de fin</FormLabel>
 						<FormControl>
-							<Input
-								v-bind="componentField"
-								type="date"
-							/>
+							<Input v-bind="componentField" type="date" />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
 				</FormField>
-				<FormField
-					v-if="selectedNode.type === 'deliverable'"
-					v-slot="{ handleChange }"
-					name="file"
-				>
+				<FormField v-if="selectedNode.type === 'deliverable'" v-slot="{ handleChange }" name="file">
 					<FormItem class="w-full">
 						<FormLabel>Fichier</FormLabel>
 						<FormControl>
-							<Input
-								type="file"
-								accept="image/png, image/jpeg, image/jpg, .pdf"
-								@change="handleChange"
-							/>
+							<Input type="file" accept="image/png, image/jpeg, image/jpg, .pdf" @change="handleChange" />
 						</FormControl>
 						<FormMessage />
 					</FormItem>
 				</FormField>
 				<div class="flex justify-between">
-					<Button
-						type="button"
-						variant="destructive"
-						@click="
-							() => {
-								elements.splice(
-									elements.findIndex((node) => node.id === selectedNodeId),
-									1
-								)
+					<Button type="button" variant="destructive" @click="() => {
+			elements.splice(
+				elements.findIndex((node) => node.id === selectedNodeId),
+				1
+			)
 
-								selectedNodeId = null
+			selectedNodeId = null
 
-								saveData()
-							}
-						"
-					>
+			saveData()
+		}
+		">
 						Supprimer
 					</Button>
-					<Button
-						v-if="!isSubmitting"
-						type="submit"
-					>
+					<Button v-if="!isSubmitting" type="submit">
 						Modifier
 					</Button>
-					<Button
-						v-else
-						disabled
-					>
+					<Button v-else disabled>
 						<Loader2 class="h-4 w-4 mr-2 animate-spin" />
 						Modification...
 					</Button>

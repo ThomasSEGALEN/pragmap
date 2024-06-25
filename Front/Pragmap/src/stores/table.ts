@@ -77,6 +77,13 @@ export const getRoadmapsData = async (): Promise<Array<RoadmapsData>> => {
 
 	return customerNameRoadmaps
 }
+
+export const getRoadmapDataById = async (id: string): Promise<any> => {
+	const roadmap = await roadmapService.getById(id)
+	const data = JSON.parse(roadmap.data).filter(el => el.type != "default") ?? []
+	return data
+}
+
 export const getRoadmapData = async (
 	id: string,
 	nodeType: 'task' | 'deliverable'
