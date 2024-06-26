@@ -1,6 +1,6 @@
 import { ref, type Ref, watch } from 'vue'
 import { type Elements, Position, useVueFlow } from '@vue-flow/core'
-import { format } from 'date-fns';
+import { format } from 'date-fns'
 
 const state = {
 	draggedType: ref<string | null>(null),
@@ -54,12 +54,16 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 		})
 		//Find the highest node id
 		console.log(elements.value.map((node) => parseInt(node.id)))
-		const nodeId = elements.value.length > 0
-		? Math.max(...elements.value
-			.filter(node => node.type !== 'default') // Filtrer les nœuds de type 'default'
-			.map(node => parseInt(node.id))
-		  ) + 1
-		: 1;		console.log(nodeId)
+		const nodeId = (
+			elements.value.length > 0
+				? Math.max(
+						...elements.value
+							.filter((node) => node.type !== 'default') // Filtrer les nœuds de type 'default'
+							.map((node) => parseInt(node.id))
+					) + 1
+				: 1
+		).toString()
+		console.log(nodeId)
 		const label =
 			draggedType.value === 'task'
 				? 'Tâche'
@@ -76,7 +80,7 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 			label: label,
 			position: position,
 			sourcePosition: Position.Left,
-			parentNode: null
+			parentNode: ''
 		}
 		const groupNode = {
 			...defaultNode,
@@ -84,9 +88,9 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 				description: `Description de ` + label,
 				type: 'group',
 				startDate: format(new Date(), 'yyyy-MM-dd'),
-				endDate:  format(new Date(), 'yyyy-MM-dd')
+				endDate: format(new Date(), 'yyyy-MM-dd')
 			},
-			style: { backgroundColor: 'rgba(0, 255, 0, 0.1)', width: '700px', height: '400px'},
+			style: { backgroundColor: 'rgba(0, 255, 0, 0.1)', width: '700px', height: '400px' },
 			type: 'resizable',
 			targetPosition: Position.Left,
 			sourcePosition: Position.Right
@@ -99,7 +103,7 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 				progress: 0,
 				class: 'vue-flow__node-input',
 				startDate: format(new Date(), 'yyyy-MM-dd'),
-				endDate: format(new Date(), 'yyyy-MM-dd'),
+				endDate: format(new Date(), 'yyyy-MM-dd')
 			},
 			targetPosition: Position.Right
 		}
@@ -120,7 +124,7 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 			data: {
 				description: `Description de ` + label,
 				startDate: format(new Date(), 'yyyy-MM-dd'),
-				endDate: format(new Date(), 'yyyy-MM-dd'),
+				endDate: format(new Date(), 'yyyy-MM-dd')
 			},
 			targetPosition: Position.Left
 		}

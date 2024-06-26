@@ -14,7 +14,6 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
-    "@infectoone/vue-ganttastic": "^2.3.2",
     "@tanstack/vue-table": "^8.11.6",
     "@vee-validate/zod": "^4.12.4",
     "@vue-flow/additional-components": "latest",
@@ -26,7 +25,6 @@
     "@vue-flow/node-toolbar": "^1.1.0",
     "@vueuse/core": "^10.9.0",
     "anychart": "^8.12.1",
-    "apexcharts": "^3.49.0",
     "axios": "^1.6.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
@@ -51,7 +49,6 @@
   "devDependencies": {
     "@rushstack/eslint-patch": "^1.3.3",
     "@tsconfig/node18": "^18.2.2",
-    "@types/frappe-gantt": "^0.6.4",
     "@types/jsdom": "^21.1.6",
     "@types/node": "^20.11.16",
     "@vitejs/plugin-vue": "^5.0.3",

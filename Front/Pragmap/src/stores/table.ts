@@ -1,6 +1,7 @@
+import { defineStore } from 'pinia'
+import { type Element } from '@vue-flow/core'
 import { customerService, roadmapService, userService } from '@/services'
 import { Role, type ICustomer, type IRoadmap, type IUser } from '@/types'
-import { defineStore } from 'pinia'
 import { useAuthStore } from './auth'
 
 export type UsersData = Pick<
@@ -80,7 +81,7 @@ export const getRoadmapsData = async (): Promise<Array<RoadmapsData>> => {
 
 export const getRoadmapDataById = async (id: string): Promise<any> => {
 	const roadmap = await roadmapService.getById(id)
-	const data = JSON.parse(roadmap.data).filter(el => el.type != "default") ?? []
+	const data = JSON.parse(roadmap.data).filter((el: Element) => el.type != 'default') ?? []
 	return data
 }
 
