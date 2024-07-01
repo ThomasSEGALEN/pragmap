@@ -82,8 +82,8 @@ interface Task {
   parent: string | null;
   actualStart: number;
   actualEnd: number;
-  baselineStart: number;
-  baselineEnd: number;
+  baselineStart: number | null;
+  baselineEnd: number | null;
   progressValue: string;
   rowHeight: number;
 }
@@ -92,8 +92,10 @@ interface TransformedTask {
   id: string;
   name: string;
   progressValue: string;
-  actualStart: number;
-  actualEnd: number;
+  actualStart: number | null;
+  actualEnd: number | null;
+  baselineStart: number | null;
+  baselineEnd: number | null;
   rowHeight: number;
   children?: TransformedChild[];
 }
@@ -103,6 +105,8 @@ interface TransformedChild {
   parent: string;
   actualStart: number;
   actualEnd: number;
+  baselineStart: number | null;
+  baselineEnd: number | null;
 }
 
 function transformTasks(tasks: Task[]): TransformedTask[] {
@@ -117,6 +121,8 @@ function transformTasks(tasks: Task[]): TransformedTask[] {
         progressValue: task.progressValue,
         actualStart: Date.UTC(new Date(task.actualStart).getUTCFullYear(), new Date(task.actualStart).getUTCMonth(), new Date(task.actualStart).getUTCDate()),
         actualEnd: Date.UTC(new Date(task.actualEnd).getUTCFullYear(), new Date(task.actualEnd).getUTCMonth(), new Date(task.actualEnd).getUTCDate()),
+        baselineStart: null,
+        baselineEnd: null,
         rowHeight: task.rowHeight,
         children: []
       };
@@ -130,6 +136,8 @@ function transformTasks(tasks: Task[]): TransformedTask[] {
         taskMap[task.parent].children?.push({
           name: task.name,
           parent: task.parent,
+          baselineStart: null,
+          baselineEnd: null,
           actualStart: Date.UTC(new Date(task.actualStart).getUTCFullYear(), new Date(task.actualStart).getUTCMonth(), new Date(task.actualStart).getUTCDate()),
           actualEnd: Date.UTC(new Date(task.actualEnd).getUTCFullYear(), new Date(task.actualEnd).getUTCMonth(), new Date(task.actualEnd).getUTCDate())
         });
@@ -149,17 +157,21 @@ function transformTasks(tasks: Task[]): TransformedTask[] {
 
   // Convert the map back to an array
   const transformedTasks = Object.values(taskMap);
+  transformedTasks.sort((a, b) => {
+    if (a.actualStart == null && b.actualStart == null) return 0;
+    if (a.actualStart == null) return -1;
+    if (b.actualStart == null) return 1;
+    return a.actualStart - b.actualStart;
+  });
 
-  // Sort the tasks by actualStart date
-  transformedTasks.sort((a, b) => a.actualStart - b.actualStart);
-
+  console.log(transformedTasks);
   return transformedTasks;
 }
 
 onMounted(() => {
   anychart.onDocumentReady(function () {
     // create a data tree
-    var treeData = anychart.data.tree(transformTasks(targetJsonArray), 'as-tree')
+    var treeData = anychart.data.tree((targetJsonArray), 'as-tree')
 
     // map the data
     var mapping = treeData.mapAs()
