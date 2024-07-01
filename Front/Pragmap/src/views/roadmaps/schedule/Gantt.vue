@@ -79,13 +79,129 @@ const transformDataArray = (dataArray: any[]): TargetData[] => {
 const targetJsonArray = transformDataArray(tasks.value)
 console.log(JSON.stringify(targetJsonArray, null, 2))
 
+
+interface Task {
+    id: string;
+    name: string;
+    parent: string | null;
+    actualStart: number;
+    actualEnd: number;
+    baselineStart: number;
+    baselineEnd: number;
+    progressValue: string;
+    rowHeight: number;
+}
+
+interface TransformedTask {
+    id: string;
+    name: string;
+    progressValue: string;
+    actualStart: number;
+    actualEnd: number;
+    rowHeight: number;
+    children?: TransformedChild[];
+}
+
+interface TransformedChild {
+    name: string;
+    parent: string;
+    actualStart: number;
+    actualEnd: number;
+}
+
+function transformTasks(tasks: Task[]): TransformedTask[] {
+    const taskMap: { [key: string]: TransformedTask } = {};
+
+    // Initialize the map with tasks that don't have a parent
+    tasks.forEach(task => {
+        if (!task.parent) {
+            taskMap[task.id] = {
+                id: task.id,
+                name: task.name,
+                progressValue: task.progressValue,
+                actualStart: Date.UTC(new Date(task.actualStart).getUTCFullYear(), new Date(task.actualStart).getUTCMonth(), new Date(task.actualStart).getUTCDate()),
+                actualEnd: Date.UTC(new Date(task.actualEnd).getUTCFullYear(), new Date(task.actualEnd).getUTCMonth(), new Date(task.actualEnd).getUTCDate()),
+                rowHeight: task.rowHeight,
+                children: []
+            };
+        }
+    });
+
+    // Add children to their respective parents
+    tasks.forEach(task => {
+        if (task.parent) {
+            if (taskMap[task.parent]) {
+                taskMap[task.parent].children?.push({
+                    name: task.name,
+                    parent: task.parent,
+                    actualStart: Date.UTC(new Date(task.actualStart).getUTCFullYear(), new Date(task.actualStart).getUTCMonth(), new Date(task.actualStart).getUTCDate()),
+                    actualEnd: Date.UTC(new Date(task.actualEnd).getUTCFullYear(), new Date(task.actualEnd).getUTCMonth(), new Date(task.actualEnd).getUTCDate())
+                });
+            }
+        }
+    });
+
+    // Adjust the actualStart and actualEnd for parent tasks based on their children
+    Object.values(taskMap).forEach(task => {
+        if (task.children && task.children.length > 0) {
+            const childActualStarts = task.children.map(child => child.actualStart);
+            const childActualEnds = task.children.map(child => child.actualEnd);
+            task.actualStart = Math.min(...childActualStarts);
+            task.actualEnd = Math.max(...childActualEnds);
+        }
+    });
+
+    // Convert the map back to an array
+    return Object.values(taskMap);
+}
+
+console.log(JSON.stringify(transformTasks(targetJsonArray), null, 2));
+
+var data = [
+      {
+        id: "1",
+        name: "Groupe",
+        progressValue: "70%",
+        actualStart: Date.UTC(2018, 0, 25),
+        actualEnd: Date.UTC(2018, 2, 14),
+        rowHeight: 35,
+        children: [
+          {
+            name: "Child 1",
+            parent: "1",
+            value: 65511098,
+            actualStart: Date.UTC(2018, 0, 25),
+            actualEnd: Date.UTC(2018, 1, 3)
+          },
+          {
+            name: "Child 2",
+            value: 64938716,
+            actualStart: Date.UTC(2018, 1, 4),
+            actualEnd: Date.UTC(2018, 1, 4)
+          },
+          {
+            name: "Child 3",
+            value: 59797978,
+            actualStart: Date.UTC(2018, 1, 4),
+            actualEnd: Date.UTC(2018, 1, 24)
+          },
+          {
+            name: "Child 4",
+            value: 46070146,
+            actualStart: Date.UTC(2018, 1, 24),
+            actualEnd: Date.UTC(2018, 2, 14),
+            progressValue: "70%"
+          }
+        ]
+    }];
+
 onMounted(() => {
 	anychart.onDocumentReady(function () {
 		// create a data tree
-		var treeData = anychart.data.tree(targetJsonArray, 'as-tree', '', { children: 'child_items' })
+		var treeData = anychart.data.tree(transformTasks(targetJsonArray), 'as-tree')
 
 		// map the data
-		var mapping = treeData.mapAs({ actualStart: 'start_date', actualEnd: 'end_date' })
+		var mapping = treeData.mapAs()
 
 		// create a chart
 		var chart = anychart.ganttProject()
@@ -102,77 +218,6 @@ onMounted(() => {
 		// fit elements to the width of the timeline
 		chart.fitAll()
 	})
-
-	// add bold and italic text settings to all parent items
-	// const labelTextSettingsFormatter = (label: any, dataItem: any) => {
-	// 	if (dataItem.numChildren()) {
-	// 		label.fontWeight('bold').fontStyle('italic')
-	// 	}
-	// }
-
-	// do pretty formatting for dates in third column
-	// const thirdColumnTextFormatter = (data: any) => {
-	// 	const field = data.baselineStart
-
-	// 	// format base line text
-	// 	if (field) {
-	// 		const baselineStart = new Date(field)
-	// 		return (
-	// 			formatDate(baselineStart.getUTCMonth() + 1) +
-	// 			'/' +
-	// 			formatDate(baselineStart.getUTCDate()) +
-	// 			'/' +
-	// 			baselineStart.getUTCFullYear() +
-	// 			' ' +
-	// 			formatDate(baselineStart.getUTCHours()) +
-	// 			':' +
-	// 			formatDate(baselineStart.getUTCMinutes())
-	// 		)
-	// 	}
-	// 	// format milestone text
-	// 	const actualStart = data.item.get('actualStart')
-	// 	const actualEnd = data.item.get('actualEnd')
-	// 	if (actualStart === actualEnd || (actualStart && !actualEnd)) {
-	// 		const start = new Date(actualStart)
-	// 		return (
-	// 			formatDate(start.getUTCMonth() + 1) +
-	// 			'/' +
-	// 			formatDate(start.getUTCDate()) +
-	// 			'/' +
-	// 			start.getUTCFullYear() +
-	// 			' ' +
-	// 			formatDate(start.getUTCHours()) +
-	// 			':' +
-	// 			formatDate(start.getUTCMinutes())
-	// 		)
-	// 	}
-	// 	return ''
-	// }
-
-	// do pretty formatting for dates in fourth column
-	// const fourthColumnTextFormatter = (item: any) => {
-	// 	const field = item.baselineEnd
-	// 	if (field) {
-	// 		const baselineEnd = new Date(field)
-	// 		return (
-	// 			formatDate(baselineEnd.getUTCMonth() + 1) +
-	// 			'/' +
-	// 			formatDate(baselineEnd.getUTCDate()) +
-	// 			'/' +
-	// 			baselineEnd.getUTCFullYear() +
-	// 			' ' +
-	// 			formatDate(baselineEnd.getUTCHours()) +
-	// 			':' +
-	// 			formatDate(baselineEnd.getUTCMinutes())
-	// 		)
-	// 	}
-	// 	return ''
-	// }
-
-	// do pretty formatting for passed date unit
-	// const formatDate = (dateUnit: number) => {
-	// 	return dateUnit < 10 ? '0' + dateUnit : dateUnit.toString()
-	// }
 })
 </script>
 
