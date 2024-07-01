@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRoute } from 'vue-router'
 import { Button } from '@/components/ui/button'
-import { FolderKanban, GanttChart, Handshake, UserRound } from 'lucide-vue-next'
+import { FolderKanban, Handshake, UserRound } from 'lucide-vue-next'
 
 defineProps<{
 	isToggled: boolean
