@@ -123,7 +123,6 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 			...defaultNode,
 			data: {
 				description: `Description de ` + label,
-				startDate: format(new Date(), 'yyyy-MM-dd'),
 				endDate: format(new Date(), 'yyyy-MM-dd')
 			},
 			targetPosition: Position.Left

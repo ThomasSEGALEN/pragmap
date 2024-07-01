@@ -22,16 +22,12 @@ const props = defineProps<{
 const tasks = ref([])
 tasks.value = await getRoadmapDataById(props.id)
 
-console.log(tasks.value)
-
 interface TargetData {
 	id: string | null
 	name: string | null
 	parent: string | null
 	actualStart: number | null
 	actualEnd: number | null
-	baselineStart: number | null
-	baselineEnd: number | null
 	progressValue: string | null
 	rowHeight: number
 }
@@ -45,10 +41,14 @@ const transformDataArray = (dataArray: any[]): TargetData[] => {
 				const [year, month, day] = dateString.split('-').map(Number)
 				return Date.UTC(year, month - 1, day) // Mois est 0-indexé donc -1
 			}
-
+     
+      if(!source.data.startDate){
+        source.data.startDate= source.data.endDate
+      }
 			// Conversion des dates si elles sont présentes dans la source
 			const startDate = dateToTimestamp(source.data?.startDate)
 			const endDate = dateToTimestamp(source.data?.endDate)
+
 
 			return {
 				id: source.id || null,
@@ -56,8 +56,6 @@ const transformDataArray = (dataArray: any[]): TargetData[] => {
 				parent: source.parentNode || null,
 				actualStart: startDate,
 				actualEnd: endDate,
-				baselineStart: startDate,
-				baselineEnd: endDate,
 				progressValue: (source.data?.progress || '0') + '%',
 				rowHeight: 35
 			}
@@ -77,8 +75,6 @@ const transformDataArray = (dataArray: any[]): TargetData[] => {
 }
 
 const targetJsonArray = transformDataArray(tasks.value)
-console.log(JSON.stringify(targetJsonArray, null, 2))
-
 
 interface Task {
     id: string;
@@ -111,7 +107,7 @@ interface TransformedChild {
 
 function transformTasks(tasks: Task[]): TransformedTask[] {
     const taskMap: { [key: string]: TransformedTask } = {};
-
+    console.log(tasks)
     // Initialize the map with tasks that don't have a parent
     tasks.forEach(task => {
         if (!task.parent) {
@@ -154,46 +150,6 @@ function transformTasks(tasks: Task[]): TransformedTask[] {
     // Convert the map back to an array
     return Object.values(taskMap);
 }
-
-console.log(JSON.stringify(transformTasks(targetJsonArray), null, 2));
-
-var data = [
-      {
-        id: "1",
-        name: "Groupe",
-        progressValue: "70%",
-        actualStart: Date.UTC(2018, 0, 25),
-        actualEnd: Date.UTC(2018, 2, 14),
-        rowHeight: 35,
-        children: [
-          {
-            name: "Child 1",
-            parent: "1",
-            value: 65511098,
-            actualStart: Date.UTC(2018, 0, 25),
-            actualEnd: Date.UTC(2018, 1, 3)
-          },
-          {
-            name: "Child 2",
-            value: 64938716,
-            actualStart: Date.UTC(2018, 1, 4),
-            actualEnd: Date.UTC(2018, 1, 4)
-          },
-          {
-            name: "Child 3",
-            value: 59797978,
-            actualStart: Date.UTC(2018, 1, 4),
-            actualEnd: Date.UTC(2018, 1, 24)
-          },
-          {
-            name: "Child 4",
-            value: 46070146,
-            actualStart: Date.UTC(2018, 1, 24),
-            actualEnd: Date.UTC(2018, 2, 14),
-            progressValue: "70%"
-          }
-        ]
-    }];
 
 onMounted(() => {
 	anychart.onDocumentReady(function () {

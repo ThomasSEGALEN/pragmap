@@ -266,6 +266,7 @@ const handleNodeDragStop = (event: NodeDragEvent) => {
 					v-slot="{ componentField }"
 					v-model="selectedNode.data['startDate']"
 					name="startDate"
+					v-if="selectedNode.type !== 'milestone' && selectedNode.type !== 'resizable'"
 				>
 					<FormItem class="w-full">
 						<FormLabel>Date de début</FormLabel>
@@ -282,6 +283,7 @@ const handleNodeDragStop = (event: NodeDragEvent) => {
 					v-slot="{ componentField }"
 					v-model="selectedNode.data['endDate']"
 					name="endDate"
+					v-if="selectedNode.type !== 'resizable'""
 				>
 					<FormItem class="w-full">
 						<FormLabel>Date de fin</FormLabel>
