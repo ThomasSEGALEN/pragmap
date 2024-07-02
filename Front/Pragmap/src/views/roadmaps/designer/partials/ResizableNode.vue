@@ -10,7 +10,6 @@ defineProps(['data'])
 		:min-width="100"
 		:min-height="30"
 	/>
-
 	<Handle
 		type="target"
 		:position="Position.Right"
