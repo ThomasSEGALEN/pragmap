@@ -21,7 +21,7 @@ import { Loader2 } from 'lucide-vue-next'
 import { Textarea } from '@/components/ui/textarea'
 import { toast } from '@/components/ui/toast'
 import useDragAndDrop from './partials/useDragAndDrop'
-import ResizableNode from './partials/resizableNode.vue'
+import ResizableNode from './partials/ResizableNode.vue'
 
 const { id } = useRoute().params as { id: string }
 const nameInput = ref<HTMLInputElement | null>(null)
@@ -283,7 +283,7 @@ const handleNodeDragStop = (event: NodeDragEvent) => {
 					v-slot="{ componentField }"
 					v-model="selectedNode.data['endDate']"
 					name="endDate"
-					v-if="selectedNode.type !== 'resizable'""
+					v-if="selectedNode.type !== 'resizable'"
 				>
 					<FormItem class="w-full">
 						<FormLabel>Date de fin</FormLabel>
