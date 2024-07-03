@@ -76,6 +76,7 @@ const transformDataArray = (dataArray: any[]): TargetData[] => {
 
 const targetJsonArray = transformDataArray(tasks.value)
 
+const endData  = transformTasks(targetJsonArray) 
 interface Task {
   id: string;
   name: string;
@@ -109,7 +110,7 @@ interface TransformedChild {
   baselineEnd: number | null;
 }
 
-function transformTasks(tasks: Task[]): TransformedTask[] {
+function transformTasks(tasks: any[]): TransformedTask[] {
   const taskMap: { [key: string]: TransformedTask } = {};
   console.log(tasks)
   // Initialize the map with tasks that don't have a parent
@@ -171,7 +172,7 @@ function transformTasks(tasks: Task[]): TransformedTask[] {
 onMounted(() => {
   anychart.onDocumentReady(function () {
     // create a data tree
-    var treeData = anychart.data.tree((targetJsonArray), 'as-tree')
+    var treeData = anychart.data.tree((endData), 'as-tree')
 
     // map the data
     var mapping = treeData.mapAs()
