@@ -73,21 +73,8 @@ const transformDataArray = (dataArray: any[]): TargetData[] => {
       }
     })
 }
-
 const targetJsonArray = transformDataArray(tasks.value)
-
 const endData  = transformTasks(targetJsonArray) 
-interface Task {
-  id: string;
-  name: string;
-  parent: string | null;
-  actualStart: number;
-  actualEnd: number;
-  baselineStart: number | null;
-  baselineEnd: number | null;
-  progressValue: string;
-  rowHeight: number;
-}
 
 interface TransformedTask {
   id: string;
@@ -112,7 +99,6 @@ interface TransformedChild {
 
 function transformTasks(tasks: any[]): TransformedTask[] {
   const taskMap: { [key: string]: TransformedTask } = {};
-  console.log(tasks)
   // Initialize the map with tasks that don't have a parent
   tasks.forEach(task => {
     if (!task.parent) {
@@ -164,8 +150,6 @@ function transformTasks(tasks: any[]): TransformedTask[] {
     if (b.actualStart == null) return 1;
     return a.actualStart - b.actualStart;
   });
-
-  console.log(transformedTasks);
   return transformedTasks;
 }
 
