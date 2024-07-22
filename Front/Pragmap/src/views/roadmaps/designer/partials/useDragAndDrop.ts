@@ -1,5 +1,6 @@
 import { ref, type Ref, watch } from 'vue'
 import { type Elements, Position, useVueFlow } from '@vue-flow/core'
+import { format } from 'date-fns'
 
 const state = {
 	draggedType: ref<string | null>(null),
@@ -51,7 +52,18 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 			x: event.clientX,
 			y: event.clientY
 		})
-		const nodeId = (elements.value.length + 1).toString()
+		//Find the highest node id
+		console.log(elements.value.map((node) => parseInt(node.id)))
+		const nodeId = (
+			elements.value.length > 0
+				? Math.max(
+						...elements.value
+							.filter((node) => node.type !== 'default') // Filtrer les nœuds de type 'default'
+							.map((node) => parseInt(node.id))
+					) + 1
+				: 1
+		).toString()
+		console.log(nodeId)
 		const label =
 			draggedType.value === 'task'
 				? 'Tâche'
@@ -59,13 +71,29 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 					? 'Livrable'
 					: draggedType.value === 'milestone'
 						? 'Jalon'
-						: 'Bloc'
+						: draggedType.value === 'group'
+							? 'Groupe'
+							: 'Bloc'
 		const defaultNode = {
 			id: nodeId,
 			type: draggedType.value ?? 'node',
-			position: position,
 			label: label,
-			sourcePosition: Position.Left
+			position: position,
+			sourcePosition: Position.Left,
+			parentNode: ''
+		}
+		const groupNode = {
+			...defaultNode,
+			data: {
+				description: `Description de ` + label,
+				type: 'group',
+				startDate: format(new Date(), 'yyyy-MM-dd'),
+				endDate: format(new Date(), 'yyyy-MM-dd')
+			},
+			style: { backgroundColor: 'rgba(0, 255, 0, 0.1)', width: '700px', height: '400px' },
+			type: 'resizable',
+			targetPosition: Position.Left,
+			sourcePosition: Position.Right
 		}
 		const taskNode = {
 			...defaultNode,
@@ -73,8 +101,9 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 				description: `Description de ` + label,
 				duration: 0,
 				progress: 0,
-				startDate: new Date().toISOString(),
-				endDate: new Date().toISOString()
+				class: 'vue-flow__node-input',
+				startDate: format(new Date(), 'yyyy-MM-dd'),
+				endDate: format(new Date(), 'yyyy-MM-dd')
 			},
 			targetPosition: Position.Right
 		}
@@ -84,6 +113,8 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 				description: `Description de ` + label,
 				duration: 0,
 				progress: 0,
+				startDate: format(new Date(), 'yyyy-MM-dd'),
+				endDate: format(new Date(), 'yyyy-MM-dd'),
 				file: ''
 			},
 			targetPosition: Position.Left
@@ -91,7 +122,8 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 		const milestoneNode = {
 			...defaultNode,
 			data: {
-				description: `Description de ` + label
+				description: `Description de ` + label,
+				endDate: format(new Date(), 'yyyy-MM-dd')
 			},
 			targetPosition: Position.Left
 		}
@@ -110,8 +142,9 @@ export default function useDragAndDrop(elements: Ref<Elements>) {
 				? taskNode
 				: draggedType.value === 'deliverable'
 					? deliverableNode
-					: milestoneNode
-
+					: draggedType.value === 'group'
+						? groupNode
+						: milestoneNode
 		addNodes(newNode)
 	}
 
